@@ -5,7 +5,7 @@ Clonare il repository
 ```
 git clone https://github.com/luca-ant/tablutchallenge.git
 ```
-A questo punto sarai nel branch master.**Passa sul tuo branch** con il comando
+A questo punto sarai nel branch master. **Passa sul tuo branch** con il comando
 ```
 git checkout <nome_tuo_branch>
 ```
@@ -21,3 +21,4 @@ git add *
 git commit -m "descrizione"
 git push origin <nome_tuo_brach>
 ```
+
