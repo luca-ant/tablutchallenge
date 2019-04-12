@@ -7,6 +7,7 @@ git clone https://github.com/luca-ant/tablutchallenge.git
 ```
 A questo punto sarai nel branch master. **Passa sul tuo branch** con il comando
 ```
+cd tablutchallenge
 git checkout <nome_tuo_branch>
 ```
 
