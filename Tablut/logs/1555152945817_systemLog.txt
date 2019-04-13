@@ -1,0 +1,30 @@
+apr 13, 2019 12:55:45 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: Accensione server
+apr 13, 2019 12:55:45 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: Partita di Tablut
+apr 13, 2019 12:55:51 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: Accettata connessione con client giocatore Bianco
+apr 13, 2019 12:55:51 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: Lettura nome player bianco in corso..
+apr 13, 2019 12:55:52 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: White player name:	random
+apr 13, 2019 12:55:55 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: Accettata connessione con client giocatore Nero
+apr 13, 2019 12:55:55 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: Lettura nome player nero in corso..
+apr 13, 2019 12:55:56 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: Black player name:	luca
+apr 13, 2019 12:55:57 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: Invio messaggio ai giocatori
+apr 13, 2019 12:55:57 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: Lettura mossa player W in corso..
+apr 13, 2019 12:55:59 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: Move received.	Turn: W Pawn from d5 to d8
+apr 13, 2019 12:55:59 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: Invio messaggio ai client
+apr 13, 2019 12:55:59 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+FINE: Lettura mossa player B in corso..
+apr 13, 2019 12:56:59 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+WARNING: Timeout! Player B lose!
+apr 13, 2019 12:56:59 PM it.unibo.ai.didattica.competition.tablut.server.Server run
+WARNING: Chiusura sistema per timeout

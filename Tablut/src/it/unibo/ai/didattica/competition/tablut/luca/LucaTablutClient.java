@@ -1,44 +1,38 @@
-package it.unibo.ai.didattica.competition.tablut.client;
+package it.unibo.ai.didattica.competition.tablut.luca;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
+import java.io.IOException;
+import java.net.UnknownHostException;
+import it.unibo.ai.didattica.competition.tablut.client.TablutClient;
 import it.unibo.ai.didattica.competition.tablut.domain.*;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
+import it.unibo.ai.didattica.competition.tablut.exceptions.ActionException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.BoardException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.CitadelException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.ClimbingCitadelException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.ClimbingException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.DiagonalException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 
-/**
- * 
- * @author A. Piretti, Andrea Galassi
- *
- */
-public class TablutRandomClient extends TablutClient {
+public class LucaTablutClient extends TablutClient {
 
 	private int game;
+	private IA ia;
 
-	public TablutRandomClient(String player, String name, int gameChosen) throws UnknownHostException, IOException {
+	public LucaTablutClient(String player, String name, int gameChosen) throws UnknownHostException, IOException {
 		super(player, name);
-		game = gameChosen;
-	}
-
-	public TablutRandomClient(String player) throws UnknownHostException, IOException {
-		this(player, "random", 4);
-	}
-
-	public TablutRandomClient(String player, String name) throws UnknownHostException, IOException {
-		this(player, name, 4);
-	}
-
-	public TablutRandomClient(String player, int gameChosen) throws UnknownHostException, IOException {
-		this(player, "random", gameChosen);
+		this.game = gameChosen;
+		this.ia = null;
 	}
 
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 		int gametype = 4;
 		String role = "";
-		String name = "random";
+		String name = "luca";
 		// TODO: change the behavior?
 		if (args.length < 1) {
 			System.out.println("You must specify which player you are (WHITE or BLACK)");
@@ -56,7 +50,7 @@ public class TablutRandomClient extends TablutClient {
 		}
 		System.out.println("Selected client: " + args[0]);
 
-		TablutRandomClient client = new TablutRandomClient(role, name, gametype);
+		LucaTablutClient client = new LucaTablutClient(role, name, gametype);
 		client.run();
 	}
 
@@ -96,10 +90,9 @@ public class TablutRandomClient extends TablutClient {
 			System.exit(4);
 		}
 
-		List<int[]> pawns = new ArrayList<int[]>();
-		List<int[]> empty = new ArrayList<int[]>();
-
 		System.out.println("You are player " + this.getPlayer().toString() + "!");
+
+		this.ia = new MinMax(rules);
 
 		while (true) {
 			try {
@@ -118,57 +111,23 @@ public class TablutRandomClient extends TablutClient {
 			}
 
 			if (this.getPlayer().equals(Turn.WHITE)) {
-				// è il mio turno
+				// è il mio turno quando sono il bianco
 				if (this.getCurrentState().getTurn().equals(StateTablut.Turn.WHITE)) {
-					int[] buf;
-					for (int i = 0; i < state.getBoard().length; i++) {
-						for (int j = 0; j < state.getBoard().length; j++) {
-							if (state.getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString())
-									|| state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
-								buf = new int[2];
-								buf[0] = i;
-								buf[1] = j;
-								pawns.add(buf);
-							} else if (state.getPawn(i, j).equalsPawn(State.Pawn.EMPTY.toString())) {
-								buf = new int[2];
-								buf[0] = i;
-								buf[1] = j;
-								empty.add(buf);
-							}
-						}
-					}
-
-					int[] selected = null;
-
-					boolean found = false;
 					Action a = null;
 					try {
 						a = new Action("z0", "z0", State.Turn.WHITE);
-					} catch (IOException e1) {
+					} catch (IOException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+
+					try {
+						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.WHITE);
+					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
+							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
+							| CitadelException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					}
-					while (!found) {
-						selected = pawns.get(new Random().nextInt(pawns.size() - 1));
-						String from = this.getCurrentState().getBox(selected[0], selected[1]);
-
-						selected = empty.get(new Random().nextInt(empty.size() - 1));
-						String to = this.getCurrentState().getBox(selected[0], selected[1]);
-
-						try {
-							a = new Action(from, to, State.Turn.WHITE);
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-
-						try {
-							rules.checkMove(state, a);
-							found = true;
-						} catch (Exception e) {
-
-						}
-
 					}
 
 					System.out.println("Mossa scelta: " + a.toString());
@@ -178,8 +137,6 @@ public class TablutRandomClient extends TablutClient {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					pawns.clear();
-					empty.clear();
 
 				}
 				// è il turno dell'avversario
@@ -204,58 +161,23 @@ public class TablutRandomClient extends TablutClient {
 
 			} else {
 
-				// è il mio turno
+				// è il mio turno quando sono il nero
 				if (this.getCurrentState().getTurn().equals(StateTablut.Turn.BLACK)) {
-					int[] buf;
-					for (int i = 0; i < state.getBoard().length; i++) {
-						for (int j = 0; j < state.getBoard().length; j++) {
-							if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
-								buf = new int[2];
-								buf[0] = i;
-								buf[1] = j;
-								pawns.add(buf);
-							} else if (state.getPawn(i, j).equalsPawn(State.Pawn.EMPTY.toString())) {
-								buf = new int[2];
-								buf[0] = i;
-								buf[1] = j;
-								empty.add(buf);
-							}
-						}
-					}
-
-					int[] selected = null;
-
-					boolean found = false;
 					Action a = null;
+
 					try {
 						a = new Action("z0", "z0", State.Turn.BLACK);
-					} catch (IOException e1) {
+					} catch (IOException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+					try {
+						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.BLACK);
+					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
+							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
+							| CitadelException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
-					}
-					;
-					while (!found) {
-						selected = pawns.get(new Random().nextInt(pawns.size() - 1));
-						String from = this.getCurrentState().getBox(selected[0], selected[1]);
-
-						selected = empty.get(new Random().nextInt(empty.size() - 1));
-						String to = this.getCurrentState().getBox(selected[0], selected[1]);
-
-						try {
-							a = new Action(from, to, State.Turn.BLACK);
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-
-						System.out.println("try: " + a.toString());
-						try {
-							rules.checkMove(state, a);
-							found = true;
-						} catch (Exception e) {
-
-						}
-
 					}
 
 					System.out.println("Mossa scelta: " + a.toString());
@@ -265,8 +187,6 @@ public class TablutRandomClient extends TablutClient {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					pawns.clear();
-					empty.clear();
 
 				}
 
@@ -287,4 +207,5 @@ public class TablutRandomClient extends TablutClient {
 		}
 
 	}
+
 }

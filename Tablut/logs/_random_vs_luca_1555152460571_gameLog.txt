@@ -1,0 +1,42 @@
+apr 13, 2019 12:47:40 PM it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut <init>
+FINE: Players:	White:	random	vs	luca
+apr 13, 2019 12:47:40 PM it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut <init>
+FINE: Repeated moves allowed:	0	Cache:	-1
+apr 13, 2019 12:47:40 PM it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut <init>
+FINE: Inizio partita
+apr 13, 2019 12:47:40 PM it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut <init>
+FINE: Stato:
+OOOBBBOOO
+OOOOBOOOO
+OOOOWOOOO
+BOOOWOOOB
+BBWWKWWBB
+BOOOWOOOB
+OOOOWOOOO
+OOOOBOOOO
+OOOBBBOOO
+-
+W
+apr 13, 2019 12:47:43 PM it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut checkMove
+FINE: Turn: W Pawn from f5 to f2
+apr 13, 2019 12:47:43 PM it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut movePawn
+FINE: Movimento pedina
+apr 13, 2019 12:47:43 PM it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut checkMove
+FINE: Current draw cache size: 1
+apr 13, 2019 12:47:43 PM it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut checkMove
+FINE: Stato:
+OOOBBBOOO
+OOOOBWOOO
+OOOOWOOOO
+BOOOWOOOB
+BBWWKOWBB
+BOOOWOOOB
+OOOOWOOOO
+OOOOBOOOO
+OOOBBBOOO
+-
+B
+apr 13, 2019 12:47:45 PM it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut checkMove
+FINE: Turn: B Pawn from z0 to z0
+apr 13, 2019 12:47:45 PM it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut checkMove
+WARNING: Mossa fuori tabellone

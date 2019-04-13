@@ -5,24 +5,24 @@ import it.unibo.ai.didattica.competition.tablut.domain.State;
 
 public class Node {
 
-	private MyState state;
+	private State state;
 	private double value;
 	private Action move;
 	
 
 	
 
-	public Node(MyState state, double value, Action move) {
+	public Node(State state, double value, Action move) {
 		super();
 		this.state = state;
 		this.value = value;
 		this.move = move;
 	}
 	
-	public MyState getState() {
+	public State getState() {
 		return state;
 	}
-	public void setState(MyState state) {
+	public void setState(State state) {
 		this.state = state;
 	}
 	public Action getMove() {
@@ -32,7 +32,7 @@ public class Node {
 		this.move = move;
 	}
 
-	public Node(MyState state) {
+	public Node(State state) {
 		this.state = state;
 	}
 
