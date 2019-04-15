@@ -122,7 +122,12 @@ public class LucaTablutClient extends TablutClient {
 					}
 
 					try {
+						NodeUtil.reset();
+						
 						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.WHITE);
+						
+						NodeUtil.printExpanseNodes();
+						
 					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
 							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
 							| CitadelException e1) {
@@ -172,7 +177,12 @@ public class LucaTablutClient extends TablutClient {
 						e2.printStackTrace();
 					}
 					try {
+						NodeUtil.reset();
+						
 						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.BLACK);
+						
+						NodeUtil.printExpanseNodes();
+
 					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
 							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
 							| CitadelException e1) {
