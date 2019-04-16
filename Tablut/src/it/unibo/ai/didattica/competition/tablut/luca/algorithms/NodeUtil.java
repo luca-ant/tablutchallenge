@@ -9,11 +9,11 @@ public class NodeUtil {
 		this.expanseNodes = 0;
 	}
 
-	public void incrementExpanseNodes() {
+	public void incrementExpandedNodes() {
 		this.expanseNodes++;
 	}
 
-	public void printExpanseNodes() {
+	public void printExpandedNodes() {
 		System.out.println("Nodi espansi : "+this.expanseNodes);
 	}
 

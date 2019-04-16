@@ -19,22 +19,21 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyAshtonTablutRules;
+import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGame;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
 
 public class MinMaxAlphaBeta implements IA {
 
-	public final static int MIN = -1;
-	public final static int MAX = 1;
-	public final static int DEPTH = 8;
+	public final static int DEPTH = 5;
 
-	private Game rules;
+	private MyGame rules;
 	private int timeout;
 	private List<Node> rootChildren;
 	private List<int[]> pawns;
 	private Thread wd;
 
-	public MinMaxAlphaBeta(Game rules, int timeout) {
+	public MinMaxAlphaBeta(MyGame rules, int timeout) {
 		this.timeout = timeout;
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
@@ -72,12 +71,12 @@ public class MinMaxAlphaBeta implements IA {
 
 		Node root = new Node(state);
 
-		NodeUtil.getIstance().incrementExpanseNodes();
+		NodeUtil.getIstance().incrementExpandedNodes();
 
 		if (yourColor.equals(State.Turn.BLACK))
-			root.setValue(maxValue(root, depth, Double.MIN_VALUE, Double.MAX_VALUE));
+			root.setValue(maxValue(root, depth, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
 		else if (yourColor.equals(State.Turn.WHITE))
-			root.setValue(minValue(root, depth, Double.MAX_VALUE, Double.MIN_VALUE));
+			root.setValue(minValue(root, depth, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
 
 		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
@@ -92,7 +91,7 @@ public class MinMaxAlphaBeta implements IA {
 
 		if (depth == 0 || !this.wd.isAlive()) {
 			Heuristic h = new RandomHeuristic();
-			return h.heuristic(node);
+			return h.heuristic(node.getState());
 		}
 
 		int[] buf;
@@ -132,7 +131,7 @@ public class MinMaxAlphaBeta implements IA {
 				to = node.getState().getBox(orr[0], orr[1]);
 				try {
 					Action a = new Action(from, to, State.Turn.BLACK);
-					MyAshtonTablutRules.checkMove(node.getState(), a);
+					rules.checkMove(node.getState(), a);
 
 					// state.setTurn(State.Turn.BLACK);
 
@@ -146,7 +145,7 @@ public class MinMaxAlphaBeta implements IA {
 				to = node.getState().getBox(ver[0], ver[1]);
 				try {
 					Action a = new Action(from, to, State.Turn.BLACK);
-					MyAshtonTablutRules.checkMove(node.getState(), a);
+					rules.checkMove(node.getState(), a);
 
 					possibleMoves.add(a);
 
@@ -161,23 +160,22 @@ public class MinMaxAlphaBeta implements IA {
 		}
 		this.pawns.clear();
 
-		node.setValue(Double.MIN_VALUE);
-		Double v = Double.MIN_VALUE;
+		node.setValue(Double.NEGATIVE_INFINITY);
+		Double v = Double.NEGATIVE_INFINITY;
 
 		for (Action a : possibleMoves) {
-			State nextState = MyAshtonTablutRules.movePawn(node.getState(), a);
-			Node n = new Node(nextState.clone(), Double.MAX_VALUE, a);
+			State nextState = rules.movePawn(node.getState(), a);
+			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
-			NodeUtil.getIstance().incrementExpanseNodes();
+			NodeUtil.getIstance().incrementExpandedNodes();
 
-			v = Math.max(v, minValue(n, depth - 1, alpha,beta));
+			v = Math.max(v, minValue(n, depth - 1, alpha, beta));
 
 			if (v >= beta)
 				return v;
 
-			alpha = Math.max(alpha,v);
+			alpha = Math.max(alpha, v);
 
-			
 			if (depth == DEPTH - 1) {
 
 				rootChildren.add(n);
@@ -194,13 +192,14 @@ public class MinMaxAlphaBeta implements IA {
 
 		if (depth == 0 || !this.wd.isAlive()) {
 			Heuristic h = new RandomHeuristic();
-			return h.heuristic(node);
+			return h.heuristic(node.getState());
 		}
 
 		int[] buf;
 		for (int i = 0; i < node.getState().getBoard().length; i++) {
 			for (int j = 0; j < node.getState().getBoard().length; j++) {
-				if (node.getState().getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString())) {
+				if (node.getState().getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString())
+						|| node.getState().getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
 					buf = new int[2];
 					buf[0] = i;
 					buf[1] = j;
@@ -234,7 +233,7 @@ public class MinMaxAlphaBeta implements IA {
 				to = node.getState().getBox(orr[0], orr[1]);
 				try {
 					Action a = new Action(from, to, State.Turn.WHITE);
-					MyAshtonTablutRules.checkMove(node.getState(), a);
+					rules.checkMove(node.getState(), a);
 
 					// state.setTurn(State.Turn.WHITE);
 
@@ -248,7 +247,7 @@ public class MinMaxAlphaBeta implements IA {
 				to = node.getState().getBox(ver[0], ver[1]);
 				try {
 					Action a = new Action(from, to, State.Turn.WHITE);
-					MyAshtonTablutRules.checkMove(node.getState(), a);
+					rules.checkMove(node.getState(), a);
 					possibleMoves.add(a);
 
 					// state.setTurn(State.Turn.WHITE);
@@ -262,24 +261,22 @@ public class MinMaxAlphaBeta implements IA {
 		}
 		this.pawns.clear();
 
-		node.setValue(Double.MAX_VALUE);
-		Double v = Double.MAX_VALUE;
+		node.setValue(Double.POSITIVE_INFINITY);
+		Double v = Double.POSITIVE_INFINITY;
 		for (Action a : possibleMoves) {
-			State nextState = MyAshtonTablutRules.movePawn(node.getState(), a);
+			State nextState = rules.movePawn(node.getState(), a);
 
-			Node n = new Node(nextState, Double.MIN_VALUE, a);
+			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
-			NodeUtil.getIstance().incrementExpanseNodes();
+			NodeUtil.getIstance().incrementExpandedNodes();
 
-			v = Math.min(v, maxValue(n, depth - 1, alpha,beta));
+			v = Math.min(v, maxValue(n, depth - 1, alpha, beta));
 
-			
-			
 			if (v <= alpha)
 				return v;
 
-			alpha = Math.min(beta,v);
-			
+			alpha = Math.min(beta, v);
+
 			if (depth == DEPTH - 1) {
 
 				rootChildren.add(n);

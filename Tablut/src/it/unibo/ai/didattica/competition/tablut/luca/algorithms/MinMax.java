@@ -19,28 +19,25 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyAshtonTablutRules;
+import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGame;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
 
 public class MinMax implements IA {
 
-	public final static int MIN = -1;
-	public final static int MAX = 1;
 	public final static int DEPTH = 5;
 
-	private Game rules;
+	private MyGame rules;
 	private int timeout;
 	private List<Node> rootChildren;
 	private List<int[]> pawns;
-	private NodeUtil nu;
 	private Thread wd;
 
-	public MinMax(Game rules, int timeout) {
+	public MinMax(MyGame rules, int timeout) {
 		this.timeout = timeout;
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
-		this.nu = NodeUtil.getIstance();
 
 	}
 
@@ -74,7 +71,7 @@ public class MinMax implements IA {
 
 		Node root = new Node(state);
 
-		NodeUtil.getIstance().incrementExpanseNodes();
+		NodeUtil.getIstance().incrementExpandedNodes();
 
 		if (yourColor.equals(State.Turn.BLACK))
 			root.setValue(maxValue(root, depth - 1));
@@ -94,7 +91,7 @@ public class MinMax implements IA {
 
 		if (depth == 0 || !this.wd.isAlive()) {
 			Heuristic h = new RandomHeuristic();
-			return h.heuristic(node);
+			return h.heuristic(node.getState());
 		}
 
 		int[] buf;
@@ -134,7 +131,7 @@ public class MinMax implements IA {
 				to = node.getState().getBox(orr[0], orr[1]);
 				try {
 					Action a = new Action(from, to, State.Turn.BLACK);
-					MyAshtonTablutRules.checkMove(node.getState(), a);
+					rules.checkMove(node.getState(), a);
 
 					// state.setTurn(State.Turn.BLACK);
 
@@ -148,7 +145,7 @@ public class MinMax implements IA {
 				to = node.getState().getBox(ver[0], ver[1]);
 				try {
 					Action a = new Action(from, to, State.Turn.BLACK);
-					MyAshtonTablutRules.checkMove(node.getState(), a);
+					rules.checkMove(node.getState(), a);
 
 					possibleMoves.add(a);
 
@@ -167,10 +164,10 @@ public class MinMax implements IA {
 		Double v = Double.MIN_VALUE;
 
 		for (Action a : possibleMoves) {
-			State nextState = MyAshtonTablutRules.movePawn(node.getState(), a);
+			State nextState = rules.movePawn(node.getState(), a);
 			Node n = new Node(nextState.clone(), Double.MAX_VALUE, a);
 
-			NodeUtil.getIstance().incrementExpanseNodes();
+			NodeUtil.getIstance().incrementExpandedNodes();
 
 			v = Math.max(v, minValue(n, depth - 1));
 
@@ -190,13 +187,13 @@ public class MinMax implements IA {
 
 		if (depth == 0 || !this.wd.isAlive()) {
 			Heuristic h = new RandomHeuristic();
-			return h.heuristic(node);
+			return h.heuristic(node.getState());
 		}
 
 		int[] buf;
 		for (int i = 0; i < node.getState().getBoard().length; i++) {
 			for (int j = 0; j < node.getState().getBoard().length; j++) {
-				if (node.getState().getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString())) {
+				if (node.getState().getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString()) || node.getState().getPawn(i, j).equalsPawn(State.Pawn.KING.toString())  ) {
 					buf = new int[2];
 					buf[0] = i;
 					buf[1] = j;
@@ -230,7 +227,7 @@ public class MinMax implements IA {
 				to = node.getState().getBox(orr[0], orr[1]);
 				try {
 					Action a = new Action(from, to, State.Turn.WHITE);
-					MyAshtonTablutRules.checkMove(node.getState(), a);
+					rules.checkMove(node.getState(), a);
 
 					// state.setTurn(State.Turn.WHITE);
 
@@ -244,7 +241,7 @@ public class MinMax implements IA {
 				to = node.getState().getBox(ver[0], ver[1]);
 				try {
 					Action a = new Action(from, to, State.Turn.WHITE);
-					MyAshtonTablutRules.checkMove(node.getState(), a);
+					rules.checkMove(node.getState(), a);
 					possibleMoves.add(a);
 
 					// state.setTurn(State.Turn.WHITE);
@@ -261,11 +258,11 @@ public class MinMax implements IA {
 		node.setValue(Double.MAX_VALUE);
 		Double v = Double.MAX_VALUE;
 		for (Action a : possibleMoves) {
-			State nextState = MyAshtonTablutRules.movePawn(node.getState(), a);
+			State nextState = rules.movePawn(node.getState(), a);
 
 			Node n = new Node(nextState, Double.MIN_VALUE, a);
 
-			NodeUtil.getIstance().incrementExpanseNodes();
+			NodeUtil.getIstance().incrementExpandedNodes();
 
 			v = Math.min(v, maxValue(n, depth - 1));
 
@@ -279,6 +276,5 @@ public class MinMax implements IA {
 
 		return v;
 	}
-
 
 }

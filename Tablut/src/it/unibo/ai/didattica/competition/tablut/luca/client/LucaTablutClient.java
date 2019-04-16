@@ -21,6 +21,8 @@ import it.unibo.ai.didattica.competition.tablut.luca.algorithms.IA;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMax;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMaxAlphaBeta;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.NodeUtil;
+import it.unibo.ai.didattica.competition.tablut.luca.domain.MyAshtonTablutRules;
+import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGame;
 
 public class LucaTablutClient extends TablutClient {
 
@@ -32,7 +34,8 @@ public class LucaTablutClient extends TablutClient {
 		super(player, name);
 		this.game = gameChosen;
 		this.timeout = timeout;
-		this.ia = null;
+		this.ia = new MinMaxAlphaBeta(MyAshtonTablutRules.getInstance(), this.timeout);
+
 	}
 
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
@@ -56,7 +59,7 @@ public class LucaTablutClient extends TablutClient {
 		}
 		System.out.println("Selected client: " + args[0]);
 
-		int timeout = 59;
+		int timeout = 50;
 		
 		LucaTablutClient client = new LucaTablutClient(role, name, gametype, timeout);
 		client.run();
@@ -100,7 +103,6 @@ public class LucaTablutClient extends TablutClient {
 
 		System.out.println("You are player " + this.getPlayer().toString() + "!");
 
-		this.ia = new MinMaxAlphaBeta(rules, this.timeout);
 
 		while (true) {
 			try {
@@ -134,7 +136,7 @@ public class LucaTablutClient extends TablutClient {
 						
 						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.WHITE);
 						
-						NodeUtil.getIstance().printExpanseNodes();
+						NodeUtil.getIstance().printExpandedNodes();
 						
 					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
 							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
@@ -189,7 +191,7 @@ public class LucaTablutClient extends TablutClient {
 
 						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.BLACK);
 						
-						NodeUtil.getIstance().printExpanseNodes();
+						NodeUtil.getIstance().printExpandedNodes();
 
 					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
 							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
