@@ -1,4 +1,4 @@
-package it.unibo.ai.didattica.competition.tablut.luca;
+package it.unibo.ai.didattica.competition.tablut.luca.algorithms;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -18,19 +18,24 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
+import it.unibo.ai.didattica.competition.tablut.luca.domain.MyAshtonTablutRules;
+import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
+import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
 
-public class MinMax implements IA {
+public class MinMaxAlphaBeta implements IA {
 
 	public final static int MIN = -1;
 	public final static int MAX = 1;
-	public final static int DEPTH = 5;
+	public final static int DEPTH = 8;
 
 	private Game rules;
+	private int timeout;
 	private List<Node> rootChildren;
 	private List<int[]> pawns;
+	private Thread wd;
 
-
-	public MinMax(Game rules) {
+	public MinMaxAlphaBeta(Game rules, int timeout) {
+		this.timeout = timeout;
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
@@ -48,14 +53,31 @@ public class MinMax implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
+		this.wd = new Thread() {
+			@Override
+			public void run() {
+				try {
+					int counter = 0;
+					while (counter < timeout) {
+						Thread.sleep(1000);
+						counter++;
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+
+		this.wd.start();
+
 		Node root = new Node(state);
-		
-		NodeUtil.incrementExpanseNodes();
-		
+
+		NodeUtil.getIstance().incrementExpanseNodes();
+
 		if (yourColor.equals(State.Turn.BLACK))
-			root.setValue(maxValue(root, depth - 1));
+			root.setValue(maxValue(root, depth, Double.MIN_VALUE, Double.MAX_VALUE));
 		else if (yourColor.equals(State.Turn.WHITE))
-			root.setValue(minValue(root, depth - 1));
+			root.setValue(minValue(root, depth, Double.MAX_VALUE, Double.MIN_VALUE));
 
 		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
@@ -64,15 +86,14 @@ public class MinMax implements IA {
 
 	}
 
-	private double maxValue(Node node, int depth)
+	private double maxValue(Node node, int depth, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0) {
+		if (depth == 0 || !this.wd.isAlive()) {
 			Heuristic h = new RandomHeuristic();
 			return h.heuristic(node);
 		}
-
 
 		int[] buf;
 		for (int i = 0; i < node.getState().getBoard().length; i++) {
@@ -111,7 +132,7 @@ public class MinMax implements IA {
 				to = node.getState().getBox(orr[0], orr[1]);
 				try {
 					Action a = new Action(from, to, State.Turn.BLACK);
-					checkMove(node.getState(), a);
+					MyAshtonTablutRules.checkMove(node.getState(), a);
 
 					// state.setTurn(State.Turn.BLACK);
 
@@ -125,7 +146,7 @@ public class MinMax implements IA {
 				to = node.getState().getBox(ver[0], ver[1]);
 				try {
 					Action a = new Action(from, to, State.Turn.BLACK);
-					checkMove(node.getState(), a);
+					MyAshtonTablutRules.checkMove(node.getState(), a);
 
 					possibleMoves.add(a);
 
@@ -142,15 +163,21 @@ public class MinMax implements IA {
 
 		node.setValue(Double.MIN_VALUE);
 		Double v = Double.MIN_VALUE;
-		
-		for (Action a : possibleMoves) {
-			State nextState = movePawn(node.getState(), a);
-			Node n = new Node(nextState.clone(), Double.MAX_VALUE, a);
-			
-			NodeUtil.incrementExpanseNodes();
-			
-			v = Math.max(v, minValue(n, depth - 1));
 
+		for (Action a : possibleMoves) {
+			State nextState = MyAshtonTablutRules.movePawn(node.getState(), a);
+			Node n = new Node(nextState.clone(), Double.MAX_VALUE, a);
+
+			NodeUtil.getIstance().incrementExpanseNodes();
+
+			v = Math.max(v, minValue(n, depth - 1, alpha,beta));
+
+			if (v >= beta)
+				return v;
+
+			alpha = Math.max(alpha,v);
+
+			
 			if (depth == DEPTH - 1) {
 
 				rootChildren.add(n);
@@ -161,15 +188,14 @@ public class MinMax implements IA {
 		return v;
 	}
 
-	private double minValue(Node node, int depth)
+	private double minValue(Node node, int depth, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0) {
+		if (depth == 0 || !this.wd.isAlive()) {
 			Heuristic h = new RandomHeuristic();
 			return h.heuristic(node);
 		}
-
 
 		int[] buf;
 		for (int i = 0; i < node.getState().getBoard().length; i++) {
@@ -208,7 +234,7 @@ public class MinMax implements IA {
 				to = node.getState().getBox(orr[0], orr[1]);
 				try {
 					Action a = new Action(from, to, State.Turn.WHITE);
-					checkMove(node.getState(), a);
+					MyAshtonTablutRules.checkMove(node.getState(), a);
 
 					// state.setTurn(State.Turn.WHITE);
 
@@ -222,7 +248,7 @@ public class MinMax implements IA {
 				to = node.getState().getBox(ver[0], ver[1]);
 				try {
 					Action a = new Action(from, to, State.Turn.WHITE);
-					checkMove(node.getState(), a);
+					MyAshtonTablutRules.checkMove(node.getState(), a);
 					possibleMoves.add(a);
 
 					// state.setTurn(State.Turn.WHITE);
@@ -235,18 +261,25 @@ public class MinMax implements IA {
 
 		}
 		this.pawns.clear();
-		
+
 		node.setValue(Double.MAX_VALUE);
 		Double v = Double.MAX_VALUE;
 		for (Action a : possibleMoves) {
-			State nextState = movePawn( node.getState(), a);
-			
-			Node n = new Node(nextState, Double.MIN_VALUE, a);
-			
-			NodeUtil.incrementExpanseNodes();
-			
-			v = Math.min(v, maxValue(n, depth - 1));
+			State nextState = MyAshtonTablutRules.movePawn(node.getState(), a);
 
+			Node n = new Node(nextState, Double.MIN_VALUE, a);
+
+			NodeUtil.getIstance().incrementExpanseNodes();
+
+			v = Math.min(v, maxValue(n, depth - 1, alpha,beta));
+
+			
+			
+			if (v <= alpha)
+				return v;
+
+			alpha = Math.min(beta,v);
+			
 			if (depth == DEPTH - 1) {
 
 				rootChildren.add(n);
@@ -256,139 +289,6 @@ public class MinMax implements IA {
 		possibleMoves.clear();
 
 		return v;
-	}
-
-	private State movePawn(State state, Action a) {
-		State.Pawn pawn = state.getPawn(a.getRowFrom(), a.getColumnFrom());
-		State.Pawn[][] newBoard = state.getBoard();
-		// State newState = new State();
-		// libero il trono o una casella qualunque
-		if (a.getColumnFrom() == 4 && a.getRowFrom() == 4) {
-			newBoard[a.getRowFrom()][a.getColumnFrom()] = State.Pawn.THRONE;
-		} else {
-			newBoard[a.getRowFrom()][a.getColumnFrom()] = State.Pawn.EMPTY;
-		}
-
-		// metto nel nuovo tabellone la pedina mossa
-		newBoard[a.getRowTo()][a.getColumnTo()] = pawn;
-		// aggiorno il tabellone
-		state.setBoard(newBoard);
-		// cambio il turno
-		if (state.getTurn().equalsTurn(State.Turn.WHITE.toString())) {
-			state.setTurn(State.Turn.BLACK);
-		} else {
-			state.setTurn(State.Turn.WHITE);
-		}
-
-		return state;
-	}
-
-	private State checkMove(State state, Action a) throws BoardException, ActionException, StopException, PawnException,
-			DiagonalException, ClimbingException, ThroneException, OccupitedException {
-		// this.loggGame.fine(a.toString());
-		// controllo la mossa
-		if (a.getTo().length() != 2 || a.getFrom().length() != 2) {
-			// this.loggGame.warning("Formato mossa errato");
-			throw new ActionException(a);
-		}
-		int columnFrom = a.getColumnFrom();
-		int columnTo = a.getColumnTo();
-		int rowFrom = a.getRowFrom();
-		int rowTo = a.getRowTo();
-
-		// controllo se sono fuori dal tabellone
-		if (columnFrom > state.getBoard().length - 1 || rowFrom > state.getBoard().length - 1
-				|| rowTo > state.getBoard().length - 1 || columnTo > state.getBoard().length - 1 || columnFrom < 0
-				|| rowFrom < 0 || rowTo < 0 || columnTo < 0) {
-			// this.loggGame.warning("Mossa fuori tabellone");
-			throw new BoardException(a);
-		}
-
-		// controllo che non vada sul trono
-		if (state.getPawn(rowTo, columnTo).equalsPawn(State.Pawn.THRONE.toString())) {
-			// this.loggGame.warning("Mossa sul trono");
-			throw new ThroneException(a);
-		}
-
-		// controllo la casella di arrivo
-		if (!state.getPawn(rowTo, columnTo).equalsPawn(State.Pawn.EMPTY.toString())) {
-			// this.loggGame.warning("Mossa sopra una casella occupata");
-			throw new OccupitedException(a);
-		}
-
-		// controllo se cerco di stare fermo
-		if (rowFrom == rowTo && columnFrom == columnTo) {
-			// this.loggGame.warning("Nessuna mossa");
-			throw new StopException(a);
-		}
-
-		// controllo se sto muovendo una pedina giusta
-		if (state.getTurn().equalsTurn(State.Turn.WHITE.toString())) {
-			if (!state.getPawn(rowFrom, columnFrom).equalsPawn("W")
-					&& !state.getPawn(rowFrom, columnFrom).equalsPawn("K")) {
-				// this.loggGame.warning("Giocatore "+a.getTurn()+" cerca di
-				// muovere una pedina avversaria");
-				throw new PawnException(a);
-			}
-		}
-		if (state.getTurn().equalsTurn(State.Turn.BLACK.toString())) {
-			if (!state.getPawn(rowFrom, columnFrom).equalsPawn("B")) {
-				// this.loggGame.warning("Giocatore "+a.getTurn()+" cerca di
-				// muovere una pedina avversaria");
-				throw new PawnException(a);
-			}
-		}
-
-		// controllo di non muovere in diagonale
-		if (rowFrom != rowTo && columnFrom != columnTo) {
-			// this.loggGame.warning("Mossa in diagonale");
-			throw new DiagonalException(a);
-		}
-
-		// controllo di non scavalcare pedine
-		if (rowFrom == rowTo) {
-			if (columnFrom > columnTo) {
-				for (int i = columnTo; i < columnFrom; i++) {
-					if (!state.getPawn(rowFrom, i).equalsPawn(State.Pawn.EMPTY.toString())
-							&& !state.getPawn(rowFrom, i).equalsPawn(State.Pawn.THRONE.toString())) {
-						// this.loggGame.warning("Mossa che scavalca una
-						// pedina");
-						throw new ClimbingException(a);
-					}
-				}
-			} else {
-				for (int i = columnFrom + 1; i <= columnTo; i++) {
-					if (!state.getPawn(rowFrom, i).equalsPawn(State.Pawn.EMPTY.toString())
-							&& !state.getPawn(rowFrom, i).equalsPawn(State.Pawn.THRONE.toString())) {
-						// this.loggGame.warning("Mossa che scavalca una
-						// pedina");
-						throw new ClimbingException(a);
-					}
-				}
-			}
-		} else {
-			if (rowFrom > rowTo) {
-				for (int i = rowTo; i < rowFrom; i++) {
-					if (!state.getPawn(i, columnFrom).equalsPawn(State.Pawn.EMPTY.toString())
-							&& !state.getPawn(i, columnFrom).equalsPawn(State.Pawn.THRONE.toString())) {
-						// this.loggGame.warning("Mossa che scavalca una
-						// pedina");
-						throw new ClimbingException(a);
-					}
-				}
-			} else {
-				for (int i = rowFrom + 1; i <= rowTo; i++) {
-					if (!state.getPawn(i, columnFrom).equalsPawn(State.Pawn.EMPTY.toString())
-							&& !state.getPawn(i, columnFrom).equalsPawn(State.Pawn.THRONE.toString())) {
-						// this.loggGame.warning("Mossa che scavalca una
-						// pedina");
-						throw new ClimbingException(a);
-					}
-				}
-			}
-		}
-
-		return state;
 	}
 
 }

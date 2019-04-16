@@ -1,4 +1,4 @@
-package it.unibo.ai.didattica.competition.tablut.luca;
+package it.unibo.ai.didattica.competition.tablut.luca.client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +17,21 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
+import it.unibo.ai.didattica.competition.tablut.luca.algorithms.IA;
+import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMax;
+import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMaxAlphaBeta;
+import it.unibo.ai.didattica.competition.tablut.luca.algorithms.NodeUtil;
 
 public class LucaTablutClient extends TablutClient {
 
 	private int game;
 	private IA ia;
+	private int timeout;
 
-	public LucaTablutClient(String player, String name, int gameChosen) throws UnknownHostException, IOException {
+	public LucaTablutClient(String player, String name, int gameChosen, int timeout) throws UnknownHostException, IOException {
 		super(player, name);
 		this.game = gameChosen;
+		this.timeout = timeout;
 		this.ia = null;
 	}
 
@@ -50,7 +56,9 @@ public class LucaTablutClient extends TablutClient {
 		}
 		System.out.println("Selected client: " + args[0]);
 
-		LucaTablutClient client = new LucaTablutClient(role, name, gametype);
+		int timeout = 59;
+		
+		LucaTablutClient client = new LucaTablutClient(role, name, gametype, timeout);
 		client.run();
 	}
 
@@ -92,7 +100,7 @@ public class LucaTablutClient extends TablutClient {
 
 		System.out.println("You are player " + this.getPlayer().toString() + "!");
 
-		this.ia = new MinMax(rules);
+		this.ia = new MinMaxAlphaBeta(rules, this.timeout);
 
 		while (true) {
 			try {
@@ -111,7 +119,7 @@ public class LucaTablutClient extends TablutClient {
 			}
 
 			if (this.getPlayer().equals(Turn.WHITE)) {
-				// è il mio turno quando sono il bianco
+				// ï¿½ il mio turno quando sono il bianco
 				if (this.getCurrentState().getTurn().equals(StateTablut.Turn.WHITE)) {
 					Action a = null;
 					try {
@@ -122,11 +130,11 @@ public class LucaTablutClient extends TablutClient {
 					}
 
 					try {
-						NodeUtil.reset();
+						NodeUtil.getIstance().reset();;
 						
 						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.WHITE);
 						
-						NodeUtil.printExpanseNodes();
+						NodeUtil.getIstance().printExpanseNodes();
 						
 					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
 							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
@@ -144,7 +152,7 @@ public class LucaTablutClient extends TablutClient {
 					}
 
 				}
-				// è il turno dell'avversario
+				// ï¿½ il turno dell'avversario
 				else if (state.getTurn().equals(StateTablut.Turn.BLACK)) {
 					System.out.println("Waiting for your opponent move... ");
 				}
@@ -166,7 +174,7 @@ public class LucaTablutClient extends TablutClient {
 
 			} else {
 
-				// è il mio turno quando sono il nero
+				// ï¿½ il mio turno quando sono il nero
 				if (this.getCurrentState().getTurn().equals(StateTablut.Turn.BLACK)) {
 					Action a = null;
 
@@ -177,11 +185,11 @@ public class LucaTablutClient extends TablutClient {
 						e2.printStackTrace();
 					}
 					try {
-						NodeUtil.reset();
-						
+						NodeUtil.getIstance().reset();
+
 						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.BLACK);
 						
-						NodeUtil.printExpanseNodes();
+						NodeUtil.getIstance().printExpanseNodes();
 
 					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
 							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
