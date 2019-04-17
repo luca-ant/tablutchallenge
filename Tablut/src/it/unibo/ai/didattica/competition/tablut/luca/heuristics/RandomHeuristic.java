@@ -19,16 +19,18 @@ public class RandomHeuristic implements Heuristic {
 	@Override
 	public double heuristic(State state) {
 
-		int countB = countBlackPawns(state);
+//		int countB = countBlackPawns(state);
 
-		int countW = countWhitePawns(state);
+//		int countW = countWhitePawns(state);
 
-		if (countB > countW) {
-			return myRandom(0, 1);
-		} else {
-			return myRandom(-1, 0);
-		}
+//		if (countB > countW) {
+//			return myRandom(0, 1);
+//		} else {
+//			return myRandom(-1, 0);
+//		}
 
+		
+		return myRandom(-1, 1);
 	}
 
 	private int countWhitePawns(State state) {

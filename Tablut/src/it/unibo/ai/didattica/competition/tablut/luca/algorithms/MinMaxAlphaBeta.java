@@ -25,7 +25,7 @@ import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
 
 public class MinMaxAlphaBeta implements IA {
 
-	public final static int DEPTH = 5;
+	public final static int DEPTH = 3;
 
 	private MyGame rules;
 	private int timeout;
@@ -35,6 +35,9 @@ public class MinMaxAlphaBeta implements IA {
 
 	public MinMaxAlphaBeta(MyGame rules, int timeout) {
 		this.timeout = timeout;
+		this.timeout = 960;
+
+		
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
@@ -45,10 +48,10 @@ public class MinMaxAlphaBeta implements IA {
 	public Action getBestAction(State state, Turn yourColor)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
-		return this.minmaxAlg(state, DEPTH, yourColor);
+		return this.minmaxAlg(state, DEPTH, yourColor, this.timeout);
 	}
 
-	private Action minmaxAlg(State state, int depth, Turn yourColor)
+	private Action minmaxAlg(State state, int depth, Turn yourColor, int timeout)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
@@ -160,23 +163,23 @@ public class MinMaxAlphaBeta implements IA {
 		}
 		this.pawns.clear();
 
-		node.setValue(Double.NEGATIVE_INFINITY);
 		Double v = Double.NEGATIVE_INFINITY;
 
 		for (Action a : possibleMoves) {
-			State nextState = rules.movePawn(node.getState(), a);
+			State nextState = rules.movePawn(node.getState().clone(), a);
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			NodeUtil.getIstance().incrementExpandedNodes();
 
 			v = Math.max(v, minValue(n, depth - 1, alpha, beta));
 
+			n.setValue(v);
 			if (v >= beta)
 				return v;
 
 			alpha = Math.max(alpha, v);
 
-			if (depth == DEPTH - 1) {
+			if (depth == DEPTH) {
 
 				rootChildren.add(n);
 
@@ -261,10 +264,9 @@ public class MinMaxAlphaBeta implements IA {
 		}
 		this.pawns.clear();
 
-		node.setValue(Double.POSITIVE_INFINITY);
 		Double v = Double.POSITIVE_INFINITY;
 		for (Action a : possibleMoves) {
-			State nextState = rules.movePawn(node.getState(), a);
+			State nextState = rules.movePawn(node.getState().clone(), a);
 
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
@@ -272,13 +274,14 @@ public class MinMaxAlphaBeta implements IA {
 
 			v = Math.min(v, maxValue(n, depth - 1, alpha, beta));
 
+			n.setValue(v);
+
 			if (v <= alpha)
 				return v;
 
 			alpha = Math.min(beta, v);
 
-			if (depth == DEPTH - 1) {
-
+			if (depth == DEPTH) {
 				rootChildren.add(n);
 
 			}

@@ -45,10 +45,10 @@ public class MinMax implements IA {
 	public Action getBestAction(State state, Turn yourColor)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
-		return this.minmaxAlg(state, DEPTH, yourColor);
+		return this.minmaxAlg(state, DEPTH, yourColor, this.timeout);
 	}
 
-	private Action minmaxAlg(State state, int depth, Turn yourColor)
+	private Action minmaxAlg(State state, int depth, Turn yourColor, int timeout)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
