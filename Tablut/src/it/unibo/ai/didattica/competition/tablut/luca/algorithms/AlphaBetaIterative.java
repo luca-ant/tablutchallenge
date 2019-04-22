@@ -1,11 +1,14 @@
 package it.unibo.ai.didattica.competition.tablut.luca.algorithms;
 
+import java.awt.event.HierarchyEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
-import it.unibo.ai.didattica.competition.tablut.domain.Game;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ActionException;
@@ -18,40 +21,34 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
-import it.unibo.ai.didattica.competition.tablut.luca.domain.MyAshtonTablutRules;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGame;
+import it.unibo.ai.didattica.competition.tablut.luca.heuristics.BasicHeuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
 
-public class MinMax implements IA {
-
-	public final static int DEPTH = 5;
+public class AlphaBetaIterative implements IA {
+	public final static int MAX_DEPTH = 10;
 
 	private MyGame rules;
 	private int timeout;
 	private List<Node> rootChildren;
+
 	private List<int[]> pawns;
 	private Thread wd;
 	private Heuristic heuristic;
 
-
-	public MinMax(MyGame rules, int timeout) {
+	public AlphaBetaIterative(MyGame rules, int timeout) {
 		this.timeout = timeout;
+
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
-		this.heuristic	= new RandomHeuristic();
+		this.heuristic	= new BasicHeuristic();
 
 	}
 
 	@Override
 	public Action getBestAction(State state, Turn yourColor)
-			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
-			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
-		return this.minmaxAlg(state, DEPTH, yourColor, this.timeout);
-	}
-
-	private Action minmaxAlg(State state, int depth, Turn yourColor, int timeout)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
@@ -72,14 +69,38 @@ public class MinMax implements IA {
 
 		this.wd.start();
 
+		Action bestMove = null;
+		Action temp;
+		for (int d = 1; d <= MAX_DEPTH; ++d) {
+			System.out.println("DEPTH = " + d);
+			NodeUtil.getIstance().reset();
+			temp = this.minmaxAlg(state, d, d, yourColor);
+			System.out.println("Temp move found: " + temp);
+
+			if (!this.wd.isAlive()) {
+				break;
+			}
+
+			bestMove = temp;
+
+		}
+
+		return bestMove;
+
+	}
+
+	private Action minmaxAlg(State state, int depth, int maxDepth, Turn yourColor)
+			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
+			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
+
 		Node root = new Node(state);
 
 		NodeUtil.getIstance().incrementExpandedNodes();
 
 		if (yourColor.equals(State.Turn.BLACK))
-			root.setValue(maxValue(root, depth - 1));
+			root.setValue(maxValue(root, depth, maxDepth, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
 		else if (yourColor.equals(State.Turn.WHITE))
-			root.setValue(minValue(root, depth - 1));
+			root.setValue(minValue(root, depth, maxDepth, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
 
 		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
@@ -88,13 +109,12 @@ public class MinMax implements IA {
 
 	}
 
-	private double maxValue(Node node, int depth)
+	private double maxValue(Node node, int depth, int maxDepth, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || !this.wd.isAlive()) {
 			return this.heuristic.heuristic(node.getState());
-
 		}
 
 		int[] buf;
@@ -163,18 +183,23 @@ public class MinMax implements IA {
 		}
 		this.pawns.clear();
 
-		node.setValue(Double.MIN_VALUE);
-		Double v = Double.MIN_VALUE;
+		Double v = Double.NEGATIVE_INFINITY;
 
 		for (Action a : possibleMoves) {
-			State nextState = rules.movePawn(node.getState(), a);
-			Node n = new Node(nextState.clone(), Double.MAX_VALUE, a);
+			State nextState = rules.movePawn(node.getState().clone(), a);
+			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			NodeUtil.getIstance().incrementExpandedNodes();
 
-			v = Math.max(v, minValue(n, depth - 1));
+			v = Math.max(v, minValue(n, depth - 1, maxDepth, alpha, beta));
 
-			if (depth == DEPTH - 1) {
+			n.setValue(v);
+			if (v >= beta)
+				return v;
+
+			alpha = Math.max(alpha, v);
+
+			if (depth == maxDepth) {
 
 				rootChildren.add(n);
 
@@ -184,19 +209,19 @@ public class MinMax implements IA {
 		return v;
 	}
 
-	private double minValue(Node node, int depth)
+	private double minValue(Node node, int depth, int maxDepth, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || !this.wd.isAlive()) {
 			return this.heuristic.heuristic(node.getState());
-
 		}
 
 		int[] buf;
 		for (int i = 0; i < node.getState().getBoard().length; i++) {
 			for (int j = 0; j < node.getState().getBoard().length; j++) {
-				if (node.getState().getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString()) || node.getState().getPawn(i, j).equalsPawn(State.Pawn.KING.toString())  ) {
+				if (node.getState().getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString())
+						|| node.getState().getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
 					buf = new int[2];
 					buf[0] = i;
 					buf[1] = j;
@@ -258,19 +283,24 @@ public class MinMax implements IA {
 		}
 		this.pawns.clear();
 
-		node.setValue(Double.MAX_VALUE);
-		Double v = Double.MAX_VALUE;
+		Double v = Double.POSITIVE_INFINITY;
 		for (Action a : possibleMoves) {
-			State nextState = rules.movePawn(node.getState(), a);
+			State nextState = rules.movePawn(node.getState().clone(), a);
 
-			Node n = new Node(nextState, Double.MIN_VALUE, a);
+			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
 			NodeUtil.getIstance().incrementExpandedNodes();
 
-			v = Math.min(v, maxValue(n, depth - 1));
+			v = Math.min(v, maxValue(n, depth - 1, maxDepth, alpha, beta));
 
-			if (depth == DEPTH - 1) {
+			n.setValue(v);
 
+			if (v <= alpha)
+				return v;
+
+			alpha = Math.min(beta, v);
+
+			if (depth == maxDepth) {
 				rootChildren.add(n);
 
 			}

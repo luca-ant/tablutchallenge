@@ -20,6 +20,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyAshtonTablutRules;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGame;
+import it.unibo.ai.didattica.competition.tablut.luca.heuristics.BasicHeuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
 
@@ -32,15 +33,16 @@ public class MinMaxAlphaBeta implements IA {
 	private List<Node> rootChildren;
 	private List<int[]> pawns;
 	private Thread wd;
+	private Heuristic heuristic;
 
 	public MinMaxAlphaBeta(MyGame rules, int timeout) {
 		this.timeout = timeout;
-		this.timeout = 960;
 
 		
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
+		this.heuristic	= new RandomHeuristic();
 
 	}
 
@@ -48,10 +50,10 @@ public class MinMaxAlphaBeta implements IA {
 	public Action getBestAction(State state, Turn yourColor)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
-		return this.minmaxAlg(state, DEPTH, yourColor, this.timeout);
+		return this.minmaxAlg(state, DEPTH, yourColor);
 	}
 
-	private Action minmaxAlg(State state, int depth, Turn yourColor, int timeout)
+	private Action minmaxAlg(State state, int depth, Turn yourColor)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
@@ -93,8 +95,8 @@ public class MinMaxAlphaBeta implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || !this.wd.isAlive()) {
-			Heuristic h = new RandomHeuristic();
-			return h.heuristic(node.getState());
+			return this.heuristic.heuristic(node.getState());
+
 		}
 
 		int[] buf;
@@ -194,8 +196,8 @@ public class MinMaxAlphaBeta implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || !this.wd.isAlive()) {
-			Heuristic h = new RandomHeuristic();
-			return h.heuristic(node.getState());
+			return this.heuristic.heuristic(node.getState());
+
 		}
 
 		int[] buf;

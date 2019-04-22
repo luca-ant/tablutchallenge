@@ -17,6 +17,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
+import it.unibo.ai.didattica.competition.tablut.luca.algorithms.AlphaBetaIterative;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.IA;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMax;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMaxAlphaBeta;
@@ -34,7 +35,7 @@ public class LucaTablutClient extends TablutClient {
 		super(player, name);
 		this.game = gameChosen;
 		this.timeout = timeout;
-		this.ia = new MinMaxAlphaBeta(MyAshtonTablutRules.getInstance(), this.timeout);
+		this.ia = new AlphaBetaIterative(MyAshtonTablutRules.getInstance(), this.timeout);
 
 	}
 
@@ -59,7 +60,7 @@ public class LucaTablutClient extends TablutClient {
 		}
 		System.out.println("Selected client: " + args[0]);
 
-		int timeout = 50;
+		int timeout = 58;
 		
 		LucaTablutClient client = new LucaTablutClient(role, name, gametype, timeout);
 		client.run();
