@@ -18,6 +18,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.AlphaBetaIterative;
+import it.unibo.ai.didattica.competition.tablut.luca.algorithms.AlphaBetaIterativeWithMemory;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.IA;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMax;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMaxAlphaBeta;
@@ -35,14 +36,14 @@ public class LucaTablutClient extends TablutClient {
 		super(player, name);
 		this.game = gameChosen;
 		this.timeout = timeout;
-		this.ia = new AlphaBetaIterative(MyAshtonTablutRules.getInstance(), this.timeout);
+		this.ia = new AlphaBetaIterativeWithMemory(MyAshtonTablutRules.getInstance(), this.timeout);
 
 	}
 
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 		int gametype = 4;
 		String role = "";
-		String name = "luca";
+		String name = "TEAM-PALLO";
 		// TODO: change the behavior?
 		if (args.length < 1) {
 			System.out.println("You must specify which player you are (WHITE or BLACK)");

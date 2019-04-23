@@ -41,7 +41,7 @@
 	</target>
 
 	<target name="lucablack">
-		<java classname="it.unibo.ai.didattica.competition.tablut.luca.client.LucaBlackTab    lutClient" fork="true">
+		<java classname="it.unibo.ai.didattica.competition.tablut.luca.client.LucaBlackTablutClient" fork="true">
 			<classpath>
 				<pathelement location="lib/gson-2.2.2.jar" />
 				<pathelement location="build" />
@@ -49,6 +49,13 @@
 		</java>
 	</target>
 
-
+	<target name="lucawhite">
+		<java classname="it.unibo.ai.didattica.competition.tablut.luca.client.LucaWhiteTablutClient" fork="true">
+			<classpath>
+				<pathelement location="lib/gson-2.2.2.jar" />
+				<pathelement location="build" />
+			</classpath>
+		</java>
+	</target>
 
 </project>
