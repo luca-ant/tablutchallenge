@@ -90,6 +90,8 @@ public class GuiCli {
 		this.citadels.add("e9");
 		this.citadels.add("f9");
 		this.citadels.add("e8");
+		
+		
 		this.stars = new ArrayList<String>();
 		this.stars.add("a2");
 		this.stars.add("a3");
