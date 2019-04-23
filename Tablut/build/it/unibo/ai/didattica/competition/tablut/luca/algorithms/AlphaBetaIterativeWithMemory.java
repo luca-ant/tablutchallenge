@@ -203,8 +203,8 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 			n.setValue(v);
 
-			if (!this.transpositionTable.containsKey(node.getState().hashCode())) {
-				this.transpositionTable.put(node.getState().hashCode(), node);
+			if (!this.transpositionTable.containsKey(n.getState().hashCode())) {
+				this.transpositionTable.put(n.getState().hashCode(), n);
 			}
 
 			if (v >= beta)
@@ -314,8 +314,8 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 			n.setValue(v);
 
-			if (!this.transpositionTable.containsKey(node.getState().hashCode())) {
-				this.transpositionTable.put(node.getState().hashCode(), node);
+			if (!this.transpositionTable.containsKey(n.getState().hashCode())) {
+				this.transpositionTable.put(n.getState().hashCode(), n);
 			}
 
 			

@@ -63,9 +63,9 @@ public class BasicHeuristic implements Heuristic {
 		double result = 0;
 
 		if (this.countB > this.countW) {
-			result += 1;
+			result += 0.1;
 		} else {
-			result -= 1;
+			result -= 0.1;
 
 		}
 
