@@ -108,30 +108,30 @@ public class GuiCli {
 			for (int j = 0; j < aState.getBoard().length; j++) {
 				if (aState.getPawn(i, j).equalsPawn("B")) {
 					// pedina nera
-					System.out.print(this.BLACK_BACKGROUND + "N");
+					System.out.print(GuiCli.BLACK_BACKGROUND + "   ");
 				} else if (aState.getPawn(i, j).equalsPawn("W")) {
 					// pedina bianca
-					System.out.print(this.WHITE_BACKGROUND+"B");
+					System.out.print(GuiCli.WHITE_BACKGROUND+"   ");
 
 				} else if (aState.getPawn(i, j).equalsPawn("K")) {
 					// re
-					System.out.print("R");
+					System.out.print(GuiCli.WHITE_BACKGROUND_BRIGHT+" + ");
 				}
 				else if 	(aState.getPawn(i, j).equalsPawn(State.Pawn.EMPTY.toString())) {
 					// casella vuota
-					System.out.print("0");
+					System.out.print(GuiCli.YELLOW_BACKGROUND+"  ");
 					
 				} else {
 
 					if (this.citadels.contains(aState.getBox(i, j))) {
 						// accampamento
-						System.out.print("A");
+						System.out.print(GuiCli.BLUE_BACKGROUND+" A ");
 
 					}
 					if (aState.getPawn(i, j).equalsPawn("T")) {
 
 						// trono
-						System.out.print("T");
+						System.out.print(GuiCli.RED_BACKGROUND+" T ");
 
 					}
 
