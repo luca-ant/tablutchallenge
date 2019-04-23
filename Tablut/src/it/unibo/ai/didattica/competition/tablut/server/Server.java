@@ -13,6 +13,7 @@ import java.util.logging.*;
 
 import it.unibo.ai.didattica.competition.tablut.domain.*;
 import it.unibo.ai.didattica.competition.tablut.gui.Gui;
+import it.unibo.ai.didattica.competition.tablut.gui.GuiCli;
 import it.unibo.ai.didattica.competition.tablut.util.StreamUtils;
 
 import com.google.gson.Gson;
@@ -76,7 +77,10 @@ public class Server implements Runnable {
 
 	private Game game;
 	private Gson gson;
-	private Gui theGui;
+//	private Gui theGui;
+	private GuiCli theGui;
+
+	
 	/**
 	 * Integer that represents the game type
 	 */
@@ -93,7 +97,9 @@ public class Server implements Runnable {
 	}
 
 	public void initializeGUI(State state) {
-		this.theGui = new Gui(this.gameC);
+//		this.theGui = new Gui(this.gameC);
+//		this.theGui.update(state);
+		this.theGui = new GuiCli();
 		this.theGui.update(state);
 	}
 
