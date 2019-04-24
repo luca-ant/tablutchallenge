@@ -1,5 +1,6 @@
 package it.unibo.ai.didattica.competition.tablut.gui;
 
+
 import javax.swing.JFrame;
 
 import it.unibo.ai.didattica.competition.tablut.domain.State;

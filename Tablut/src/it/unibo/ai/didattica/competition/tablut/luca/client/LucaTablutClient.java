@@ -61,7 +61,7 @@ public class LucaTablutClient extends TablutClient {
 		}
 		System.out.println("Selected client: " + args[0]);
 
-		int timeout = 58;
+		int timeout = 55;
 		
 		LucaTablutClient client = new LucaTablutClient(role, name, gametype, timeout);
 		client.run();

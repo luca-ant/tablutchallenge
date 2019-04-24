@@ -12,8 +12,11 @@ public class BasicHeuristic implements Heuristic {
 	private int countW;
 	private int blackNearKing;
 	private int kingFreeWay;
+	private boolean kingInThrone;
+
 	private List<String> citadels;
 	private List<String> stars;
+	private String throne;
 
 	public BasicHeuristic() {
 		this.citadels = new ArrayList<String>();
@@ -51,6 +54,8 @@ public class BasicHeuristic implements Heuristic {
 		this.stars.add("i3");
 		this.stars.add("i7");
 		this.stars.add("i8");
+
+		this.throne = "e5";
 	}
 
 	// BLACK -> MAX
@@ -62,21 +67,33 @@ public class BasicHeuristic implements Heuristic {
 
 		double result = 0;
 
-		if (this.countB > this.countW) {
-			result += 0.1;
+		if (this.countB < 8) {
+			result -= 1;
 		} else {
-			result -= 0.1;
-
+			result += 1;
 		}
 
 		if (this.blackNearKing > 0) {
 			result += 0.75;
 		}
+		else {
+			result -= 0.75;
+		}
 		if (this.blackNearKing == 0 && this.kingFreeWay >= 2) {
-			result -= 1;
+			result -= 10;
 
 		}
-
+		else {
+			result += 2;
+		}
+		
+		if (kingInThrone) {
+			result -= 0.5;
+		}
+		else {
+			result += 0.5;
+		}
+		System.out.println("Euristica per lo stato\n" + state + "\n = " + result);
 		return result;
 	}
 
@@ -85,6 +102,7 @@ public class BasicHeuristic implements Heuristic {
 		this.countW = 0;
 		this.blackNearKing = 0;
 		this.kingFreeWay = 0;
+		this.kingInThrone = false;
 
 	}
 
@@ -198,10 +216,12 @@ public class BasicHeuristic implements Heuristic {
 					}
 
 				}
-				
-				
-				
-				
+
+				// controllo se il re è sul trono
+				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
+						&& state.getBox(i, j).equals(this.throne)) {
+					this.kingInThrone = true;
+				}
 
 			}
 		}

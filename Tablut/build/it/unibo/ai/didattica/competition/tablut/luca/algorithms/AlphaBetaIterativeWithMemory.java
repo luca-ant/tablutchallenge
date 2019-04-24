@@ -41,6 +41,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 	public AlphaBetaIterativeWithMemory(MyGame rules, int timeout) {
 		this.timeout = timeout;
+
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
@@ -61,6 +62,9 @@ public class AlphaBetaIterativeWithMemory implements IA {
 				try {
 					int counter = 0;
 					while (counter < timeout) {
+						int left = timeout - counter;
+						System.out.println("TIME LEFT = " + left +" sec");
+
 						Thread.sleep(1000);
 						counter++;
 					}
@@ -78,11 +82,11 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			System.out.println("DEPTH = " + d);
 			NodeUtil.getIstance().reset();
 			temp = this.minmaxAlg(state, d, d, yourColor);
-			System.out.println("Temp move found: " + temp);
 
 			if (!this.wd.isAlive()) {
 				break;
 			}
+			System.out.println("Temp move found: " + temp);
 
 			bestMove = temp;
 
@@ -122,6 +126,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 
 		if (this.transpositionTable.containsKey(node.getState().hashCode())) {
+			System.out.println("Get node from transposition table");
 			return this.transpositionTable.get(node.getState().hashCode()).getValue();
 		}
 		
@@ -204,6 +209,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			n.setValue(v);
 
 			if (!this.transpositionTable.containsKey(n.getState().hashCode())) {
+
 				this.transpositionTable.put(n.getState().hashCode(), n);
 			}
 
@@ -232,6 +238,8 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 
 		if (this.transpositionTable.containsKey(node.getState().hashCode())) {
+			System.out.println("Get node from transposition table");
+
 			return this.transpositionTable.get(node.getState().hashCode()).getValue();
 		}
 		
@@ -315,6 +323,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			n.setValue(v);
 
 			if (!this.transpositionTable.containsKey(n.getState().hashCode())) {
+
 				this.transpositionTable.put(n.getState().hashCode(), n);
 			}
 
