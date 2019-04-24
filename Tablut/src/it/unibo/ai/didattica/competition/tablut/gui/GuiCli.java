@@ -113,6 +113,12 @@ public class GuiCli {
 	}
 
 	public void update(State aState) {
+		this.printGuiCli(aState);
+
+	}
+
+	
+	public void printGuiCli(State aState) {
 		System.out.println(this.RESET + "    A  B  C  D  E  F  G  H  I ");
 
 		for (int i = 0; i < aState.getBoard().length; i++) {
@@ -159,7 +165,5 @@ public class GuiCli {
 			System.out.println(this.RESET);
 
 		}
-
 	}
-
 }
