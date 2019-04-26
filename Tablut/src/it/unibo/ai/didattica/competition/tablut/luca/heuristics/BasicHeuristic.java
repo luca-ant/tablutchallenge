@@ -104,27 +104,27 @@ public class BasicHeuristic implements Heuristic {
 
 					if (i > 0 && (state.getPawn(i - 1, j).equalsPawn(State.Pawn.BLACK.toString())
 							|| this.citadels.contains(state.getBox(i - 1, j))
-							|| state.getBox(i - 1, j) == this.throne)) {
+							|| state.getBox(i - 1, j).equals(this.throne))) {
 						this.blackNearKing++;
 					}
 
 					if (i < state.getBoard().length - 1
 							&& (state.getPawn(i + 1, j).equalsPawn(State.Pawn.BLACK.toString())
 									|| this.citadels.contains(state.getBox(i + 1, j))
-									|| state.getBox(i + 1, j) == this.throne)) {
+									|| state.getBox(i + 1, j).equals(this.throne))) {
 						this.blackNearKing++;
 					}
 
 					if (j > 0 && (state.getPawn(i, j - 1).equalsPawn(State.Pawn.BLACK.toString())
 							|| this.citadels.contains(state.getBox(i, j - 1))
-							|| state.getBox(i, j - 1) == this.throne)) {
+							|| state.getBox(i, j - 1).contentEquals(this.throne))) {
 						this.blackNearKing++;
 					}
 
 					if (j < state.getBoard().length - 1
 							&& (state.getPawn(i, j + 1).equalsPawn(State.Pawn.BLACK.toString())
 									| this.citadels.contains(state.getBox(i, j + 1))
-									|| state.getBox(i, j + 1) == this.throne)) {
+									|| state.getBox(i, j + 1).contentEquals(this.throne))) {
 						this.blackNearKing++;
 					}
 
