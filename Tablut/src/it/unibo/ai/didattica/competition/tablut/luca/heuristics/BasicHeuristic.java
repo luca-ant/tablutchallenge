@@ -44,6 +44,14 @@ public class BasicHeuristic implements Heuristic {
 	// WHITE -> MIN
 	@Override
 	public double heuristic(State state) {
+		
+		if(state.getTurn().equalsTurn("WW")) {
+			return Double.NEGATIVE_INFINITY;
+		}
+		if(state.getTurn().equalsTurn("BW")) {
+			return Double.POSITIVE_INFINITY;
+		}
+		
 		this.resetValues();
 		this.extractValues(state);
 
@@ -60,6 +68,9 @@ public class BasicHeuristic implements Heuristic {
 		
 		result -= WEIGHT_KING_ON_STAR * this.kingOnStar;
 
+		
+		
+		
 		return result;
 	}
 
