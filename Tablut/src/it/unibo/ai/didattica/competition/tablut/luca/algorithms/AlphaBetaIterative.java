@@ -35,6 +35,7 @@ public class AlphaBetaIterative implements IA {
 	private List<int[]> pawns;
 
 	private long endTime;
+	private Action bestMove;
 
 	private Heuristic heuristic;
 
@@ -45,6 +46,7 @@ public class AlphaBetaIterative implements IA {
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
 		this.heuristic = new BasicHeuristic();
+		this.bestMove = null;
 
 	}
 
@@ -55,7 +57,6 @@ public class AlphaBetaIterative implements IA {
 
 		this.endTime = System.currentTimeMillis() + this.timeout * 1000;
 
-		Action bestMove = null;
 		Action temp;
 		for (int d = 1; d <= MAX_DEPTH; ++d) {
 			System.out.println("DEPTH = " + d);
@@ -67,11 +68,11 @@ public class AlphaBetaIterative implements IA {
 			}
 			System.out.println("Temp move found: " + temp);
 
-			bestMove = temp;
+			this.bestMove = temp;
 
 		}
 
-		return bestMove;
+		return this.bestMove;
 
 	}
 
@@ -88,12 +89,19 @@ public class AlphaBetaIterative implements IA {
 		else if (yourColor.equals(State.Turn.WHITE))
 			root.setValue(minValue(root, depth, maxDepth, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
 
-		System.out.println("rootChildren: " + rootChildren);
+		if (System.currentTimeMillis() > this.endTime && this.rootChildren.isEmpty()) {
+			return this.bestMove;
+		}
+
 		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
 		rootChildren.clear();
-		return bestNextNode.getMove();
 
+		if (bestNextNode != null) {
+			return bestNextNode.getMove();
+		} else {
+			return this.bestMove;
+		}
 	}
 
 	private double maxValue(Node node, int depth, int maxDepth, double alpha, double beta)
