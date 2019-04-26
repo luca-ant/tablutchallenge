@@ -44,14 +44,14 @@ public class BasicHeuristic implements Heuristic {
 	// WHITE -> MIN
 	@Override
 	public double heuristic(State state) {
-		
-		if(state.getTurn().equalsTurn("WW")) {
+
+		if (state.getTurn().equalsTurn("WW")) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		if(state.getTurn().equalsTurn("BW")) {
+		if (state.getTurn().equalsTurn("BW")) {
 			return Double.POSITIVE_INFINITY;
 		}
-		
+
 		this.resetValues();
 		this.extractValues(state);
 
@@ -65,12 +65,9 @@ public class BasicHeuristic implements Heuristic {
 		result -= WEIGHT_FREE_WAY_KING * this.kingFreeWay;
 
 		result -= WEIGHT_KING_IN_THRONE * this.kingInThrone;
-		
+
 		result -= WEIGHT_KING_ON_STAR * this.kingOnStar;
 
-		
-		
-		
 		return result;
 	}
 
@@ -102,24 +99,32 @@ public class BasicHeuristic implements Heuristic {
 
 				}
 
-				// controllo se il re ha pedine nere intorno
+				// controllo se il re ha pedine nere intorno o accampamenti o il trono
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
 
-					if (i > 0 && state.getPawn(i - 1, j).equalsPawn(State.Pawn.BLACK.toString())) {
+					if (i > 0 && (state.getPawn(i - 1, j).equalsPawn(State.Pawn.BLACK.toString())
+							|| this.citadels.contains(state.getBox(i - 1, j))
+							|| state.getBox(i - 1, j) == this.throne)) {
 						this.blackNearKing++;
 					}
 
 					if (i < state.getBoard().length - 1
-							&& state.getPawn(i + 1, j).equalsPawn(State.Pawn.BLACK.toString())) {
+							&& (state.getPawn(i + 1, j).equalsPawn(State.Pawn.BLACK.toString())
+									|| this.citadels.contains(state.getBox(i + 1, j))
+									|| state.getBox(i + 1, j) == this.throne)) {
 						this.blackNearKing++;
 					}
 
-					if (j > 0 && state.getPawn(i, j - 1).equalsPawn(State.Pawn.BLACK.toString())) {
+					if (j > 0 && (state.getPawn(i, j - 1).equalsPawn(State.Pawn.BLACK.toString())
+							|| this.citadels.contains(state.getBox(i, j - 1))
+							|| state.getBox(i, j - 1) == this.throne)) {
 						this.blackNearKing++;
 					}
 
 					if (j < state.getBoard().length - 1
-							&& state.getPawn(i, j + 1).equalsPawn(State.Pawn.BLACK.toString())) {
+							&& (state.getPawn(i, j + 1).equalsPawn(State.Pawn.BLACK.toString())
+									| this.citadels.contains(state.getBox(i, j + 1))
+									|| state.getBox(i, j + 1) == this.throne)) {
 						this.blackNearKing++;
 					}
 
@@ -200,7 +205,7 @@ public class BasicHeuristic implements Heuristic {
 						&& state.getBox(i, j).equals(this.throne)) {
 					this.kingInThrone = 1;
 				}
-				
+
 				// controllo se il re è su una stella
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
 						&& this.stars.contains(state.getBox(i, j))) {
