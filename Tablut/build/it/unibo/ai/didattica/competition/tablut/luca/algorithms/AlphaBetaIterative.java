@@ -34,7 +34,9 @@ public class AlphaBetaIterative implements IA {
 	private List<Node> rootChildren;
 
 	private List<int[]> pawns;
-	private Thread wd;
+
+	private long endTime;
+	
 	private Heuristic heuristic;
 
 	public AlphaBetaIterative(MyGame rules, int timeout) {
@@ -52,22 +54,8 @@ public class AlphaBetaIterative implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		this.wd = new Thread() {
-			@Override
-			public void run() {
-				try {
-					int counter = 0;
-					while (counter < timeout) {
-						Thread.sleep(1000);
-						counter++;
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		};
 
-		this.wd.start();
+this.endTime = System.currentTimeMillis()+this.timeout*1000;
 
 		Action bestMove = null;
 		Action temp;
@@ -77,7 +65,7 @@ public class AlphaBetaIterative implements IA {
 			temp = this.minmaxAlg(state, d, d, yourColor);
 			System.out.println("Temp move found: " + temp);
 
-			if (!this.wd.isAlive()) {
+			if (System.currentTimeMillis()>this.endTime) {
 				break;
 			}
 
@@ -113,7 +101,7 @@ public class AlphaBetaIterative implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || !this.wd.isAlive()) {
+		if (depth == 0 || System.currentTimeMillis()>this.endTime) {
 			return this.heuristic.heuristic(node.getState());
 		}
 
@@ -213,7 +201,7 @@ public class AlphaBetaIterative implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || !this.wd.isAlive()) {
+		if (depth == 0 || System.currentTimeMillis()>this.endTime) {
 			return this.heuristic.heuristic(node.getState());
 		}
 
