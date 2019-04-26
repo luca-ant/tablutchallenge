@@ -2,6 +2,7 @@ package it.unibo.ai.didattica.competition.tablut.luca.heuristics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
@@ -14,11 +15,14 @@ public class BasicHeuristic implements Heuristic {
 	private int kingFreeWay;
 	private boolean kingInThrone;
 
+	private Random r;
 	private List<String> citadels;
 	private List<String> stars;
 	private String throne;
 
 	public BasicHeuristic() {
+		this.r = new Random(System.currentTimeMillis());
+		
 		this.citadels = new ArrayList<String>();
 		this.citadels.add("a4");
 		this.citadels.add("a5");
@@ -65,7 +69,11 @@ public class BasicHeuristic implements Heuristic {
 		this.resetValues();
 		this.extractValues(state);
 
-		double result = 0;
+		
+		double pesoDiffPedine = 0.5;
+		
+		
+		double result = myRandom(-1,1);
 
 		if (this.countB < 8) {
 			result -= 1;
@@ -73,27 +81,28 @@ public class BasicHeuristic implements Heuristic {
 			result += 1;
 		}
 
-		if (this.blackNearKing > 0) {
-			result += 0.75;
-		}
-		else {
-			result -= 0.75;
-		}
-		if (this.blackNearKing == 0 && this.kingFreeWay >= 2) {
-			result -= 10;
-
-		}
-		else {
-			result += 2;
-		}
+		result += pesoDiffPedine * (countB - countW);
 		
-		if (kingInThrone) {
-			result -= 0.5;
-		}
-		else {
-			result += 0.5;
-		}
-		System.out.println("Euristica per lo stato\n" + state + "\n = " + result);
+//		if (this.blackNearKing > 0) {
+//			result += 0.75;
+//		}
+//		else {
+//			result -= 0.75;
+//		}
+//		if (this.blackNearKing == 0 && this.kingFreeWay >= 2) {
+//			result -= 10;
+//
+//		}
+//		else {
+//			result += 2;
+//		}
+//		
+//		if (kingInThrone) {
+//			result -= 0.5;
+//		}
+//		else {
+//			result += 0.5;
+//		}
 		return result;
 	}
 
@@ -226,6 +235,13 @@ public class BasicHeuristic implements Heuristic {
 			}
 		}
 
+	}
+	
+	private double myRandom(double start, double end) {
+
+		double random = this.r.nextDouble();
+		double result = start + (random * (end - start));
+		return result;
 	}
 
 }

@@ -36,7 +36,8 @@ public class AlphaBetaIterativeWithMemory implements IA {
 	private List<Node> rootChildren;
 	private Map<Integer, Node> transpositionTable;
 	private List<int[]> pawns;
-	private Thread wd;
+	private long endTime;
+
 	private Heuristic heuristic;
 
 	public AlphaBetaIterativeWithMemory(MyGame rules, int timeout) {
@@ -56,25 +57,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		this.wd = new Thread() {
-			@Override
-			public void run() {
-				try {
-					int counter = 0;
-					while (counter < timeout) {
-						int left = timeout - counter;
-						System.out.println("TIME LEFT = " + left +" sec");
-
-						Thread.sleep(1000);
-						counter++;
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-
-		this.wd.start();
+		this.endTime = System.currentTimeMillis() + this.timeout * 1000;
 
 		Action bestMove = null;
 		Action temp;
@@ -83,7 +66,8 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			NodeUtil.getIstance().reset();
 			temp = this.minmaxAlg(state, d, d, yourColor);
 
-			if (!this.wd.isAlive()) {
+			if (System.currentTimeMillis() > this.endTime) {
+
 				break;
 			}
 			System.out.println("Temp move found: " + temp);
@@ -120,16 +104,15 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || !this.wd.isAlive()) {
+		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
 			return this.heuristic.heuristic(node.getState());
 		}
-
 
 		if (this.transpositionTable.containsKey(node.getState().hashCode())) {
 			System.out.println("Get node from transposition table");
 			return this.transpositionTable.get(node.getState().hashCode()).getValue();
 		}
-		
+
 		int[] buf;
 		for (int i = 0; i < node.getState().getBoard().length; i++) {
 			for (int j = 0; j < node.getState().getBoard().length; j++) {
@@ -232,18 +215,16 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || !this.wd.isAlive()) {
+		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
 			return this.heuristic.heuristic(node.getState());
 		}
-
 
 		if (this.transpositionTable.containsKey(node.getState().hashCode())) {
 			System.out.println("Get node from transposition table");
 
 			return this.transpositionTable.get(node.getState().hashCode()).getValue();
 		}
-		
-		
+
 		int[] buf;
 		for (int i = 0; i < node.getState().getBoard().length; i++) {
 			for (int j = 0; j < node.getState().getBoard().length; j++) {
@@ -327,7 +308,6 @@ public class AlphaBetaIterativeWithMemory implements IA {
 				this.transpositionTable.put(n.getState().hashCode(), n);
 			}
 
-			
 			if (v <= alpha)
 				return v;
 

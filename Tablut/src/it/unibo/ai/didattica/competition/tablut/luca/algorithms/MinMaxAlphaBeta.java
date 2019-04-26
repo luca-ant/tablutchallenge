@@ -32,17 +32,18 @@ public class MinMaxAlphaBeta implements IA {
 	private int timeout;
 	private List<Node> rootChildren;
 	private List<int[]> pawns;
-	private Thread wd;
+
+	private long endTime;
+
 	private Heuristic heuristic;
 
 	public MinMaxAlphaBeta(MyGame rules, int timeout) {
 		this.timeout = timeout;
 
-		
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
-		this.heuristic	= new RandomHeuristic();
+		this.heuristic = new RandomHeuristic();
 
 	}
 
@@ -57,22 +58,7 @@ public class MinMaxAlphaBeta implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		this.wd = new Thread() {
-			@Override
-			public void run() {
-				try {
-					int counter = 0;
-					while (counter < timeout) {
-						Thread.sleep(1000);
-						counter++;
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-
-		this.wd.start();
+		this.endTime = System.currentTimeMillis() + this.timeout * 1000;
 
 		Node root = new Node(state);
 
@@ -94,7 +80,7 @@ public class MinMaxAlphaBeta implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || !this.wd.isAlive()) {
+		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
 			return this.heuristic.heuristic(node.getState());
 
 		}
@@ -195,7 +181,7 @@ public class MinMaxAlphaBeta implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || !this.wd.isAlive()) {
+		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
 			return this.heuristic.heuristic(node.getState());
 
 		}

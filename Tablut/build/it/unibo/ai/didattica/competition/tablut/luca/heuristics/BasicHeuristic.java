@@ -2,6 +2,7 @@ package it.unibo.ai.didattica.competition.tablut.luca.heuristics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
@@ -12,10 +13,16 @@ public class BasicHeuristic implements Heuristic {
 	private int countW;
 	private int blackNearKing;
 	private int kingFreeWay;
+	private boolean kingInThrone;
+
+	private Random r;
 	private List<String> citadels;
 	private List<String> stars;
+	private String throne;
 
 	public BasicHeuristic() {
+		this.r = new Random(System.currentTimeMillis());
+		
 		this.citadels = new ArrayList<String>();
 		this.citadels.add("a4");
 		this.citadels.add("a5");
@@ -51,6 +58,8 @@ public class BasicHeuristic implements Heuristic {
 		this.stars.add("i3");
 		this.stars.add("i7");
 		this.stars.add("i8");
+
+		this.throne = "e5";
 	}
 
 	// BLACK -> MAX
@@ -60,23 +69,40 @@ public class BasicHeuristic implements Heuristic {
 		this.resetValues();
 		this.extractValues(state);
 
-		double result = 0;
+		
+		double pesoDiffPedine = 0.5;
+		
+		
+		double result = myRandom(-1,1);
 
-		if (this.countB > this.countW) {
-			result += 0.1;
-		} else {
-			result -= 0.1;
-
-		}
-
-		if (this.blackNearKing > 0) {
-			result += 0.75;
-		}
-		if (this.blackNearKing == 0 && this.kingFreeWay >= 2) {
+		if (this.countB < 8) {
 			result -= 1;
-
+		} else {
+			result += 1;
 		}
 
+		result += pesoDiffPedine * (countB - countW);
+		
+//		if (this.blackNearKing > 0) {
+//			result += 0.75;
+//		}
+//		else {
+//			result -= 0.75;
+//		}
+//		if (this.blackNearKing == 0 && this.kingFreeWay >= 2) {
+//			result -= 10;
+//
+//		}
+//		else {
+//			result += 2;
+//		}
+//		
+//		if (kingInThrone) {
+//			result -= 0.5;
+//		}
+//		else {
+//			result += 0.5;
+//		}
 		return result;
 	}
 
@@ -85,6 +111,7 @@ public class BasicHeuristic implements Heuristic {
 		this.countW = 0;
 		this.blackNearKing = 0;
 		this.kingFreeWay = 0;
+		this.kingInThrone = false;
 
 	}
 
@@ -198,14 +225,23 @@ public class BasicHeuristic implements Heuristic {
 					}
 
 				}
-				
-				
-				
-				
+
+				// controllo se il re è sul trono
+				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
+						&& state.getBox(i, j).equals(this.throne)) {
+					this.kingInThrone = true;
+				}
 
 			}
 		}
 
+	}
+	
+	private double myRandom(double start, double end) {
+
+		double random = this.r.nextDouble();
+		double result = start + (random * (end - start));
+		return result;
 	}
 
 }
