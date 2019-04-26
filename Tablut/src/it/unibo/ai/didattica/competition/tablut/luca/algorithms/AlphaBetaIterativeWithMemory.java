@@ -70,11 +70,11 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			}
 			System.out.println("Temp move found: " + temp);
 
-			bestMove = temp;
+			this.bestMove = temp;
 
 		}
 
-		return bestMove;
+		return this.bestMove;
 
 	}
 
