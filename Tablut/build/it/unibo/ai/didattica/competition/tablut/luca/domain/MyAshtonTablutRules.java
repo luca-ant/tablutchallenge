@@ -1,6 +1,6 @@
 package it.unibo.ai.didattica.competition.tablut.luca.domain;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
@@ -22,23 +22,8 @@ public class MyAshtonTablutRules implements MyGame {
 	private List<String> citadels;
 
 	private MyAshtonTablutRules() {
-		this.citadels = new ArrayList<String>();
-		this.citadels.add("a4");
-		this.citadels.add("a5");
-		this.citadels.add("a6");
-		this.citadels.add("b5");
-		this.citadels.add("d1");
-		this.citadels.add("e1");
-		this.citadels.add("f1");
-		this.citadels.add("e2");
-		this.citadels.add("i4");
-		this.citadels.add("i5");
-		this.citadels.add("i6");
-		this.citadels.add("h5");
-		this.citadels.add("d9");
-		this.citadels.add("e9");
-		this.citadels.add("f9");
-		this.citadels.add("e8");
+		this.citadels = Arrays.asList("a4", "a5", "a6", "b5", "d1", "e1", "f1", "e2", "i4", "i5", "i6", "h5", "d9",
+				"e9", "f9", "e8");
 	}
 
 	public static MyAshtonTablutRules getInstance() {

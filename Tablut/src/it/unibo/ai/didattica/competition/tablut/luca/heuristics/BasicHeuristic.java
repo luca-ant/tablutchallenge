@@ -71,6 +71,17 @@ public class BasicHeuristic implements Heuristic {
 		return result;
 	}
 
+	
+	public double heuristicWhite(State state) {
+
+		return this.heuristic(state);
+	}
+	
+	public double heuristicBlack(State state) {
+
+		return this.heuristic(state);
+	}
+	
 	private void resetValues() {
 		this.countB = 0;
 		this.countW = 0;

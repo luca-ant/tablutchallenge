@@ -36,7 +36,8 @@ public class LucaTablutClient extends TablutClient {
 		super(player, name);
 		this.game = gameChosen;
 		this.timeout = timeout;
-		this.ia = new AlphaBetaIterativeWithMemory(MyAshtonTablutRules.getInstance(), this.timeout);
+	//	this.ia = new AlphaBetaIterativeWithMemory(MyAshtonTablutRules.getInstance(), this.timeout);
+		this.ia = new AlphaBetaIterative(MyAshtonTablutRules.getInstance(), this.timeout);
 
 	}
 
@@ -61,7 +62,7 @@ public class LucaTablutClient extends TablutClient {
 		}
 		System.out.println("Selected client: " + args[0]);
 
-		int timeout = 55;
+		int timeout = 50;
 		
 		LucaTablutClient client = new LucaTablutClient(role, name, gametype, timeout);
 		client.run();

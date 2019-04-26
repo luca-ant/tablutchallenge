@@ -47,7 +47,6 @@ public class AlphaBetaIterativeWithMemory implements IA {
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
 		this.heuristic = new BasicHeuristic();
-
 		this.transpositionTable = new Hashtable<Integer, Node>();
 
 	}
@@ -67,7 +66,6 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			temp = this.minmaxAlg(state, d, d, yourColor);
 
 			if (System.currentTimeMillis() > this.endTime) {
-
 				break;
 			}
 			System.out.println("Temp move found: " + temp);
@@ -105,7 +103,9 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
+			// return this.heuristic.heuristicBlack(node.getState());
 			return this.heuristic.heuristic(node.getState());
+
 		}
 
 		if (this.transpositionTable.containsKey(node.getState().hashCode())) {
@@ -216,7 +216,9 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
+			// return this.heuristic.heuristicWhite(node.getState());
 			return this.heuristic.heuristic(node.getState());
+
 		}
 
 		if (this.transpositionTable.containsKey(node.getState().hashCode())) {

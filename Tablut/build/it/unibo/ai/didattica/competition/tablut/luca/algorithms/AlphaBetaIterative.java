@@ -32,11 +32,10 @@ public class AlphaBetaIterative implements IA {
 	private MyGame rules;
 	private int timeout;
 	private List<Node> rootChildren;
-
 	private List<int[]> pawns;
 
 	private long endTime;
-	
+
 	private Heuristic heuristic;
 
 	public AlphaBetaIterative(MyGame rules, int timeout) {
@@ -45,7 +44,7 @@ public class AlphaBetaIterative implements IA {
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
-		this.heuristic	= new BasicHeuristic();
+		this.heuristic = new BasicHeuristic();
 
 	}
 
@@ -54,8 +53,7 @@ public class AlphaBetaIterative implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-
-this.endTime = System.currentTimeMillis()+this.timeout*1000;
+		this.endTime = System.currentTimeMillis() + this.timeout * 1000;
 
 		Action bestMove = null;
 		Action temp;
@@ -63,11 +61,11 @@ this.endTime = System.currentTimeMillis()+this.timeout*1000;
 			System.out.println("DEPTH = " + d);
 			NodeUtil.getIstance().reset();
 			temp = this.minmaxAlg(state, d, d, yourColor);
-			System.out.println("Temp move found: " + temp);
 
-			if (System.currentTimeMillis()>this.endTime) {
+			if (System.currentTimeMillis() > this.endTime) {
 				break;
 			}
+			System.out.println("Temp move found: " + temp);
 
 			bestMove = temp;
 
@@ -90,6 +88,7 @@ this.endTime = System.currentTimeMillis()+this.timeout*1000;
 		else if (yourColor.equals(State.Turn.WHITE))
 			root.setValue(minValue(root, depth, maxDepth, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
 
+		System.out.println("rootChildren: " + rootChildren);
 		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
 		rootChildren.clear();
@@ -101,7 +100,7 @@ this.endTime = System.currentTimeMillis()+this.timeout*1000;
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || System.currentTimeMillis()>this.endTime) {
+		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
 			return this.heuristic.heuristic(node.getState());
 		}
 
@@ -201,7 +200,7 @@ this.endTime = System.currentTimeMillis()+this.timeout*1000;
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || System.currentTimeMillis()>this.endTime) {
+		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
 			return this.heuristic.heuristic(node.getState());
 		}
 

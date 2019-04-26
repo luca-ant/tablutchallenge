@@ -6,5 +6,7 @@ import it.unibo.ai.didattica.competition.tablut.luca.algorithms.Node;
 public interface Heuristic {
 	
 	public double heuristic(State state);
+	public double heuristicWhite(State state);
+	public double heuristicBlack(State state);
 
 }

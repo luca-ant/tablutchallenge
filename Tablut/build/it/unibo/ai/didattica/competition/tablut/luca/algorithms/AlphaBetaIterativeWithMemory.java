@@ -47,7 +47,6 @@ public class AlphaBetaIterativeWithMemory implements IA {
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
 		this.heuristic = new BasicHeuristic();
-
 		this.transpositionTable = new Hashtable<Integer, Node>();
 
 	}
@@ -67,7 +66,6 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			temp = this.minmaxAlg(state, d, d, yourColor);
 
 			if (System.currentTimeMillis() > this.endTime) {
-
 				break;
 			}
 			System.out.println("Temp move found: " + temp);
