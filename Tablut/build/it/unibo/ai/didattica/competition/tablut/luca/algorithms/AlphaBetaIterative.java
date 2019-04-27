@@ -73,7 +73,7 @@ public class AlphaBetaIterative implements IA {
 				this.bestMove = temp;
 				break;
 			}
-			
+
 			if (this.bw && yourColor.equals(State.Turn.BLACK)) {
 				this.bestMove = temp;
 				break;
@@ -135,9 +135,8 @@ public class AlphaBetaIterative implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-	//	return this.heuristic.heuristicBlack(node.getState()); // ok
-		return this.heuristic.heuristicWhite(node.getState()); 
-		//	return this.heuristic.heuristic(node.getState());
+			return this.heuristic.heuristicBlack(node.getState()); // ok
+			// return this.heuristic.heuristic(node.getState());
 
 		}
 
@@ -240,9 +239,8 @@ public class AlphaBetaIterative implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-		//	 return this.heuristic.heuristicWhite(node.getState()); // ok
-			 return this.heuristic.heuristicBlack(node.getState()); 
-		//	return this.heuristic.heuristic(node.getState());
+			return this.heuristic.heuristicWhite(node.getState()); // ok
+			// return this.heuristic.heuristic(node.getState());
 		}
 
 		int[] buf;

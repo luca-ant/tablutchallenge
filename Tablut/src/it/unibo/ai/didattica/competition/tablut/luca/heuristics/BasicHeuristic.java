@@ -10,7 +10,7 @@ import it.unibo.ai.didattica.competition.tablut.domain.State;
 
 public class BasicHeuristic implements Heuristic {
 
-	private final static double WEIGHT_DIFF_PAWNS = 1.5;
+	private final static double WEIGHT_DIFF_PAWNS = 2;
 	private final static double WEIGHT_BLACK_NEAR_KING = 7;
 	private final static double WEIGHT_FREE_WAY_KING = 5;
 	private final static double WEIGHT_KING_ON_THRONE = 2;
