@@ -58,6 +58,8 @@ public class AlphaBetaIterative implements IA {
 		this.endTime = System.currentTimeMillis() + this.timeout * 1000;
 
 		Action temp;
+		this.bestMove = null;
+
 		for (int d = 1; d <= MAX_DEPTH; ++d) {
 			System.out.println("DEPTH = " + d);
 			NodeUtil.getIstance().reset();
@@ -192,16 +194,18 @@ public class AlphaBetaIterative implements IA {
 			v = Math.max(v, minValue(n, depth - 1, maxDepth, alpha, beta));
 
 			n.setValue(v);
-			if (v >= beta)
-				return v;
-
-			alpha = Math.max(alpha, v);
 
 			if (depth == maxDepth) {
 
 				rootChildren.add(n);
 
 			}
+
+			if (v >= beta)
+				return v;
+
+			alpha = Math.max(alpha, v);
+
 		}
 
 		return v;
@@ -294,15 +298,17 @@ public class AlphaBetaIterative implements IA {
 
 			n.setValue(v);
 
-			if (v <= alpha)
-				return v;
-
-			alpha = Math.min(beta, v);
-
 			if (depth == maxDepth) {
 				rootChildren.add(n);
 
 			}
+
+			if (v <= alpha)
+
+				return v;
+
+			alpha = Math.min(beta, v);
+
 		}
 		possibleMoves.clear();
 
