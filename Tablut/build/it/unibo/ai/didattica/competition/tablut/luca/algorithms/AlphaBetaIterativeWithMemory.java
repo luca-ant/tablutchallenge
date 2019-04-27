@@ -23,7 +23,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
-import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGame;
+import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.BasicHeuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
@@ -31,7 +31,7 @@ import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
 public class AlphaBetaIterativeWithMemory implements IA {
 	public final static int MAX_DEPTH = 10;
 
-	private MyGame rules;
+	private MyRules rules;
 	private int timeout;
 	private List<Node> rootChildren;
 	private Map<Integer, Node> transpositionTable;
@@ -41,7 +41,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 	private Heuristic heuristic;
 
-	public AlphaBetaIterativeWithMemory(MyGame rules, int timeout) {
+	public AlphaBetaIterativeWithMemory(MyRules rules, int timeout) {
 		this.timeout = timeout;
 
 		this.rules = rules;

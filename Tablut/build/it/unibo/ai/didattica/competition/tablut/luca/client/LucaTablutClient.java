@@ -23,8 +23,10 @@ import it.unibo.ai.didattica.competition.tablut.luca.algorithms.IA;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMax;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMaxAlphaBeta;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.NodeUtil;
-import it.unibo.ai.didattica.competition.tablut.luca.domain.MyAshtonTablutRules;
-import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGame;
+import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameAshtonTablutRules;
+import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameModernTablutRules;
+import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameTablutRules;
+import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
 
 public class LucaTablutClient extends TablutClient {
 
@@ -32,19 +34,44 @@ public class LucaTablutClient extends TablutClient {
 	private IA ia;
 	private int timeout;
 
-	public LucaTablutClient(String player, String name, int gameChosen, int timeout) throws UnknownHostException, IOException {
+	public LucaTablutClient(String player, String name, int gameChosen, int timeout)
+			throws UnknownHostException, IOException {
 		super(player, name);
 		this.game = gameChosen;
 		this.timeout = timeout;
-	//	this.ia = new AlphaBetaIterativeWithMemory(MyAshtonTablutRules.getInstance(), this.timeout);
-		this.ia = new AlphaBetaIterative(MyAshtonTablutRules.getInstance(), this.timeout);
+		MyRules rules = null;
+
+		switch (this.game) {
+		case 1:
+			rules = MyGameTablutRules.getInstance();
+			break;
+		case 2:
+			rules = MyGameModernTablutRules.getInstance();
+			break;
+		case 3:
+			rules = MyGameTablutRules.getInstance();
+			break;
+		case 4:
+
+			rules = MyGameAshtonTablutRules.getInstance();
+			System.out.println("Ashton Tablut game");
+			break;
+		default:
+			System.out.println("Error in game selection");
+			System.exit(4);
+		}
+
+		// this.ia = new MinMax(rules,this.timeout);
+		// this.ia = new MinMaxAlphaBeta(rules,this.timeout);
+		this.ia = new AlphaBetaIterative(rules, this.timeout);
+		// this.ia = new AlphaBetaIterativeWithMemory(rules, this.timeout);
 
 	}
 
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 		int gametype = 4;
 		String role = "";
-		String name = "TEAM_PALLO";
+		String name = "TEAM-PALLO";
 		// TODO: change the behavior?
 		if (args.length < 1) {
 			System.out.println("You must specify which player you are (WHITE or BLACK)");
@@ -63,7 +90,7 @@ public class LucaTablutClient extends TablutClient {
 		System.out.println("Selected client: " + args[0]);
 
 		int timeout = 50;
-		
+
 		LucaTablutClient client = new LucaTablutClient(role, name, gametype, timeout);
 		client.run();
 	}
@@ -79,24 +106,19 @@ public class LucaTablutClient extends TablutClient {
 
 		State state;
 
-		Game rules = null;
 		switch (this.game) {
 		case 1:
 			state = new StateTablut();
-			rules = new GameTablut();
 			break;
 		case 2:
 			state = new StateTablut();
-			rules = new GameModernTablut();
 			break;
 		case 3:
 			state = new StateBrandub();
-			rules = new GameTablut();
 			break;
 		case 4:
 			state = new StateTablut();
 			state.setTurn(State.Turn.WHITE);
-			rules = new GameAshtonTablut(99, 0, "garbage", "fake", "fake");
 			System.out.println("Ashton Tablut game");
 			break;
 		default:
@@ -105,7 +127,6 @@ public class LucaTablutClient extends TablutClient {
 		}
 
 		System.out.println("You are player " + this.getPlayer().toString() + "!");
-
 
 		while (true) {
 			try {
@@ -135,12 +156,13 @@ public class LucaTablutClient extends TablutClient {
 					}
 
 					try {
-						NodeUtil.getIstance().reset();;
-						
+						NodeUtil.getIstance().reset();
+						;
+
 						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.WHITE);
-						
+
 						NodeUtil.getIstance().printExpandedNodes();
-						
+
 					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
 							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
 							| CitadelException e1) {
@@ -193,7 +215,7 @@ public class LucaTablutClient extends TablutClient {
 						NodeUtil.getIstance().reset();
 
 						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.BLACK);
-						
+
 						NodeUtil.getIstance().printExpandedNodes();
 
 					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException

@@ -18,8 +18,8 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
-import it.unibo.ai.didattica.competition.tablut.luca.domain.MyAshtonTablutRules;
-import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGame;
+import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameAshtonTablutRules;
+import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
 
@@ -27,7 +27,7 @@ public class MinMax implements IA {
 
 	public final static int DEPTH = 5;
 
-	private MyGame rules;
+	private MyRules rules;
 	private int timeout;
 	private List<Node> rootChildren;
 	private List<int[]> pawns;
@@ -35,7 +35,7 @@ public class MinMax implements IA {
 	private Heuristic heuristic;
 
 
-	public MinMax(MyGame rules, int timeout) {
+	public MinMax(MyRules rules, int timeout) {
 		this.timeout = timeout;
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();

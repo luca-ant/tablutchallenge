@@ -10,13 +10,20 @@ import it.unibo.ai.didattica.competition.tablut.domain.State;
 
 public class BasicHeuristic implements Heuristic {
 
-	private final static double WEIGHT_DIFF_PAWNS = 2;
-	private final static double WEIGHT_BLACK_NEAR_KING = 7;
-	private final static double WEIGHT_FREE_WAY_KING = 5;
-	private final static double WEIGHT_KING_ON_THRONE = 2;
-	private final static double WEIGHT_KING_NEAR_THRONE = 1.5;
-	private final static double WEIGHT_KING_ON_STAR = 10;
+	private final static double BLACK_WEIGHT_DIFF_PAWNS = 2;
+	private final static double BLACK_WEIGHT_BLACK_NEAR_KING = 7;
+	private final static double BLACK_WEIGHT_FREE_WAY_KING = 5;
+	private final static double BLACK_WEIGHT_KING_ON_THRONE = 2;
+	private final static double BLACK_WEIGHT_KING_NEAR_THRONE = 1.5;
+	private final static double BLACK_WEIGHT_KING_ON_STAR = 10;
 
+	private final static double WHITE_WEIGHT_DIFF_PAWNS = 7;
+	private final static double WHITE_WEIGHT_BLACK_NEAR_KING = 5;
+	private final static double WHITE_WEIGHT_FREE_WAY_KING = 9;
+	private final static double WHITE_WEIGHT_KING_ON_THRONE = 2;
+	private final static double WHITE_WEIGHT_KING_NEAR_THRONE = 1.5;
+	private final static double WHITE_WEIGHT_KING_ON_STAR = 10;
+	
 	private int countB;
 	private int countW;
 	private int blackNearKing;
@@ -55,8 +62,33 @@ public class BasicHeuristic implements Heuristic {
 	}
 
 	public double heuristicWhite(State state) {
-		return this.heuristic(state);
 
+		if (state.getTurn().equalsTurn("WW")) {
+			return Double.NEGATIVE_INFINITY;
+		}
+		if (state.getTurn().equalsTurn("BW")) {
+			return Double.POSITIVE_INFINITY;
+		}
+
+		this.resetValues();
+		this.extractValues(state);
+
+		double result = myRandom(-1, 1);
+//		double result = 0;
+
+		result += WHITE_WEIGHT_DIFF_PAWNS * (this.countB - this.countW);
+
+		result += WHITE_WEIGHT_BLACK_NEAR_KING * this.blackNearKing;
+
+		result -= WHITE_WEIGHT_FREE_WAY_KING * this.kingFreeWay;
+
+		result -= WHITE_WEIGHT_KING_ON_THRONE * this.kingOnThrone;
+
+		result -= WHITE_WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
+
+		result -= WHITE_WEIGHT_KING_ON_STAR * this.kingOnStar;
+
+		return result;
 	}
 
 	public double heuristicBlack(State state) {
@@ -74,17 +106,17 @@ public class BasicHeuristic implements Heuristic {
 		double result = myRandom(-1, 1);
 //		double result = 0;
 
-		result += WEIGHT_DIFF_PAWNS * (this.countB - this.countW);
+		result += BLACK_WEIGHT_DIFF_PAWNS * (this.countB - this.countW);
 
-		result += WEIGHT_BLACK_NEAR_KING * this.blackNearKing;
+		result += BLACK_WEIGHT_BLACK_NEAR_KING * this.blackNearKing;
 
-		result -= WEIGHT_FREE_WAY_KING * this.kingFreeWay;
+		result -= BLACK_WEIGHT_FREE_WAY_KING * this.kingFreeWay;
 
-		result -= WEIGHT_KING_ON_THRONE * this.kingOnThrone;
+		result -= BLACK_WEIGHT_KING_ON_THRONE * this.kingOnThrone;
 
-		result -= WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
+		result -= BLACK_WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
 
-		result -= WEIGHT_KING_ON_STAR * this.kingOnStar;
+		result -= BLACK_WEIGHT_KING_ON_STAR * this.kingOnStar;
 
 		return result;
 	}
