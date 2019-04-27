@@ -1,4 +1,4 @@
-package it.unibo.ai.didattica.competition.tablut.gui;
+package it.unibo.ai.didattica.competition.tablut.luca.gui;
 
 import java.util.ArrayList;
 import java.util.List;
