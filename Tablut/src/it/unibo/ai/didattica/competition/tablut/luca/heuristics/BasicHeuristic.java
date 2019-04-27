@@ -40,7 +40,7 @@ public class BasicHeuristic implements Heuristic {
 		this.stars = Arrays.asList("a2", "a3", "a7", "a8", "b1", "b9", "c1", "c9", "g1", "g9", "h1", "h9", "i2", "i3",
 				"i7", "i8");
 
-		this.nearsThrone = Arrays.asList("e4","e6","d5","f5");
+		this.nearsThrone = Arrays.asList("e4", "e6", "d5", "f5");
 		this.throne = "e5";
 	}
 
@@ -48,6 +48,18 @@ public class BasicHeuristic implements Heuristic {
 	// WHITE -> MIN
 	@Override
 	public double heuristic(State state) {
+
+		double result = myRandom(-1, 1);
+
+		return result;
+	}
+
+	public double heuristicWhite(State state) {
+		return this.heuristic(state);
+
+	}
+
+	public double heuristicBlack(State state) {
 
 		if (state.getTurn().equalsTurn("WW")) {
 			return Double.NEGATIVE_INFINITY;
@@ -77,17 +89,6 @@ public class BasicHeuristic implements Heuristic {
 		return result;
 	}
 
-	
-	public double heuristicWhite(State state) {
-
-		return this.heuristic(state);
-	}
-	
-	public double heuristicBlack(State state) {
-
-		return this.heuristic(state);
-	}
-	
 	private void resetValues() {
 		this.countB = 0;
 		this.countW = 0;
@@ -96,7 +97,6 @@ public class BasicHeuristic implements Heuristic {
 		this.kingOnThrone = 0;
 		this.kingOnStar = 0;
 		this.kingNearThrone = 0;
-
 
 	}
 
@@ -224,13 +224,12 @@ public class BasicHeuristic implements Heuristic {
 						&& state.getBox(i, j).equals(this.throne)) {
 					this.kingOnThrone = 1;
 				}
-				
+
 				// controllo se il re è vicino al trono
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
 						&& this.nearsThrone.contains(state.getBox(i, j))) {
 					this.kingNearThrone = 1;
 				}
-
 
 				// controllo se il re è su una stella
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())

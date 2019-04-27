@@ -27,7 +27,7 @@ import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
 
 public class AlphaBetaIterative implements IA {
-	public final static int MAX_DEPTH = 10;
+	public final static int MAX_DEPTH = 4;
 
 	private MyGame rules;
 	private int timeout;
@@ -35,6 +35,9 @@ public class AlphaBetaIterative implements IA {
 	private List<int[]> pawns;
 
 	private long endTime;
+	private Action bestMove;
+	private boolean ww;
+	private boolean bw;
 
 	private Heuristic heuristic;
 
@@ -45,6 +48,9 @@ public class AlphaBetaIterative implements IA {
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
 		this.heuristic = new BasicHeuristic();
+		this.bestMove = null;
+		this.ww = false;
+		this.bw = false;
 
 	}
 
@@ -55,23 +61,34 @@ public class AlphaBetaIterative implements IA {
 
 		this.endTime = System.currentTimeMillis() + this.timeout * 1000;
 
-		Action bestMove = null;
 		Action temp;
+		this.bestMove = null;
+
 		for (int d = 1; d <= MAX_DEPTH; ++d) {
 			System.out.println("DEPTH = " + d);
 			NodeUtil.getIstance().reset();
 			temp = this.minmaxAlg(state, d, d, yourColor);
+
+			if (this.ww && yourColor.equals(State.Turn.WHITE)) {
+				this.bestMove = temp;
+				break;
+			}
+			
+			if (this.bw && yourColor.equals(State.Turn.BLACK)) {
+				this.bestMove = temp;
+				break;
+			}
 
 			if (System.currentTimeMillis() > this.endTime) {
 				break;
 			}
 			System.out.println("Temp move found: " + temp);
 
-			bestMove = temp;
+			this.bestMove = temp;
 
 		}
 
-		return bestMove;
+		return this.bestMove;
 
 	}
 
@@ -88,12 +105,29 @@ public class AlphaBetaIterative implements IA {
 		else if (yourColor.equals(State.Turn.WHITE))
 			root.setValue(minValue(root, depth, maxDepth, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
 
-		System.out.println("rootChildren: " + rootChildren);
+		if (System.currentTimeMillis() > this.endTime && this.rootChildren.isEmpty()) {
+			return this.bestMove;
+		}
+
 		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
 		rootChildren.clear();
-		return bestNextNode.getMove();
 
+		if (bestNextNode.getState().getTurn().equalsTurn("WW")) {
+
+			this.ww = true;
+		}
+		if (bestNextNode.getState().getTurn().equalsTurn("BW")) {
+
+			this.bw = true;
+		}
+
+		if (bestNextNode != null) {
+			return bestNextNode.getMove();
+
+		} else {
+			return this.bestMove;
+		}
 	}
 
 	private double maxValue(Node node, int depth, int maxDepth, double alpha, double beta)
@@ -101,7 +135,10 @@ public class AlphaBetaIterative implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			return this.heuristic.heuristic(node.getState());
+	//	return this.heuristic.heuristicBlack(node.getState()); // ok
+		return this.heuristic.heuristicWhite(node.getState()); 
+		//	return this.heuristic.heuristic(node.getState());
+
 		}
 
 		int[] buf;
@@ -181,16 +218,18 @@ public class AlphaBetaIterative implements IA {
 			v = Math.max(v, minValue(n, depth - 1, maxDepth, alpha, beta));
 
 			n.setValue(v);
-			if (v >= beta)
-				return v;
-
-			alpha = Math.max(alpha, v);
 
 			if (depth == maxDepth) {
 
 				rootChildren.add(n);
 
 			}
+
+			if (v >= beta)
+				return v;
+
+			alpha = Math.max(alpha, v);
+
 		}
 
 		return v;
@@ -201,7 +240,9 @@ public class AlphaBetaIterative implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			return this.heuristic.heuristic(node.getState());
+		//	 return this.heuristic.heuristicWhite(node.getState()); // ok
+			 return this.heuristic.heuristicBlack(node.getState()); 
+		//	return this.heuristic.heuristic(node.getState());
 		}
 
 		int[] buf;
@@ -282,15 +323,17 @@ public class AlphaBetaIterative implements IA {
 
 			n.setValue(v);
 
-			if (v <= alpha)
-				return v;
-
-			alpha = Math.min(beta, v);
-
 			if (depth == maxDepth) {
 				rootChildren.add(n);
 
 			}
+
+			if (v <= alpha)
+
+				return v;
+
+			alpha = Math.min(beta, v);
+
 		}
 		possibleMoves.clear();
 

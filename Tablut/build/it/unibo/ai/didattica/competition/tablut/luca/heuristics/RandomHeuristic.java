@@ -15,9 +15,17 @@ public class RandomHeuristic implements Heuristic {
 	// BLACK -> MAX
 	// WHITE -> MIN
 	@Override
-	public double heuristic(State state) {
+		public double heuristic(State state) {
 
 		return myRandom(-1, 1);
+	}
+	
+	public double heuristicBlack(State state) {
+return this.heuristic(state);
+	}
+	public double heuristicWhite(State state) {
+
+		return this.heuristic(state);
 	}
 
 	private double myRandom(double start, double end) {

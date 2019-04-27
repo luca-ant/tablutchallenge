@@ -37,6 +37,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 	private Map<Integer, Node> transpositionTable;
 	private List<int[]> pawns;
 	private long endTime;
+	private Action bestMove;
 
 	private Heuristic heuristic;
 
@@ -48,7 +49,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 		this.pawns = new ArrayList<int[]>();
 		this.heuristic = new BasicHeuristic();
 		this.transpositionTable = new Hashtable<Integer, Node>();
-
+		this.bestMove = null;
 	}
 
 	@Override
@@ -58,8 +59,9 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 		this.endTime = System.currentTimeMillis() + this.timeout * 1000;
 
-		Action bestMove = null;
 		Action temp;
+		this.bestMove = null;
+
 		for (int d = 1; d <= MAX_DEPTH; ++d) {
 			System.out.println("DEPTH = " + d);
 			NodeUtil.getIstance().reset();
@@ -70,11 +72,11 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			}
 			System.out.println("Temp move found: " + temp);
 
-			bestMove = temp;
+			this.bestMove = temp;
 
 		}
 
-		return bestMove;
+		return this.bestMove;
 
 	}
 
@@ -91,10 +93,19 @@ public class AlphaBetaIterativeWithMemory implements IA {
 		else if (yourColor.equals(State.Turn.WHITE))
 			root.setValue(minValue(root, depth, maxDepth, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
 
+		if (System.currentTimeMillis() > this.endTime && this.rootChildren.isEmpty()) {
+			return this.bestMove;
+		}
+
 		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
 		rootChildren.clear();
-		return bestNextNode.getMove();
+
+		if (bestNextNode != null) {
+			return bestNextNode.getMove();
+		} else {
+			return this.bestMove;
+		}
 
 	}
 
@@ -103,7 +114,9 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
+			// return this.heuristic.heuristicBlack(node.getState());
 			return this.heuristic.heuristic(node.getState());
+
 		}
 
 		if (this.transpositionTable.containsKey(node.getState().hashCode())) {
@@ -194,16 +207,17 @@ public class AlphaBetaIterativeWithMemory implements IA {
 				this.transpositionTable.put(n.getState().hashCode(), n);
 			}
 
-			if (v >= beta)
-				return v;
-
-			alpha = Math.max(alpha, v);
-
 			if (depth == maxDepth) {
 
 				rootChildren.add(n);
 
 			}
+
+			if (v >= beta)
+				return v;
+
+			alpha = Math.max(alpha, v);
+
 		}
 
 		return v;
@@ -214,7 +228,9 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
+			// return this.heuristic.heuristicWhite(node.getState());
 			return this.heuristic.heuristic(node.getState());
+
 		}
 
 		if (this.transpositionTable.containsKey(node.getState().hashCode())) {
@@ -306,15 +322,15 @@ public class AlphaBetaIterativeWithMemory implements IA {
 				this.transpositionTable.put(n.getState().hashCode(), n);
 			}
 
+			if (depth == maxDepth) {
+				rootChildren.add(n);
+
+			}
 			if (v <= alpha)
 				return v;
 
 			alpha = Math.min(beta, v);
 
-			if (depth == maxDepth) {
-				rootChildren.add(n);
-
-			}
 		}
 		possibleMoves.clear();
 
