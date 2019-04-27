@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.logging.*;
 
 import it.unibo.ai.didattica.competition.tablut.domain.*;
+import it.unibo.ai.didattica.competition.tablut.gui.Gui;
 import it.unibo.ai.didattica.competition.tablut.luca.gui.GuiCli;
 import it.unibo.ai.didattica.competition.tablut.util.StreamUtils;
 
@@ -78,8 +79,6 @@ public class Server implements Runnable {
 	private Gson gson;
 //	private Gui theGui;
 	private GuiCli theGui;
-
-	
 	/**
 	 * Integer that represents the game type
 	 */
