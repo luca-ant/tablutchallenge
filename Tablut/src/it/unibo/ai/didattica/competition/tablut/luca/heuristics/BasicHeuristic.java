@@ -17,12 +17,13 @@ public class BasicHeuristic implements Heuristic {
 	private final static double BLACK_WEIGHT_KING_NEAR_THRONE = 1.5;
 	private final static double BLACK_WEIGHT_KING_ON_STAR = 10;
 
-	private final static double WHITE_WEIGHT_DIFF_PAWNS = 7;
+	private final static double WHITE_WEIGHT_DIFF_PAWNS = 10;
 	private final static double WHITE_WEIGHT_BLACK_NEAR_KING = 5;
 	private final static double WHITE_WEIGHT_FREE_WAY_KING = 9;
 	private final static double WHITE_WEIGHT_KING_ON_THRONE = 2;
-	private final static double WHITE_WEIGHT_KING_NEAR_THRONE = 1.5;
+	private final static double WHITE_WEIGHT_KING_NEAR_THRONE = 2;
 	private final static double WHITE_WEIGHT_KING_ON_STAR = 10;
+	
 	
 	private int countB;
 	private int countW;
