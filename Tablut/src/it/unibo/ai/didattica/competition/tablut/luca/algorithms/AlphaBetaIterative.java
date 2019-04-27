@@ -36,6 +36,8 @@ public class AlphaBetaIterative implements IA {
 
 	private long endTime;
 	private Action bestMove;
+	private boolean ww;
+	private boolean bw;
 
 	private Heuristic heuristic;
 
@@ -47,6 +49,8 @@ public class AlphaBetaIterative implements IA {
 		this.pawns = new ArrayList<int[]>();
 		this.heuristic = new BasicHeuristic();
 		this.bestMove = null;
+		this.ww = false;
+		this.bw = false;
 
 	}
 
@@ -64,6 +68,16 @@ public class AlphaBetaIterative implements IA {
 			System.out.println("DEPTH = " + d);
 			NodeUtil.getIstance().reset();
 			temp = this.minmaxAlg(state, d, d, yourColor);
+
+			if (this.ww && yourColor.equals(State.Turn.WHITE)) {
+				this.bestMove = temp;
+				break;
+			}
+			
+			if (this.bw && yourColor.equals(State.Turn.BLACK)) {
+				this.bestMove = temp;
+				break;
+			}
 
 			if (System.currentTimeMillis() > this.endTime) {
 				break;
@@ -99,8 +113,18 @@ public class AlphaBetaIterative implements IA {
 
 		rootChildren.clear();
 
+		if (bestNextNode.getState().getTurn().equalsTurn("WW")) {
+
+			this.ww = true;
+		}
+		if (bestNextNode.getState().getTurn().equalsTurn("BW")) {
+
+			this.bw = true;
+		}
+
 		if (bestNextNode != null) {
 			return bestNextNode.getMove();
+
 		} else {
 			return this.bestMove;
 		}
