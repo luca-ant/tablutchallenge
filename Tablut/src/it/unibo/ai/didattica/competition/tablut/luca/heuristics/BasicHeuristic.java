@@ -13,19 +13,22 @@ public class BasicHeuristic implements Heuristic {
 	private final static double WEIGHT_DIFF_PAWNS = 1.5;
 	private final static double WEIGHT_BLACK_NEAR_KING = 7;
 	private final static double WEIGHT_FREE_WAY_KING = 5;
-	private final static double WEIGHT_KING_IN_THRONE = 1.5;
+	private final static double WEIGHT_KING_ON_THRONE = 2;
+	private final static double WEIGHT_KING_NEAR_THRONE = 1.5;
 	private final static double WEIGHT_KING_ON_STAR = 10;
 
 	private int countB;
 	private int countW;
 	private int blackNearKing;
 	private int kingFreeWay;
-	private int kingInThrone;
+	private int kingOnThrone;
+	private int kingNearThrone;
 	private int kingOnStar;
 
 	private Random r;
 	private List<String> citadels;
 	private List<String> stars;
+	private List<String> nearsThrone;
 	private String throne;
 
 	public BasicHeuristic() {
@@ -37,6 +40,7 @@ public class BasicHeuristic implements Heuristic {
 		this.stars = Arrays.asList("a2", "a3", "a7", "a8", "b1", "b9", "c1", "c9", "g1", "g9", "h1", "h9", "i2", "i3",
 				"i7", "i8");
 
+		this.nearsThrone = Arrays.asList("e4","e6","d5","f5");
 		this.throne = "e5";
 	}
 
@@ -64,7 +68,9 @@ public class BasicHeuristic implements Heuristic {
 
 		result -= WEIGHT_FREE_WAY_KING * this.kingFreeWay;
 
-		result -= WEIGHT_KING_IN_THRONE * this.kingInThrone;
+		result -= WEIGHT_KING_ON_THRONE * this.kingOnThrone;
+
+		result -= WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
 
 		result -= WEIGHT_KING_ON_STAR * this.kingOnStar;
 
@@ -87,8 +93,10 @@ public class BasicHeuristic implements Heuristic {
 		this.countW = 0;
 		this.blackNearKing = 0;
 		this.kingFreeWay = 0;
-		this.kingInThrone = 0;
+		this.kingOnThrone = 0;
 		this.kingOnStar = 0;
+		this.kingNearThrone = 0;
+
 
 	}
 
@@ -214,8 +222,15 @@ public class BasicHeuristic implements Heuristic {
 				// controllo se il re è sul trono
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
 						&& state.getBox(i, j).equals(this.throne)) {
-					this.kingInThrone = 1;
+					this.kingOnThrone = 1;
 				}
+				
+				// controllo se il re è vicino al trono
+				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
+						&& this.nearsThrone.contains(state.getBox(i, j))) {
+					this.kingNearThrone = 1;
+				}
+
 
 				// controllo se il re è su una stella
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
