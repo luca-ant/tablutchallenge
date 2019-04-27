@@ -13,7 +13,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 
-public interface MyGame {
+public interface MyRules {
 
 
 	State movePawn(State state, Action a);

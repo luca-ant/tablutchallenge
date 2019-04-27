@@ -16,19 +16,19 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 
-public class MyAshtonTablutRules implements MyGame {
+public class MyGameAshtonTablutRules implements MyRules {
 
-	private static MyAshtonTablutRules instance = null;
+	private static MyGameAshtonTablutRules instance = null;
 	private List<String> citadels;
 
-	private MyAshtonTablutRules() {
+	private MyGameAshtonTablutRules() {
 		this.citadels = Arrays.asList("a4", "a5", "a6", "b5", "d1", "e1", "f1", "e2", "i4", "i5", "i6", "h5", "d9",
 				"e9", "f9", "e8");
 	}
 
-	public static MyAshtonTablutRules getInstance() {
-		if (MyAshtonTablutRules.instance == null)
-			MyAshtonTablutRules.instance = new MyAshtonTablutRules();
+	public static MyGameAshtonTablutRules getInstance() {
+		if (MyGameAshtonTablutRules.instance == null)
+			MyGameAshtonTablutRules.instance = new MyGameAshtonTablutRules();
 		return instance;
 	}
 
