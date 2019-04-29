@@ -65,9 +65,9 @@ public class MinMaxAlphaBeta implements IA {
 		NodeUtil.getIstance().incrementExpandedNodes();
 
 		if (yourColor.equals(State.Turn.BLACK))
-			root.setValue(maxValue(root, depth, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+			root.setValue(maxValue(root, depth, yourColor, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
 		else if (yourColor.equals(State.Turn.WHITE))
-			root.setValue(minValue(root, depth, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
+			root.setValue(minValue(root, depth, yourColor, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
 
 		Node bestNextNode = null;
 		if (yourColor.equals(State.Turn.BLACK)) {
@@ -75,18 +75,18 @@ public class MinMaxAlphaBeta implements IA {
 		} else if (yourColor.equals(State.Turn.WHITE)) {
 			bestNextNode = rootChildren.stream().min(Comparator.comparing(n -> n.getValue())).get();
 		}
-		
+
 		rootChildren.clear();
 		return bestNextNode.getMove();
 
 	}
 
-	private double maxValue(Node node, int depth, double alpha, double beta)
+	private double maxValue(Node node, int depth, Turn yourColor, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			return this.heuristic.heuristic(node.getState());
+			return this.heuristic.heuristic(node.getState(), yourColor);
 
 		}
 
@@ -164,7 +164,7 @@ public class MinMaxAlphaBeta implements IA {
 
 			NodeUtil.getIstance().incrementExpandedNodes();
 
-			v = Math.max(v, minValue(n, depth - 1, alpha, beta));
+			v = Math.max(v, minValue(n, depth - 1, yourColor, alpha, beta));
 
 			n.setValue(v);
 			if (v >= beta)
@@ -182,12 +182,12 @@ public class MinMaxAlphaBeta implements IA {
 		return v;
 	}
 
-	private double minValue(Node node, int depth, double alpha, double beta)
+	private double minValue(Node node, int depth, Turn yourColor, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			return this.heuristic.heuristic(node.getState());
+			return this.heuristic.heuristic(node.getState(), yourColor);
 
 		}
 
@@ -265,7 +265,7 @@ public class MinMaxAlphaBeta implements IA {
 
 			NodeUtil.getIstance().incrementExpandedNodes();
 
-			v = Math.min(v, maxValue(n, depth - 1, alpha, beta));
+			v = Math.min(v, maxValue(n, depth - 1, yourColor, alpha, beta));
 
 			n.setValue(v);
 

@@ -3,6 +3,7 @@ package it.unibo.ai.didattica.competition.tablut.luca.heuristics;
 import java.util.Random;
 
 import it.unibo.ai.didattica.competition.tablut.domain.State;
+import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 public class RandomHeuristic implements Heuristic {
 
@@ -15,17 +16,18 @@ public class RandomHeuristic implements Heuristic {
 	// BLACK -> MAX
 	// WHITE -> MIN
 	@Override
-		public double heuristic(State state) {
+		public double heuristic(State state, Turn yourColor) {
 
 		return myRandom(-1, 1);
 	}
 	
 	public double heuristicBlack(State state) {
-return this.heuristic(state);
+
+		return myRandom(-1, 1);
 	}
 	public double heuristicWhite(State state) {
 
-		return this.heuristic(state);
+		return myRandom(-1, 1);
 	}
 
 	private double myRandom(double start, double end) {

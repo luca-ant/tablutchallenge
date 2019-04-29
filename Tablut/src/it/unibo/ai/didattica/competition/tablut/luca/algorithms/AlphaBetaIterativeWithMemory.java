@@ -38,6 +38,8 @@ public class AlphaBetaIterativeWithMemory implements IA {
 	private List<int[]> pawns;
 	private long endTime;
 	private Action bestMove;
+	private boolean ww;
+	private boolean bw;
 
 	private Heuristic heuristic;
 
@@ -50,6 +52,8 @@ public class AlphaBetaIterativeWithMemory implements IA {
 		this.heuristic = new BasicHeuristic();
 		this.transpositionTable = new Hashtable<Integer, Node>();
 		this.bestMove = null;
+		this.ww = false;
+		this.bw = false;
 	}
 
 	@Override
@@ -63,9 +67,21 @@ public class AlphaBetaIterativeWithMemory implements IA {
 		this.bestMove = null;
 
 		for (int d = 1; d <= MAX_DEPTH; ++d) {
-			System.out.println("DEPTH = " + d);
+			System.out.println("START DEPTH = " + d);
 			NodeUtil.getIstance().reset();
 			temp = this.minmaxAlg(state, d, d, yourColor);
+
+			System.out.println("END DEPTH = " + d);
+
+			if (this.ww && yourColor.equals(State.Turn.WHITE)) {
+				this.bestMove = temp;
+				break;
+			}
+
+			if (this.bw && yourColor.equals(State.Turn.BLACK)) {
+				this.bestMove = temp;
+				break;
+			}
 
 			if (System.currentTimeMillis() > this.endTime) {
 				break;
@@ -105,8 +121,18 @@ public class AlphaBetaIterativeWithMemory implements IA {
 		}
 		rootChildren.clear();
 
+		if (bestNextNode.getState().getTurn().equalsTurn("WW")) {
+
+			this.ww = true;
+		}
+		if (bestNextNode.getState().getTurn().equalsTurn("BW")) {
+
+			this.bw = true;
+		}
+
 		if (bestNextNode != null) {
 			return bestNextNode.getMove();
+
 		} else {
 			return this.bestMove;
 		}
@@ -118,8 +144,8 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			// return this.heuristic.heuristicBlack(node.getState());
-			return this.heuristic.heuristic(node.getState(), yourColor);
+			return this.heuristic.heuristicBlack(node.getState());
+			// return this.heuristic.heuristic(node.getState(), yourColor);
 
 		}
 
@@ -232,8 +258,8 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			// return this.heuristic.heuristicWhite(node.getState());
-			return this.heuristic.heuristic(node.getState(), yourColor);
+			 return this.heuristic.heuristicWhite(node.getState());
+		//	return this.heuristic.heuristic(node.getState(), yourColor);
 
 		}
 
