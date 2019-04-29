@@ -31,16 +31,23 @@ public class MyGameModernTablutRules implements MyRules {
 			MyGameModernTablutRules.instance = new MyGameModernTablutRules();
 		return instance;
 	}
+
 	@Override
 	public State movePawn(State state, Action a) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public State checkMove(State state, Action a)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, CitadelException, ClimbingCitadelException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Action> getNextMovesFromState(State state) {
 		// TODO Auto-generated method stub
 		return null;
 	}

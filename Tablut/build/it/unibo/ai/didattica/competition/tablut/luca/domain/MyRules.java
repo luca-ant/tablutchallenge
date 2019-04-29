@@ -1,5 +1,7 @@
 package it.unibo.ai.didattica.competition.tablut.luca.domain;
 
+import java.util.List;
+
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ActionException;
@@ -15,10 +17,10 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 
 public interface MyRules {
 
-
 	State movePawn(State state, Action a);
 
-	State checkMove(State state, Action a) throws BoardException, ActionException, StopException, PawnException,
-			DiagonalException, ClimbingException, ThroneException, OccupitedException, CitadelException, ClimbingCitadelException;
+//	State checkMove(State state, Action a) throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException, ThroneException, OccupitedException, CitadelException, ClimbingCitadelException;
+
+	public List<Action> getNextMovesFromState(State state);
 
 }

@@ -1,5 +1,6 @@
 package it.unibo.ai.didattica.competition.tablut.luca.domain;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -332,7 +333,7 @@ public class MyGameAshtonTablutRules implements MyRules {
 
 	@Override
 	public State movePawn(State state, Action a) {
-				
+
 		State.Pawn pawn = state.getPawn(a.getRowFrom(), a.getColumnFrom());
 		State.Pawn[][] newBoard = state.getBoard();
 		// State newState = new State();
@@ -362,8 +363,8 @@ public class MyGameAshtonTablutRules implements MyRules {
 		return state;
 	}
 
-	@Override
-	public State checkMove(State state, Action a)
+	
+	private State checkMove(State state, Action a)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, CitadelException, ClimbingCitadelException {
 //		this.loggGame.fine(a.toString());
@@ -520,6 +521,79 @@ public class MyGameAshtonTablutRules implements MyRules {
 		}
 
 		return state;
+	}
+
+	public List<Action> getNextMovesFromState(State state) {
+
+		List<Action> possibleMoves = new ArrayList<Action>();
+
+		List<int[]> pawns = new ArrayList<int[]>();
+
+		int[] buf;
+		for (int i = 0; i < state.getBoard().length; i++) {
+			for (int j = 0; j < state.getBoard().length; j++) {
+				if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
+					buf = new int[2];
+					buf[0] = i;
+					buf[1] = j;
+					pawns.add(buf);
+
+				}
+			}
+		}
+
+		String from = "";
+		String to = "";
+		int[] p;
+
+		for (int i = 0; i < pawns.size(); i++) {
+			p = pawns.get(i);
+
+			for (int j = 0; j < state.getBoard().length; j++) {
+
+				int[] orr = new int[2];
+				int[] ver = new int[2];
+
+				orr[0] = p[0];
+				orr[1] = j;
+
+				ver[0] = j;
+				ver[1] = p[1];
+
+				from = state.getBox(p[0], p[1]);
+
+				to = state.getBox(orr[0], orr[1]);
+				try {
+					Action a = new Action(from, to, State.Turn.BLACK);
+					this.checkMove(state, a);
+
+					// state.setTurn(State.Turn.BLACK);
+
+					possibleMoves.add(a);
+				} catch (Exception e1) {
+
+				}
+
+				from = state.getBox(p[0], p[1]);
+
+				to = state.getBox(ver[0], ver[1]);
+				try {
+					Action a = new Action(from, to, State.Turn.BLACK);
+					this.checkMove(state, a);
+
+					possibleMoves.add(a);
+
+					// state.setTurn(State.Turn.BLACK);
+
+				} catch (Exception e1) {
+
+				}
+
+			}
+
+		}
+
+		return possibleMoves;
 	}
 
 }

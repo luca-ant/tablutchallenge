@@ -103,8 +103,7 @@ public class BasicHeuristic implements Heuristic {
 	public double heuristic(State state, Turn yourColor) {
 
 		if (yourColor.equalsTurn("W")) {
-			//return this.heuristicWhite(state);
-			return -this.heuristicBlack(state);
+			return this.heuristicWhite(state);
 		} else {
 			return this.heuristicBlack(state);
 		}
@@ -150,7 +149,6 @@ public class BasicHeuristic implements Heuristic {
 
 		// result -= WHITE_WEIGHT_KING_ON_STAR * this.kingOnStar;
 
-		
 		return result;
 	}
 

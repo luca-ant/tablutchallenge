@@ -38,10 +38,15 @@ public class MyGameTablutRules implements MyRules {
 		return null;
 	}
 
-	@Override
 	public State checkMove(State state, Action a)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, CitadelException, ClimbingCitadelException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Action> getNextMovesFromState(State state) {
 		// TODO Auto-generated method stub
 		return null;
 	}
