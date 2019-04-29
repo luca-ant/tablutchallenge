@@ -70,7 +70,7 @@ public class LucaTablutClient extends TablutClient {
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 		int gametype = 4;
 		String role = "";
-		String name = "TEAM-PALLO";
+		String name = "TEAMPALLO";
 		// TODO: change the behavior?
 		if (args.length < 1) {
 			System.out.println("You must specify which player you are (WHITE or BLACK)");
@@ -87,6 +87,7 @@ public class LucaTablutClient extends TablutClient {
 			name = args[2];
 		}
 		System.out.println("Selected client: " + args[0]);
+		System.out.println("YOUR NAME: " + name);
 
 		int timeout = 50;
 

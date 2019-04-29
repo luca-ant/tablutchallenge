@@ -127,6 +127,9 @@ public class AlphaBetaIterative implements IA {
 		}
 
 		if (bestNextNode != null) {
+			
+			
+			System.out.println("H: "+ bestNextNode.getValue());
 			return bestNextNode.getMove();
 
 		} else {
@@ -139,10 +142,10 @@ public class AlphaBetaIterative implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			 return this.heuristic.heuristicBlack(node.getState());
+			 // return this.heuristic.heuristicBlack(node.getState());
 			// return this.heuristic.heuristicWhite(node.getState());
 
-			// return this.heuristic.heuristic(node.getState(), yourColor);
+			 return this.heuristic.heuristic(node.getState(), yourColor);
 
 		}
 
@@ -245,9 +248,9 @@ public class AlphaBetaIterative implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			 return this.heuristic.heuristicWhite(node.getState());
+			// return this.heuristic.heuristicWhite(node.getState());
 			// return this.heuristic.heuristicBlack(node.getState());
-			//return this.heuristic.heuristic(node.getState(), yourColor);
+			return this.heuristic.heuristic(node.getState(), yourColor);
 		}
 
 		int[] buf;

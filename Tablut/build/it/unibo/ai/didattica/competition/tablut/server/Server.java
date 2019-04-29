@@ -426,6 +426,8 @@ public class Server implements Runnable {
 				if (Character.isAlphabetic(c) || Character.isDigit(c))
 					temp += c;
 			}
+			blackName = temp;
+
 			System.out.println("Black player name:\t" + blackName);
 			loggSys.fine("Black player name:\t" + blackName);
 
