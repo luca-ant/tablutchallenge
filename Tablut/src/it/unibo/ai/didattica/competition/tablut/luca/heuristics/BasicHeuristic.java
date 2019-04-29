@@ -7,6 +7,7 @@ import java.util.Random;
 
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
+import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 public class BasicHeuristic implements Heuristic {
 
@@ -14,7 +15,7 @@ public class BasicHeuristic implements Heuristic {
 	private final static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 5;
 	private final static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2;
 	private final static double BLACK_WEIGHT_BLACK_NEAR_KING = 5;
-	private final static double BLACK_WEIGHT_WHITE_NEAR_KING = 3;
+	private final static double BLACK_WEIGHT_WHITE_NEAR_KING = 4;
 	private final static double BLACK_WEIGHT_FREE_WAY_KING = 7;
 	private final static double BLACK_WEIGHT_KING_ON_THRONE = 2;
 	private final static double BLACK_WEIGHT_KING_NEAR_THRONE = 1.5;
@@ -36,8 +37,6 @@ public class BasicHeuristic implements Heuristic {
 	private final static double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 6;
 	private final static double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 8;
 
-	
-	
 	// *** OK BLACK ***
 //	private final static double WEIGHT_DIFF_PAWNS = 7;
 //	private final static double WEIGHT_COUNT_WHITE_PAWNS = 5;
@@ -53,7 +52,7 @@ public class BasicHeuristic implements Heuristic {
 //	private final static double WEIGHT_WHITE_PAWNS_OVERHANGED = 4;
 
 	// *** ***
-	
+
 	private final static double WEIGHT_DIFF_PAWNS = 7;
 	private final static double WEIGHT_COUNT_WHITE_PAWNS = 5;
 	private final static double WEIGHT_COUNT_BLACK_PAWNS = 2;
@@ -66,8 +65,7 @@ public class BasicHeuristic implements Heuristic {
 	private final static double WEIGHT_KING_FROM_BORDER = 4;
 	private final static double WEIGHT_BLACK_PAWNS_OVERHANGED = 3;
 	private final static double WEIGHT_WHITE_PAWNS_OVERHANGED = 4;
-	
-	
+
 	private int countB;
 	private int countW;
 	private int blackNearKing;
@@ -102,46 +100,14 @@ public class BasicHeuristic implements Heuristic {
 	// BLACK -> MAX
 	// WHITE -> MIN
 	@Override
-	public double heuristic(State state) {
+	public double heuristic(State state, Turn yourColor) {
 
-		if (state.getTurn().equalsTurn("WW")) {
-			return Double.NEGATIVE_INFINITY;
+		if (yourColor.equalsTurn("W")) {
+			return this.heuristicWhite(state);
+		} else {
+			return this.heuristicBlack(state);
 		}
-		if (state.getTurn().equalsTurn("BW")) {
-			return Double.POSITIVE_INFINITY;
-		}
 
-		this.resetValues();
-		this.extractValues(state);
-
-		double result = myRandom(-1, 1);
-//		double result = 0;
-
-		result += WEIGHT_DIFF_PAWNS * (this.countB - this.countW);
-
-		result += WEIGHT_COUNT_BLACK_PAWNS * this.countB;
-
-		result += WEIGHT_WHITE_PAWNS_OVERHANGED * this.whitePawnsOverhanged;
-
-		result += WEIGHT_BLACK_NEAR_KING * this.blackNearKing;
-
-		result -= WEIGHT_COUNT_WHITE_PAWNS * this.countW;
-
-		result -= WEIGHT_WHITE_NEAR_KING * this.whiteNearKing;
-
-		result -= WEIGHT_FREE_WAY_KING * this.kingFreeWay;
-
-		result -= WEIGHT_KING_ON_THRONE * this.kingOnThrone;
-
-		result -= WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
-
-//		result -= WEIGHT_KING_FROM_BORDER * (state.getBoard().length - this.kingFromBorder);
-
-		result -= WEIGHT_BLACK_PAWNS_OVERHANGED * this.blackPawnsOverhanged;
-
-		// result -= WEIGHT_KING_ON_STAR * this.kingOnStar;
-
-		return result;
 	}
 
 	public double heuristicWhite(State state) {
@@ -161,9 +127,15 @@ public class BasicHeuristic implements Heuristic {
 
 		result += WHITE_WEIGHT_DIFF_PAWNS * (this.countB - this.countW);
 
+		result += WHITE_WEIGHT_COUNT_BLACK_PAWNS * this.countB;
+
+		result += WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED * this.whitePawnsOverhanged;
+
 		result += WHITE_WEIGHT_BLACK_NEAR_KING * this.blackNearKing;
 
-//		result -= WHITE_WEIGHT_WHITE_NEAR_KING * this.whiteNearKing;
+		result -= WHITE_WEIGHT_COUNT_WHITE_PAWNS * this.countW;
+
+		result -= WHITE_WEIGHT_WHITE_NEAR_KING * this.whiteNearKing;
 
 		result -= WHITE_WEIGHT_FREE_WAY_KING * this.kingFreeWay;
 
@@ -171,11 +143,12 @@ public class BasicHeuristic implements Heuristic {
 
 		result -= WHITE_WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
 
-//		result -= WHITE_WEIGHT_KING_ON_STAR * this.kingOnStar;
-
 //		result -= WHITE_WEIGHT_KING_FROM_BORDER * (state.getBoard().length - this.kingFromBorder);
 
 		result -= WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED * this.blackPawnsOverhanged;
+
+		// result -= WHITE_WEIGHT_KING_ON_STAR * this.kingOnStar;
+
 		return result;
 	}
 
@@ -196,7 +169,15 @@ public class BasicHeuristic implements Heuristic {
 
 		result += BLACK_WEIGHT_DIFF_PAWNS * (this.countB - this.countW);
 
+		result += BLACK_WEIGHT_COUNT_BLACK_PAWNS * this.countB;
+
+		result += BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED * this.whitePawnsOverhanged;
+
 		result += BLACK_WEIGHT_BLACK_NEAR_KING * this.blackNearKing;
+
+		result -= BLACK_WEIGHT_COUNT_WHITE_PAWNS * this.countW;
+
+		result -= BLACK_WEIGHT_WHITE_NEAR_KING * this.whiteNearKing;
 
 		result -= BLACK_WEIGHT_FREE_WAY_KING * this.kingFreeWay;
 
@@ -204,9 +185,11 @@ public class BasicHeuristic implements Heuristic {
 
 		result -= BLACK_WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
 
-		result -= BLACK_WEIGHT_KING_ON_STAR * this.kingOnStar;
+//		result -= BLACK_WEIGHT_KING_FROM_BORDER * (state.getBoard().length - this.kingFromBorder);
 
-		result -= WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED * this.blackPawnsOverhanged;
+		result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * this.blackPawnsOverhanged;
+
+		// result -= BLACK_WEIGHT_KING_ON_STAR * this.kingOnStar;
 
 		return result;
 	}
@@ -246,6 +229,7 @@ public class BasicHeuristic implements Heuristic {
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
 
 					if (i > 0 && (state.getPawn(i - 1, j).equalsPawn(State.Pawn.WHITE.toString())
+							|| state.getPawn(i - 1, j).equalsPawn(State.Pawn.KING.toString())
 							|| this.citadels.contains(state.getBox(i - 1, j))
 							|| state.getBox(i - 1, j).equals(this.throne))) {
 						this.blackPawnsOverhanged++;
@@ -253,12 +237,14 @@ public class BasicHeuristic implements Heuristic {
 
 					if (i < state.getBoard().length - 1
 							&& (state.getPawn(i + 1, j).equalsPawn(State.Pawn.WHITE.toString())
+									|| state.getPawn(i + 1, j).equalsPawn(State.Pawn.KING.toString())
 									|| this.citadels.contains(state.getBox(i + 1, j))
 									|| state.getBox(i + 1, j).equals(this.throne))) {
 						this.blackPawnsOverhanged++;
 					}
 
 					if (j > 0 && (state.getPawn(i, j - 1).equalsPawn(State.Pawn.WHITE.toString())
+							|| state.getPawn(i, j-1).equalsPawn(State.Pawn.KING.toString())
 							|| this.citadels.contains(state.getBox(i, j - 1))
 							|| state.getBox(i, j - 1).contentEquals(this.throne))) {
 						this.blackPawnsOverhanged++;
@@ -266,6 +252,7 @@ public class BasicHeuristic implements Heuristic {
 
 					if (j < state.getBoard().length - 1
 							&& (state.getPawn(i, j + 1).equalsPawn(State.Pawn.WHITE.toString())
+									|| state.getPawn(i, j+1).equalsPawn(State.Pawn.KING.toString())
 									|| this.citadels.contains(state.getBox(i, j + 1))
 									|| state.getBox(i, j + 1).contentEquals(this.throne))) {
 						this.blackPawnsOverhanged++;

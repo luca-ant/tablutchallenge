@@ -61,9 +61,9 @@ public class MinMax implements IA {
 		NodeUtil.getIstance().incrementExpandedNodes();
 
 		if (yourColor.equals(State.Turn.BLACK))
-			root.setValue(maxValue(root, depth - 1));
+			root.setValue(maxValue(root, depth - 1, yourColor));
 		else if (yourColor.equals(State.Turn.WHITE))
-			root.setValue(minValue(root, depth - 1));
+			root.setValue(minValue(root, depth - 1, yourColor));
 
 		Node bestNextNode = null;
 		if (yourColor.equals(State.Turn.BLACK)) {
@@ -77,12 +77,12 @@ public class MinMax implements IA {
 
 	}
 
-	private double maxValue(Node node, int depth)
+	private double maxValue(Node node, int depth, Turn yourColor)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			return this.heuristic.heuristic(node.getState());
+			return this.heuristic.heuristic(node.getState(), yourColor);
 
 		}
 
@@ -161,7 +161,7 @@ public class MinMax implements IA {
 
 			NodeUtil.getIstance().incrementExpandedNodes();
 
-			v = Math.max(v, minValue(n, depth - 1));
+			v = Math.max(v, minValue(n, depth - 1, yourColor));
 
 			if (depth == DEPTH - 1) {
 
@@ -173,12 +173,12 @@ public class MinMax implements IA {
 		return v;
 	}
 
-	private double minValue(Node node, int depth)
+	private double minValue(Node node, int depth, Turn yourColor)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			return this.heuristic.heuristic(node.getState());
+			return this.heuristic.heuristic(node.getState(), yourColor);
 
 		}
 
@@ -257,7 +257,7 @@ public class MinMax implements IA {
 
 			NodeUtil.getIstance().incrementExpandedNodes();
 
-			v = Math.min(v, maxValue(n, depth - 1));
+			v = Math.min(v, maxValue(n, depth - 1, yourColor));
 
 			if (depth == DEPTH - 1) {
 
