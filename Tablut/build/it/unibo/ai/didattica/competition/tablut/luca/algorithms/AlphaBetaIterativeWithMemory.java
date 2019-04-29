@@ -97,8 +97,12 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			return this.bestMove;
 		}
 
-		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
-
+		Node bestNextNode = null;
+		if (yourColor.equals(State.Turn.BLACK)) {
+			bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
+		} else if (yourColor.equals(State.Turn.WHITE)) {
+			bestNextNode = rootChildren.stream().min(Comparator.comparing(n -> n.getValue())).get();
+		}
 		rootChildren.clear();
 
 		if (bestNextNode != null) {

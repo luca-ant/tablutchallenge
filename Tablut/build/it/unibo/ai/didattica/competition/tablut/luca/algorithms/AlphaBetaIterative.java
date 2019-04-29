@@ -1,12 +1,9 @@
 package it.unibo.ai.didattica.competition.tablut.luca.algorithms;
 
-import java.awt.event.HierarchyEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Hashtable;
+
 import java.util.List;
-import java.util.Map;
 
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
@@ -24,10 +21,9 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.BasicHeuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
-import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
 
 public class AlphaBetaIterative implements IA {
-	public final static int MAX_DEPTH = 4;
+	public final static int MAX_DEPTH = 5;
 
 	private MyRules rules;
 	private int timeout;
@@ -100,16 +96,22 @@ public class AlphaBetaIterative implements IA {
 
 		NodeUtil.getIstance().incrementExpandedNodes();
 
-		if (yourColor.equals(State.Turn.BLACK))
+		if (yourColor.equals(State.Turn.BLACK)) {
 			root.setValue(maxValue(root, depth, maxDepth, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-		else if (yourColor.equals(State.Turn.WHITE))
+		} else if (yourColor.equals(State.Turn.WHITE)) {
 			root.setValue(minValue(root, depth, maxDepth, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
+		}
 
 		if (System.currentTimeMillis() > this.endTime && this.rootChildren.isEmpty()) {
 			return this.bestMove;
 		}
 
-		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
+		Node bestNextNode = null;
+		if (yourColor.equals(State.Turn.BLACK)) {
+			bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
+		} else if (yourColor.equals(State.Turn.WHITE)) {
+			bestNextNode = rootChildren.stream().min(Comparator.comparing(n -> n.getValue())).get();
+		}
 
 		rootChildren.clear();
 
@@ -135,8 +137,10 @@ public class AlphaBetaIterative implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			return this.heuristic.heuristicBlack(node.getState()); // ok
-			// return this.heuristic.heuristic(node.getState());
+			// return this.heuristic.heuristicBlack(node.getState());
+			// return this.heuristic.heuristicWhite(node.getState());
+
+			return this.heuristic.heuristic(node.getState());
 
 		}
 
@@ -239,8 +243,9 @@ public class AlphaBetaIterative implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			return this.heuristic.heuristicWhite(node.getState()); // ok
-			// return this.heuristic.heuristic(node.getState());
+			// return this.heuristic.heuristicWhite(node.getState());
+			// return this.heuristic.heuristicBlack(node.getState());
+			return this.heuristic.heuristic(node.getState());
 		}
 
 		int[] buf;

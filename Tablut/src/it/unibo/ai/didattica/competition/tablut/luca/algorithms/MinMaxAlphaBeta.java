@@ -69,8 +69,13 @@ public class MinMaxAlphaBeta implements IA {
 		else if (yourColor.equals(State.Turn.WHITE))
 			root.setValue(minValue(root, depth, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
 
-		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
-
+		Node bestNextNode = null;
+		if (yourColor.equals(State.Turn.BLACK)) {
+			bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
+		} else if (yourColor.equals(State.Turn.WHITE)) {
+			bestNextNode = rootChildren.stream().min(Comparator.comparing(n -> n.getValue())).get();
+		}
+		
 		rootChildren.clear();
 		return bestNextNode.getMove();
 

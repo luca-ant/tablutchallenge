@@ -31,16 +31,15 @@ public class MinMax implements IA {
 	private int timeout;
 	private List<Node> rootChildren;
 	private List<int[]> pawns;
-	private Thread wd;
+	private long endTime;
 	private Heuristic heuristic;
-
 
 	public MinMax(MyRules rules, int timeout) {
 		this.timeout = timeout;
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
 		this.pawns = new ArrayList<int[]>();
-		this.heuristic	= new RandomHeuristic();
+		this.heuristic = new RandomHeuristic();
 
 	}
 
@@ -55,22 +54,7 @@ public class MinMax implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		this.wd = new Thread() {
-			@Override
-			public void run() {
-				try {
-					int counter = 0;
-					while (counter < timeout) {
-						Thread.sleep(1000);
-						counter++;
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-
-		this.wd.start();
+		this.endTime = System.currentTimeMillis() + this.timeout * 1000;
 
 		Node root = new Node(state);
 
@@ -81,7 +65,12 @@ public class MinMax implements IA {
 		else if (yourColor.equals(State.Turn.WHITE))
 			root.setValue(minValue(root, depth - 1));
 
-		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
+		Node bestNextNode = null;
+		if (yourColor.equals(State.Turn.BLACK)) {
+			bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
+		} else if (yourColor.equals(State.Turn.WHITE)) {
+			bestNextNode = rootChildren.stream().min(Comparator.comparing(n -> n.getValue())).get();
+		}
 
 		rootChildren.clear();
 		return bestNextNode.getMove();
@@ -92,7 +81,7 @@ public class MinMax implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || !this.wd.isAlive()) {
+		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
 			return this.heuristic.heuristic(node.getState());
 
 		}
@@ -188,7 +177,7 @@ public class MinMax implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || !this.wd.isAlive()) {
+		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
 			return this.heuristic.heuristic(node.getState());
 
 		}
@@ -196,7 +185,8 @@ public class MinMax implements IA {
 		int[] buf;
 		for (int i = 0; i < node.getState().getBoard().length; i++) {
 			for (int j = 0; j < node.getState().getBoard().length; j++) {
-				if (node.getState().getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString()) || node.getState().getPawn(i, j).equalsPawn(State.Pawn.KING.toString())  ) {
+				if (node.getState().getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString())
+						|| node.getState().getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
 					buf = new int[2];
 					buf[0] = i;
 					buf[1] = j;

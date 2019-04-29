@@ -54,7 +54,6 @@ public class LucaTablutClient extends TablutClient {
 		case 4:
 
 			rules = MyGameAshtonTablutRules.getInstance();
-			System.out.println("Ashton Tablut game");
 			break;
 		default:
 			System.out.println("Error in game selection");
@@ -63,7 +62,7 @@ public class LucaTablutClient extends TablutClient {
 
 		// this.ia = new MinMax(rules,this.timeout);
 		// this.ia = new MinMaxAlphaBeta(rules,this.timeout);
-		this.ia = new AlphaBetaIterative(rules, this.timeout);
+		 this.ia = new AlphaBetaIterative(rules, this.timeout);
 		// this.ia = new AlphaBetaIterativeWithMemory(rules, this.timeout);
 
 	}
