@@ -31,7 +31,6 @@ public class MinMaxAlphaBeta implements IA {
 	private MyRules rules;
 	private int timeout;
 	private List<Node> rootChildren;
-	private List<int[]> pawns;
 
 	private long endTime;
 
@@ -42,7 +41,6 @@ public class MinMaxAlphaBeta implements IA {
 
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
-		this.pawns = new ArrayList<int[]>();
 		this.heuristic = new RandomHeuristic();
 
 	}
@@ -90,71 +88,7 @@ public class MinMaxAlphaBeta implements IA {
 
 		}
 
-		int[] buf;
-		for (int i = 0; i < node.getState().getBoard().length; i++) {
-			for (int j = 0; j < node.getState().getBoard().length; j++) {
-				if (node.getState().getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
-					buf = new int[2];
-					buf[0] = i;
-					buf[1] = j;
-					pawns.add(buf);
-
-				}
-			}
-		}
-
-		List<Action> possibleMoves = new ArrayList<Action>();
-		String from = "";
-		String to = "";
-		int[] p;
-
-		for (int i = 0; i < this.pawns.size(); i++) {
-			p = this.pawns.get(i);
-
-			for (int j = 0; j < node.getState().getBoard().length; j++) {
-
-				int[] orr = new int[2];
-				int[] ver = new int[2];
-
-				orr[0] = p[0];
-				orr[1] = j;
-
-				ver[0] = j;
-				ver[1] = p[1];
-
-				from = node.getState().getBox(p[0], p[1]);
-
-				to = node.getState().getBox(orr[0], orr[1]);
-				try {
-					Action a = new Action(from, to, State.Turn.BLACK);
-					rules.checkMove(node.getState(), a);
-
-					// state.setTurn(State.Turn.BLACK);
-
-					possibleMoves.add(a);
-				} catch (Exception e1) {
-
-				}
-
-				from = node.getState().getBox(p[0], p[1]);
-
-				to = node.getState().getBox(ver[0], ver[1]);
-				try {
-					Action a = new Action(from, to, State.Turn.BLACK);
-					rules.checkMove(node.getState(), a);
-
-					possibleMoves.add(a);
-
-					// state.setTurn(State.Turn.BLACK);
-
-				} catch (Exception e1) {
-
-				}
-
-			}
-
-		}
-		this.pawns.clear();
+		List<Action> possibleMoves = this.rules.getNextMovesFromState(node.getState());
 
 		Double v = Double.NEGATIVE_INFINITY;
 
@@ -191,71 +125,7 @@ public class MinMaxAlphaBeta implements IA {
 
 		}
 
-		int[] buf;
-		for (int i = 0; i < node.getState().getBoard().length; i++) {
-			for (int j = 0; j < node.getState().getBoard().length; j++) {
-				if (node.getState().getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString())
-						|| node.getState().getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
-					buf = new int[2];
-					buf[0] = i;
-					buf[1] = j;
-					pawns.add(buf);
-
-				}
-			}
-		}
-
-		List<Action> possibleMoves = new ArrayList<Action>();
-		String from = "";
-		String to = "";
-		int[] p;
-
-		for (int i = 0; i < this.pawns.size(); i++) {
-			p = this.pawns.get(i);
-
-			for (int j = 0; j < node.getState().getBoard().length; j++) {
-
-				int[] orr = new int[2];
-				int[] ver = new int[2];
-
-				orr[0] = p[0];
-				orr[1] = j;
-
-				ver[0] = j;
-				ver[1] = p[1];
-
-				from = node.getState().getBox(p[0], p[1]);
-
-				to = node.getState().getBox(orr[0], orr[1]);
-				try {
-					Action a = new Action(from, to, State.Turn.WHITE);
-					rules.checkMove(node.getState(), a);
-
-					// state.setTurn(State.Turn.WHITE);
-
-					possibleMoves.add(a);
-				} catch (Exception e1) {
-
-				}
-
-				from = node.getState().getBox(p[0], p[1]);
-
-				to = node.getState().getBox(ver[0], ver[1]);
-				try {
-					Action a = new Action(from, to, State.Turn.WHITE);
-					rules.checkMove(node.getState(), a);
-					possibleMoves.add(a);
-
-					// state.setTurn(State.Turn.WHITE);
-
-				} catch (Exception e1) {
-
-				}
-
-			}
-
-		}
-		this.pawns.clear();
+		List<Action> possibleMoves = this.rules.getNextMovesFromState(node.getState());
 
 		Double v = Double.POSITIVE_INFINITY;
 		for (Action a : possibleMoves) {
