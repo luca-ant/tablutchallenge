@@ -116,17 +116,15 @@ public class AlphaBetaIterative implements IA {
 //		}
 
 		rootChildren.clear();
-
-		if (bestNextNode.getState().getTurn().equalsTurn("WW")) {
-
-			this.ww = true;
-		}
-		if (bestNextNode.getState().getTurn().equalsTurn("BW")) {
-
-			this.bw = true;
-		}
-
 		if (bestNextNode != null) {
+			if (bestNextNode.getState().getTurn().equalsTurn("WW")) {
+
+				this.ww = true;
+			}
+			if (bestNextNode.getState().getTurn().equalsTurn("BW")) {
+
+				this.bw = true;
+			}
 
 			System.out.println("H: " + bestNextNode.getValue());
 			return bestNextNode.getMove();
