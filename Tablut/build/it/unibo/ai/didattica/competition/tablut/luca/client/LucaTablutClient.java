@@ -22,7 +22,6 @@ import it.unibo.ai.didattica.competition.tablut.luca.algorithms.AlphaBetaIterati
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.IA;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMax;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMaxAlphaBeta;
-import it.unibo.ai.didattica.competition.tablut.luca.algorithms.NodeUtil;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameAshtonTablutRules;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameModernTablutRules;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameTablutRules;
@@ -63,7 +62,7 @@ public class LucaTablutClient extends TablutClient {
 		// this.ia = new MinMax(rules,this.timeout);
 		// this.ia = new MinMaxAlphaBeta(rules,this.timeout);
 		// this.ia = new AlphaBetaIterative(rules, this.timeout);
-		 this.ia = new AlphaBetaIterativeWithMemory(rules, this.timeout);
+		this.ia = new AlphaBetaIterativeWithMemory(rules, this.timeout);
 
 	}
 
@@ -156,12 +155,8 @@ public class LucaTablutClient extends TablutClient {
 					}
 
 					try {
-						NodeUtil.getIstance().reset();
-						;
 
 						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.WHITE);
-
-						NodeUtil.getIstance().printExpandedNodes();
 
 					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
 							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
@@ -212,11 +207,8 @@ public class LucaTablutClient extends TablutClient {
 						e2.printStackTrace();
 					}
 					try {
-						NodeUtil.getIstance().reset();
 
 						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.BLACK);
-
-						NodeUtil.getIstance().printExpandedNodes();
 
 					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
 							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException

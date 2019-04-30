@@ -23,6 +23,7 @@ import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.BasicHeuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
+import it.unibo.ai.didattica.competition.tablut.luca.util.StatsManager;
 
 public class MinMaxAlphaBeta implements IA {
 
@@ -60,7 +61,7 @@ public class MinMaxAlphaBeta implements IA {
 
 		Node root = new Node(state);
 
-		NodeUtil.getIstance().incrementExpandedNodes();
+		StatsManager.getInstance().incrementExpandedNodes();
 
 		if (yourColor.equals(State.Turn.BLACK))
 			root.setValue(maxValue(root, depth, yourColor, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
@@ -96,7 +97,7 @@ public class MinMaxAlphaBeta implements IA {
 			State nextState = rules.movePawn(node.getState().clone(), a);
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
-			NodeUtil.getIstance().incrementExpandedNodes();
+			StatsManager.getInstance().incrementExpandedNodes();
 
 			v = Math.max(v, minValue(n, depth - 1, yourColor, alpha, beta));
 
@@ -135,7 +136,7 @@ public class MinMaxAlphaBeta implements IA {
 
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
-			NodeUtil.getIstance().incrementExpandedNodes();
+			StatsManager.getInstance().incrementExpandedNodes();
 
 			v = Math.min(v, maxValue(n, depth - 1, yourColor, alpha, beta));
 

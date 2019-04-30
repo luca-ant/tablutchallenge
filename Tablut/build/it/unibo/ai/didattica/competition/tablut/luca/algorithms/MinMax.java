@@ -22,6 +22,7 @@ import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameAshtonTablutRu
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
+import it.unibo.ai.didattica.competition.tablut.luca.util.StatsManager;
 
 public class MinMax implements IA {
 
@@ -56,7 +57,7 @@ public class MinMax implements IA {
 
 		Node root = new Node(state);
 
-		NodeUtil.getIstance().incrementExpandedNodes();
+		StatsManager.getInstance().incrementExpandedNodes();
 
 		if (yourColor.equals(State.Turn.BLACK))
 			root.setValue(maxValue(root, depth - 1, yourColor));
@@ -93,7 +94,7 @@ public class MinMax implements IA {
 			State nextState = rules.movePawn(node.getState(), a);
 			Node n = new Node(nextState.clone(), Double.MAX_VALUE, a);
 
-			NodeUtil.getIstance().incrementExpandedNodes();
+			StatsManager.getInstance().incrementExpandedNodes();
 
 			v = Math.max(v, minValue(n, depth - 1, yourColor));
 
@@ -124,7 +125,7 @@ public class MinMax implements IA {
 
 			Node n = new Node(nextState, Double.MIN_VALUE, a);
 
-			NodeUtil.getIstance().incrementExpandedNodes();
+			StatsManager.getInstance().incrementExpandedNodes();
 
 			v = Math.min(v, maxValue(n, depth - 1, yourColor));
 

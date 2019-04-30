@@ -21,6 +21,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.BasicHeuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
+import it.unibo.ai.didattica.competition.tablut.luca.util.StatsManager;
 
 public class AlphaBetaIterative implements IA {
 	public final static int MAX_DEPTH = 10;
@@ -28,8 +29,6 @@ public class AlphaBetaIterative implements IA {
 	private MyRules rules;
 	private int timeout;
 	private List<Node> rootChildren;
-	private List<int[]> pawns;
-
 	private long endTime;
 	private Action bestMove;
 	private boolean ww;
@@ -39,7 +38,6 @@ public class AlphaBetaIterative implements IA {
 
 	public AlphaBetaIterative(MyRules rules, int timeout) {
 		this.timeout = timeout;
-
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
 		this.heuristic = new BasicHeuristic();
@@ -54,21 +52,32 @@ public class AlphaBetaIterative implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		this.endTime = System.currentTimeMillis() + this.timeout * 1000;
+	this.endTime = System.currentTimeMillis() + this.timeout * 1000;
+
 
 		Action temp;
 		this.bestMove = null;
 
 		for (int d = 1; d <= MAX_DEPTH; ++d) {
-			System.out.println("START DEPTH = " + d);
-			NodeUtil.getIstance().reset();
+			System.out.println("\nSTART DEPTH = " + d);
+			
+			StatsManager.getInstance().reset();
+			StatsManager.getInstance().setStart(System.currentTimeMillis());
+			
 			temp = this.minmaxAlg(state, d, d, yourColor);
+			
+			StatsManager.getInstance().setEnd(System.currentTimeMillis());
+			StatsManager.getInstance().printResults();
+			
 
-			System.out.println("END DEPTH = " + d);
-
+			
 			if (System.currentTimeMillis() > this.endTime) {
+				System.out.println("END DUE TO TIMEOUT\n");
+
 				break;
 			}
+			System.out.println("END DEPTH = " + d +"\n");
+
 
 			System.out.println("Temp move found: " + temp);
 
@@ -96,24 +105,16 @@ public class AlphaBetaIterative implements IA {
 
 		Node root = new Node(state);
 
-		NodeUtil.getIstance().incrementExpandedNodes();
+		StatsManager.getInstance().incrementExpandedNodes();
 
-		// if (yourColor.equals(State.Turn.BLACK)) {
 		root.setValue(maxValue(root, depth, maxDepth, yourColor, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-//		} else if (yourColor.equals(State.Turn.WHITE)) {
-//			root.setValue(minValue(root, depth, maxDepth, yourColor, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
-//		}
 
-		if (System.currentTimeMillis() > this.endTime || this.rootChildren.isEmpty()) {
+	if (System.currentTimeMillis() > this.endTime || this.rootChildren.isEmpty()) {
+
 			return this.bestMove;
 		}
 
-		Node bestNextNode = null;
-//		if (yourColor.equals(State.Turn.BLACK)) {
-		bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
-//		} else if (yourColor.equals(State.Turn.WHITE)) {
-//			bestNextNode = rootChildren.stream().min(Comparator.comparing(n -> n.getValue())).get();
-//		}
+		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
 		rootChildren.clear();
 		if (bestNextNode != null) {
@@ -139,6 +140,7 @@ public class AlphaBetaIterative implements IA {
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (System.currentTimeMillis() > this.endTime) {
+
 			return 0;
 		}
 		if (depth == 0) {
@@ -157,7 +159,7 @@ public class AlphaBetaIterative implements IA {
 			State nextState = this.rules.movePawn(node.getState().clone(), a);
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
-			NodeUtil.getIstance().incrementExpandedNodes();
+			StatsManager.getInstance().incrementExpandedNodes();
 
 			v = Math.max(v, minValue(n, depth - 1, maxDepth, yourColor, alpha, beta));
 
@@ -174,7 +176,8 @@ public class AlphaBetaIterative implements IA {
 
 			alpha = Math.max(alpha, v);
 
-			if (System.currentTimeMillis() > this.endTime) {
+		if (System.currentTimeMillis() > this.endTime) {
+
 				return 0;
 			}
 
@@ -187,7 +190,8 @@ public class AlphaBetaIterative implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (System.currentTimeMillis() > this.endTime) {
+	if (System.currentTimeMillis() > this.endTime) {
+
 			return 0;
 		}
 		if (depth == 0) {
@@ -204,7 +208,7 @@ public class AlphaBetaIterative implements IA {
 
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
-			NodeUtil.getIstance().incrementExpandedNodes();
+			StatsManager.getInstance().incrementExpandedNodes();
 
 			v = Math.min(v, maxValue(n, depth - 1, maxDepth, yourColor, alpha, beta));
 
@@ -221,7 +225,8 @@ public class AlphaBetaIterative implements IA {
 
 			beta = Math.min(beta, v);
 
-			if (System.currentTimeMillis() > this.endTime) {
+			 if (System.currentTimeMillis() > this.endTime) {
+
 				return 0;
 			}
 
