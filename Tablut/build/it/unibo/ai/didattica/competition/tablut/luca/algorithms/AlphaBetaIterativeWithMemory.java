@@ -102,21 +102,22 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 		NodeUtil.getIstance().incrementExpandedNodes();
 
-		if (yourColor.equals(State.Turn.BLACK))
-			root.setValue(maxValue(root, depth, maxDepth, yourColor , Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-		else if (yourColor.equals(State.Turn.WHITE))
-			root.setValue(minValue(root, depth, maxDepth, yourColor , Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
+//		if (yourColor.equals(State.Turn.BLACK))
+		root.setValue(maxValue(root, depth, maxDepth, yourColor, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+//		else if (yourColor.equals(State.Turn.WHITE))
+		// root.setValue(minValue(root, depth, maxDepth, yourColor,
+		// Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
 
-		if (System.currentTimeMillis() > this.endTime && this.rootChildren.isEmpty()) {
+		if (System.currentTimeMillis() > this.endTime || this.rootChildren.isEmpty()) {
 			return this.bestMove;
 		}
 
 		Node bestNextNode = null;
-		if (yourColor.equals(State.Turn.BLACK)) {
-			bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
-		} else if (yourColor.equals(State.Turn.WHITE)) {
-			bestNextNode = rootChildren.stream().min(Comparator.comparing(n -> n.getValue())).get();
-		}
+//		if (yourColor.equals(State.Turn.BLACK)) {
+		bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
+//		} else if (yourColor.equals(State.Turn.WHITE)) {
+//			bestNextNode = rootChildren.stream().min(Comparator.comparing(n -> n.getValue())).get();
+//		}
 		rootChildren.clear();
 
 		if (bestNextNode.getState().getTurn().equalsTurn("WW")) {
@@ -129,6 +130,8 @@ public class AlphaBetaIterativeWithMemory implements IA {
 		}
 
 		if (bestNextNode != null) {
+			System.out.println("H: " + bestNextNode.getValue());
+
 			return bestNextNode.getMove();
 
 		} else {
@@ -137,13 +140,16 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 	}
 
-	private double maxValue(Node node, int depth, int maxDepth,Turn yourColor , double alpha, double beta)
+	private double maxValue(Node node, int depth, int maxDepth, Turn yourColor, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			return this.heuristic.heuristicBlack(node.getState());
-			// return this.heuristic.heuristic(node.getState(), yourColor);
+		if (System.currentTimeMillis() > this.endTime) {
+			return 0;
+		}
+		if (depth == 0) {
+			// return this.heuristic.heuristicBlack(node.getState());
+			return this.heuristic.heuristic(node.getState(), yourColor);
 
 		}
 
@@ -154,7 +160,6 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 		List<Action> possibleMoves = this.rules.getNextMovesFromState(node.getState());
 
-
 		Double v = Double.NEGATIVE_INFINITY;
 
 		for (Action a : possibleMoves) {
@@ -162,8 +167,8 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			NodeUtil.getIstance().incrementExpandedNodes();
- 
-			v = Math.max(v, minValue(n, depth - 1, maxDepth,yourColor, alpha, beta));
+
+			v = Math.max(v, minValue(n, depth - 1, maxDepth, yourColor, alpha, beta));
 
 			n.setValue(v);
 
@@ -182,19 +187,27 @@ public class AlphaBetaIterativeWithMemory implements IA {
 				return v;
 
 			alpha = Math.max(alpha, v);
+			
+
+			if (System.currentTimeMillis() > this.endTime) {
+				return 0;
+			}
 
 		}
 
 		return v;
 	}
 
-	private double minValue(Node node, int depth, int maxDepth,Turn yourColor , double alpha, double beta)
+	private double minValue(Node node, int depth, int maxDepth, Turn yourColor, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			 return this.heuristic.heuristicWhite(node.getState());
-		//	return this.heuristic.heuristic(node.getState(), yourColor);
+		if (System.currentTimeMillis() > this.endTime) {
+			return 0;
+		}
+		if (depth == 0) {
+			// return this.heuristic.heuristicWhite(node.getState());
+			return this.heuristic.heuristic(node.getState(), yourColor);
 
 		}
 
@@ -206,7 +219,6 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 		List<Action> possibleMoves = this.rules.getNextMovesFromState(node.getState());
 
-
 		Double v = Double.POSITIVE_INFINITY;
 		for (Action a : possibleMoves) {
 			State nextState = this.rules.movePawn(node.getState().clone(), a);
@@ -215,7 +227,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 			NodeUtil.getIstance().incrementExpandedNodes();
 
-			v = Math.min(v, maxValue(n, depth - 1, maxDepth,yourColor, alpha, beta));
+			v = Math.min(v, maxValue(n, depth - 1, maxDepth, yourColor, alpha, beta));
 
 			n.setValue(v);
 
@@ -232,6 +244,10 @@ public class AlphaBetaIterativeWithMemory implements IA {
 				return v;
 
 			beta = Math.min(beta, v);
+
+			if (System.currentTimeMillis() > this.endTime) {
+				return 0;
+			}
 
 		}
 		possibleMoves.clear();

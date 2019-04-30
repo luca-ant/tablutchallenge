@@ -23,7 +23,7 @@ import it.unibo.ai.didattica.competition.tablut.luca.heuristics.BasicHeuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
 
 public class AlphaBetaIterative implements IA {
-	public final static int MAX_DEPTH = 5;
+	public final static int MAX_DEPTH = 10;
 
 	private MyRules rules;
 	private int timeout;
@@ -60,9 +60,11 @@ public class AlphaBetaIterative implements IA {
 		this.bestMove = null;
 
 		for (int d = 1; d <= MAX_DEPTH; ++d) {
-			System.out.println("DEPTH = " + d);
+			System.out.println("START DEPTH = " + d);
 			NodeUtil.getIstance().reset();
 			temp = this.minmaxAlg(state, d, d, yourColor);
+
+			System.out.println("END DEPTH = " + d);
 
 			if (this.ww && yourColor.equals(State.Turn.WHITE)) {
 				this.bestMove = temp;
@@ -101,7 +103,7 @@ public class AlphaBetaIterative implements IA {
 //			root.setValue(minValue(root, depth, maxDepth, yourColor, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
 //		}
 
-		if (System.currentTimeMillis() > this.endTime && this.rootChildren.isEmpty()) {
+		if (System.currentTimeMillis() > this.endTime || this.rootChildren.isEmpty()) {
 			return this.bestMove;
 		}
 
@@ -173,6 +175,10 @@ public class AlphaBetaIterative implements IA {
 
 			alpha = Math.max(alpha, v);
 
+			if (System.currentTimeMillis() > this.endTime) {
+				return 0;
+			}
+
 		}
 
 		return v;
@@ -215,6 +221,10 @@ public class AlphaBetaIterative implements IA {
 				return v;
 
 			beta = Math.min(beta, v);
+
+			if (System.currentTimeMillis() > this.endTime) {
+				return 0;
+			}
 
 		}
 		possibleMoves.clear();

@@ -101,16 +101,18 @@ public class MinMaxAlphaBeta implements IA {
 			v = Math.max(v, minValue(n, depth - 1, yourColor, alpha, beta));
 
 			n.setValue(v);
-			if (v >= beta)
-				return v;
-
-			alpha = Math.max(alpha, v);
 
 			if (depth == DEPTH) {
 
 				rootChildren.add(n);
 
 			}
+
+			if (v >= beta)
+				return v;
+
+			alpha = Math.max(alpha, v);
+
 		}
 
 		return v;
@@ -139,15 +141,15 @@ public class MinMaxAlphaBeta implements IA {
 
 			n.setValue(v);
 
-			if (v <= alpha)
-				return v;
-
-			alpha = Math.min(beta, v);
-
 			if (depth == DEPTH) {
 				rootChildren.add(n);
 
 			}
+			if (v <= alpha)
+				return v;
+
+			beta = Math.min(beta, v);
+
 		}
 		possibleMoves.clear();
 
