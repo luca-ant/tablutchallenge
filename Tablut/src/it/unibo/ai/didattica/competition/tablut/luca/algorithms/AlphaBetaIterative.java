@@ -66,6 +66,12 @@ public class AlphaBetaIterative implements IA {
 
 			System.out.println("END DEPTH = " + d);
 
+			if (System.currentTimeMillis() > this.endTime) {
+				break;
+			}
+
+			System.out.println("Temp move found: " + temp);
+
 			if (this.ww && yourColor.equals(State.Turn.WHITE)) {
 				this.bestMove = temp;
 				break;
@@ -75,11 +81,6 @@ public class AlphaBetaIterative implements IA {
 				this.bestMove = temp;
 				break;
 			}
-
-			if (System.currentTimeMillis() > this.endTime) {
-				break;
-			}
-			System.out.println("Temp move found: " + temp);
 
 			this.bestMove = temp;
 

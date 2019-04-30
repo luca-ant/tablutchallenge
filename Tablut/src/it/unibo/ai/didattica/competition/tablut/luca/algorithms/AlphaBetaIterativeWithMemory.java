@@ -71,6 +71,12 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 			System.out.println("END DEPTH = " + d);
 
+			if (System.currentTimeMillis() > this.endTime) {
+				break;
+			}
+
+			System.out.println("Temp move found: " + temp);
+
 			if (this.ww && yourColor.equals(State.Turn.WHITE)) {
 				this.bestMove = temp;
 				break;
@@ -80,11 +86,6 @@ public class AlphaBetaIterativeWithMemory implements IA {
 				this.bestMove = temp;
 				break;
 			}
-
-			if (System.currentTimeMillis() > this.endTime) {
-				break;
-			}
-			System.out.println("Temp move found: " + temp);
 
 			this.bestMove = temp;
 
@@ -187,7 +188,6 @@ public class AlphaBetaIterativeWithMemory implements IA {
 				return v;
 
 			alpha = Math.max(alpha, v);
-			
 
 			if (System.currentTimeMillis() > this.endTime) {
 				return 0;
