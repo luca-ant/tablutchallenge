@@ -31,7 +31,7 @@ import it.unibo.ai.didattica.competition.tablut.luca.util.StatsManager;
 
 public class AlphaBetaIterativeWithMemory implements IA {
 	public final static int MAX_DEPTH = 10;
-	public final static int MEMORY_LIMIT = 2048;
+	public final static int MEMORY_LIMIT = 1000;
 
 	private MyRules rules;
 	private int timeout;
@@ -182,7 +182,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 				if (StatsManager.getInstance().getOccupiedMemoryInMB() > MEMORY_LIMIT) {
 
-					this.transpositionTable.clear();
+					this.transpositionTable.remove(new ArrayList<>(this.transpositionTable.keySet()).get(0));
 				}
 
 				this.transpositionTable.put(n.getState().hashCode(), n);
@@ -247,7 +247,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			if (!this.transpositionTable.containsKey(n.getState().hashCode())) {
 				if (StatsManager.getInstance().getOccupiedMemoryInMB() > MEMORY_LIMIT) {
 
-					this.transpositionTable.clear();
+					this.transpositionTable.remove(new ArrayList<>(this.transpositionTable.keySet()).get(0));
 				}
 
 				this.transpositionTable.put(n.getState().hashCode(), n);

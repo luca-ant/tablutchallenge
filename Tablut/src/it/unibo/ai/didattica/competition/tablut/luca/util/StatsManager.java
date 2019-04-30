@@ -54,9 +54,8 @@ public class StatsManager {
 
 	public long getOccupiedMemoryInMB() {
 
-		// long usedMemory = Runtime.getRuntime().totalMemory() -
-		// Runtime.getRuntime().freeMemory();
-		long usedMemory = Runtime.getRuntime().totalMemory();
+		long usedMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		// long usedMemory = Runtime.getRuntime().totalMemory();
 		return usedMemory / (1024 * 1024);
 		// return totalMemory;
 	}
