@@ -158,11 +158,11 @@ public class AlphaBetaIterativeWithMemory implements IA {
 		Double v = Double.NEGATIVE_INFINITY;
 
 		for (Action a : possibleMoves) {
-			State nextState = rules.movePawn(node.getState().clone(), a);
+			State nextState = this.rules.movePawn(node.getState().clone(), a);
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			NodeUtil.getIstance().incrementExpandedNodes();
-
+ 
 			v = Math.max(v, minValue(n, depth - 1, maxDepth,yourColor, alpha, beta));
 
 			n.setValue(v);
@@ -209,7 +209,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 		Double v = Double.POSITIVE_INFINITY;
 		for (Action a : possibleMoves) {
-			State nextState = rules.movePawn(node.getState().clone(), a);
+			State nextState = this.rules.movePawn(node.getState().clone(), a);
 
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
@@ -231,7 +231,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			if (v <= alpha)
 				return v;
 
-			alpha = Math.min(beta, v);
+			beta = Math.min(beta, v);
 
 		}
 		possibleMoves.clear();

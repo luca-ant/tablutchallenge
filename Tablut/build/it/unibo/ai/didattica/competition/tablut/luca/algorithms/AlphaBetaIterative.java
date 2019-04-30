@@ -95,24 +95,22 @@ public class AlphaBetaIterative implements IA {
 
 		NodeUtil.getIstance().incrementExpandedNodes();
 
-		if (yourColor.equals(State.Turn.BLACK)) {
-			root.setValue(
-					maxValue(root, depth, maxDepth, yourColor, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-		} else if (yourColor.equals(State.Turn.WHITE)) {
-			root.setValue(
-					minValue(root, depth, maxDepth, yourColor, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
-		}
+		// if (yourColor.equals(State.Turn.BLACK)) {
+		root.setValue(maxValue(root, depth, maxDepth, yourColor, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+//		} else if (yourColor.equals(State.Turn.WHITE)) {
+//			root.setValue(minValue(root, depth, maxDepth, yourColor, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
+//		}
 
 		if (System.currentTimeMillis() > this.endTime && this.rootChildren.isEmpty()) {
 			return this.bestMove;
 		}
 
 		Node bestNextNode = null;
-		if (yourColor.equals(State.Turn.BLACK)) {
-			bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
-		} else if (yourColor.equals(State.Turn.WHITE)) {
-			bestNextNode = rootChildren.stream().min(Comparator.comparing(n -> n.getValue())).get();
-		}
+//		if (yourColor.equals(State.Turn.BLACK)) {
+		bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
+//		} else if (yourColor.equals(State.Turn.WHITE)) {
+//			bestNextNode = rootChildren.stream().min(Comparator.comparing(n -> n.getValue())).get();
+//		}
 
 		rootChildren.clear();
 
@@ -139,7 +137,10 @@ public class AlphaBetaIterative implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
+		if (System.currentTimeMillis() > this.endTime) {
+			return 0;
+		}
+		if (depth == 0) {
 			// return this.heuristic.heuristicBlack(node.getState());
 			// return this.heuristic.heuristicWhite(node.getState());
 
@@ -152,7 +153,7 @@ public class AlphaBetaIterative implements IA {
 		Double v = Double.NEGATIVE_INFINITY;
 
 		for (Action a : possibleMoves) {
-			State nextState = rules.movePawn(node.getState().clone(), a);
+			State nextState = this.rules.movePawn(node.getState().clone(), a);
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			NodeUtil.getIstance().incrementExpandedNodes();
@@ -181,7 +182,10 @@ public class AlphaBetaIterative implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
+		if (System.currentTimeMillis() > this.endTime) {
+			return 0;
+		}
+		if (depth == 0) {
 			// return this.heuristic.heuristicWhite(node.getState());
 			// return this.heuristic.heuristicBlack(node.getState());
 			return this.heuristic.heuristic(node.getState(), yourColor);
@@ -189,10 +193,9 @@ public class AlphaBetaIterative implements IA {
 
 		List<Action> possibleMoves = this.rules.getNextMovesFromState(node.getState());
 
-
 		Double v = Double.POSITIVE_INFINITY;
 		for (Action a : possibleMoves) {
-			State nextState = rules.movePawn(node.getState().clone(), a);
+			State nextState = this.rules.movePawn(node.getState().clone(), a);
 
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
@@ -211,7 +214,7 @@ public class AlphaBetaIterative implements IA {
 
 				return v;
 
-			alpha = Math.min(beta, v);
+			beta = Math.min(beta, v);
 
 		}
 		possibleMoves.clear();

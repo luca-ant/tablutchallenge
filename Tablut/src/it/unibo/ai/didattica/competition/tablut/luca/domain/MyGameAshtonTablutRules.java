@@ -532,7 +532,7 @@ public class MyGameAshtonTablutRules implements MyRules {
 		int[] buf;
 		for (int i = 0; i < state.getBoard().length; i++) {
 			for (int j = 0; j < state.getBoard().length; j++) {
-				if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
+				if (state.getPawn(i, j).equalsPawn(state.getTurn().toString())) {
 					buf = new int[2];
 					buf[0] = i;
 					buf[1] = j;
@@ -564,7 +564,7 @@ public class MyGameAshtonTablutRules implements MyRules {
 
 				to = state.getBox(orr[0], orr[1]);
 				try {
-					Action a = new Action(from, to, State.Turn.BLACK);
+					Action a = new Action(from, to, state.getTurn());
 					this.checkMove(state, a);
 
 					// state.setTurn(State.Turn.BLACK);
@@ -578,7 +578,7 @@ public class MyGameAshtonTablutRules implements MyRules {
 
 				to = state.getBox(ver[0], ver[1]);
 				try {
-					Action a = new Action(from, to, State.Turn.BLACK);
+					Action a = new Action(from, to, state.getTurn());
 					this.checkMove(state, a);
 
 					possibleMoves.add(a);

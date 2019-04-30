@@ -14,15 +14,15 @@ public class BasicHeuristic implements Heuristic {
 	private final static double BLACK_WEIGHT_DIFF_PAWNS = 7;
 	private final static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 5;
 	private final static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2;
-	private final static double BLACK_WEIGHT_BLACK_NEAR_KING = 5;
-	private final static double BLACK_WEIGHT_WHITE_NEAR_KING = 4;
-	private final static double BLACK_WEIGHT_FREE_WAY_KING = 7;
+	private final static double BLACK_WEIGHT_BLACK_NEAR_KING = 4;
+	private final static double BLACK_WEIGHT_WHITE_NEAR_KING = 1.5;
+	private final static double BLACK_WEIGHT_FREE_WAY_KING = 5;
 	private final static double BLACK_WEIGHT_KING_ON_THRONE = 2;
 	private final static double BLACK_WEIGHT_KING_NEAR_THRONE = 1.5;
 	private final static double BLACK_WEIGHT_KING_ON_STAR = 10;
 	private final static double BLACK_WEIGHT_KING_FROM_BORDER = 4;
-	private final static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 3;
-	private final static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 4;
+	private final static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 2;
+	private final static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 3;
 
 	private final static double WHITE_WEIGHT_DIFF_PAWNS = 2;
 	private final static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 5;
@@ -103,7 +103,7 @@ public class BasicHeuristic implements Heuristic {
 	public double heuristic(State state, Turn yourColor) {
 
 		if (yourColor.equalsTurn("W")) {
-			return this.heuristicWhite(state);
+			return -this.heuristicWhite(state);
 		} else {
 			return this.heuristicBlack(state);
 		}
@@ -155,10 +155,13 @@ public class BasicHeuristic implements Heuristic {
 	public double heuristicBlack(State state) {
 
 		if (state.getTurn().equalsTurn("WW")) {
-			return Double.NEGATIVE_INFINITY;
+			// return Double.NEGATIVE_INFINITY;
+			return 1000;
 		}
 		if (state.getTurn().equalsTurn("BW")) {
-			return Double.POSITIVE_INFINITY;
+			// return Double.POSITIVE_INFINITY;
+			return -1000;
+
 		}
 
 		this.resetValues();
