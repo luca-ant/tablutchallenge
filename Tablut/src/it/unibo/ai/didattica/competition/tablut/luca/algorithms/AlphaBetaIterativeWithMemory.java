@@ -120,12 +120,17 @@ public class AlphaBetaIterativeWithMemory implements IA {
 		}
 
 		for (Node node : rootChildren) {
-			if (node.getState().getTurn().equalsTurn("WW") && yourColor.equalsTurn("W")) {
+			if (node.getState().getTurn().equalsTurn(State.Turn.WHITEWIN.toString())
+					&& yourColor.equalsTurn(State.Turn.WHITE.toString())) {
 				this.ww = true;
+				return node.getMove();
 			}
-			if (node.getState().getTurn().equalsTurn("BW") && yourColor.equalsTurn("B")) {
+			if (node.getState().getTurn().equalsTurn(State.Turn.BLACKWIN.toString())
+					&& yourColor.equalsTurn(State.Turn.BLACK.toString())) {
 
 				this.bw = true;
+				return node.getMove();
+
 			}
 
 		}
