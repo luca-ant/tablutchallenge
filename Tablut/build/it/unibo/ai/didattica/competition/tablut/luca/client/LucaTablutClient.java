@@ -60,8 +60,9 @@ public class LucaTablutClient extends TablutClient {
 		}
 
 		// this.ia = new MinMax(rules,this.timeout);
-		// this.ia = new MinMaxAlphaBeta(rules,this.timeout);
-		this.ia = new AlphaBetaIterative(rules, this.timeout, player);
+		this.ia = new MinMaxAlphaBeta(rules, this.timeout);
+		// this.ia = new AlphaBetaIterative(rules, this.timeout);
+		// this.ia = new AlphaBetaIterative(rules, this.timeout, player);
 		// this.ia = new AlphaBetaIterativeWithMemory(rules, this.timeout);
 
 	}

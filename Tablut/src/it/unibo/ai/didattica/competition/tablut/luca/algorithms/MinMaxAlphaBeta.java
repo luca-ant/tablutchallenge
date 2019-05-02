@@ -27,7 +27,7 @@ import it.unibo.ai.didattica.competition.tablut.luca.util.StatsManager;
 
 public class MinMaxAlphaBeta implements IA {
 
-	public final static int DEPTH = 3;
+	public final static int DEPTH = 10;
 
 	private MyRules rules;
 	private int timeout;

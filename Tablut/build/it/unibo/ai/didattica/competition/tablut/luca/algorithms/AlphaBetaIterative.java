@@ -36,13 +36,13 @@ public class AlphaBetaIterative implements IA {
 
 	private Heuristic heuristic;
 
-	public AlphaBetaIterative(MyRules rules, int timeout, String player) {
-	//	public AlphaBetaIterative(MyRules rules, int timeout) {
+//	public AlphaBetaIterative(MyRules rules, int timeout, String player) {
+		public AlphaBetaIterative(MyRules rules, int timeout) {
 		this.timeout = timeout;
 		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
-//		this.heuristic = new BasicHeuristic();
-		this.heuristic = new BasicHeuristic(player);
+		this.heuristic = new BasicHeuristic();
+//		this.heuristic = new BasicHeuristic(player);
 		this.bestMove = null;
 		this.ww = false;
 		this.bw = false;

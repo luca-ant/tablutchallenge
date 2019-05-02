@@ -134,7 +134,7 @@ public class BasicHeuristic implements Heuristic {
 
 			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
 
-			String numPartita = System.getenv("PATH");
+			String numPartita = System.getenv("NUMERO_PARTITA");
 
 			if (numPartita == null) {
 				numPartita = "--";
