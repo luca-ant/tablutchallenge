@@ -21,7 +21,6 @@ import it.unibo.ai.didattica.competition.tablut.gui.Gui;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.AlphaBetaIterative;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.AlphaBetaIterativeWithMemory;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.IA;
-import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMax;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMaxAlphaBeta;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameAshtonTablutRules;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameModernTablutRules;
@@ -63,11 +62,11 @@ public class LucaTablutClient extends TablutClient {
 		}
 
 		GameManager.getInstance().setRules(rules);
-		
-		// this.ia = new MinMax(rules,this.timeout);
-		// this.ia = new MinMaxAlphaBeta(rules, this.timeout);
+
+		// this.ia = new MinMax();
+		// this.ia = new MinMaxAlphaBeta();
 		this.ia = new AlphaBetaIterative();
-		// this.ia = new AlphaBetaIterativeWithMemory(rules, this.timeout);
+		// this.ia = new AlphaBetaIterativeWithMemory();
 
 	}
 
@@ -95,8 +94,7 @@ public class LucaTablutClient extends TablutClient {
 
 		int timeout = 55;
 		int depth = 10;
-		
-		
+
 		GameManager.getInstance().setParameters(timeout, depth, role.toLowerCase());
 
 		LucaTablutClient client = new LucaTablutClient(role, name, gametype, timeout);
@@ -146,7 +144,7 @@ public class LucaTablutClient extends TablutClient {
 			}
 			System.out.println("Current state:");
 			state = this.getCurrentState();
-		//	System.out.println(state.toString());
+			// System.out.println(state.toString());
 			this.gui.update(state);
 			try {
 				Thread.sleep(1000);
@@ -166,7 +164,7 @@ public class LucaTablutClient extends TablutClient {
 
 					try {
 
-						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.WHITE);
+						a = this.ia.getBestAction(this.getCurrentState());
 
 					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
 							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
@@ -218,7 +216,7 @@ public class LucaTablutClient extends TablutClient {
 					}
 					try {
 
-						a = this.ia.getBestAction(this.getCurrentState(), State.Turn.BLACK);
+						a = this.ia.getBestAction(this.getCurrentState());
 
 					} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
 							| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException

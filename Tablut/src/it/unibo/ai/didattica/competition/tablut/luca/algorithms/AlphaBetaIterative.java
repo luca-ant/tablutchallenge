@@ -26,22 +26,17 @@ import it.unibo.ai.didattica.competition.tablut.luca.util.StatsManager;
 
 public class AlphaBetaIterative implements IA {
 
-
 	private List<Node> rootChildren;
 	private long endTime;
 	private Action bestMove;
 	private boolean ww;
 	private boolean bw;
-
 	private Heuristic heuristic;
 
-//	public AlphaBetaIterative(MyRules rules, int timeout, String player) {
-		public AlphaBetaIterative() {
-		
+	public AlphaBetaIterative() {
 
 		this.rootChildren = new ArrayList<>();
 		this.heuristic = new BasicHeuristic();
-//		this.heuristic = new BasicHeuristic(GameManager.getInstance().getPlayer);
 		this.bestMove = null;
 		this.ww = false;
 		this.bw = false;
@@ -49,45 +44,41 @@ public class AlphaBetaIterative implements IA {
 	}
 
 	@Override
-	public Action getBestAction(State state, Turn yourColor)
+	public Action getBestAction(State state)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-	this.endTime = System.currentTimeMillis() + GameManager.getInstance().getTimeout() * 1000;
-
+		this.endTime = System.currentTimeMillis() + GameManager.getInstance().getTimeout() * 1000;
 
 		Action temp;
 		this.bestMove = null;
 
 		for (int d = 1; d <= GameManager.getInstance().getMaxDepth(); ++d) {
 			System.out.println("\nSTART DEPTH = " + d);
-			
+
 			StatsManager.getInstance().reset();
 			StatsManager.getInstance().setStart(System.currentTimeMillis());
-			
-			temp = this.minmaxAlg(state, d, d, yourColor);
-			
+
+			temp = this.minmaxAlg(state, d, d);
+
 			StatsManager.getInstance().setEnd(System.currentTimeMillis());
 			StatsManager.getInstance().printResults();
-			
 
-			
 			if (System.currentTimeMillis() > this.endTime) {
 				System.out.println("END DUE TO TIMEOUT\n");
 
 				break;
 			}
-			System.out.println("END DEPTH = " + d +"\n");
-
+			System.out.println("END DEPTH = " + d + "\n");
 
 			System.out.println("Temp move found: " + temp);
 
-			if (this.ww && yourColor.equals(State.Turn.WHITE)) {
+			if (this.ww && GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
 				this.bestMove = temp;
 				break;
 			}
 
-			if (this.bw && yourColor.equals(State.Turn.BLACK)) {
+			if (this.bw && GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
 				this.bestMove = temp;
 				break;
 			}
@@ -100,7 +91,7 @@ public class AlphaBetaIterative implements IA {
 
 	}
 
-	private Action minmaxAlg(State state, int depth, int maxDepth, Turn yourColor)
+	private Action minmaxAlg(State state, int depth, int maxDepth)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
@@ -108,9 +99,9 @@ public class AlphaBetaIterative implements IA {
 
 		StatsManager.getInstance().incrementExpandedNodes();
 
-		root.setValue(maxValue(root, depth, maxDepth, yourColor, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+		root.setValue(maxValue(root, depth, maxDepth, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
 
-	if (System.currentTimeMillis() > this.endTime || this.rootChildren.isEmpty()) {
+		if (System.currentTimeMillis() > this.endTime || this.rootChildren.isEmpty()) {
 
 			return this.bestMove;
 		}
@@ -136,7 +127,7 @@ public class AlphaBetaIterative implements IA {
 		}
 	}
 
-	private double maxValue(Node node, int depth, int maxDepth, Turn yourColor, double alpha, double beta)
+	private double maxValue(Node node, int depth, int maxDepth, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
@@ -148,7 +139,7 @@ public class AlphaBetaIterative implements IA {
 			// return this.heuristic.heuristicBlack(node.getState());
 			// return this.heuristic.heuristicWhite(node.getState());
 
-			return this.heuristic.heuristic(node.getState(), yourColor);
+			return this.heuristic.heuristic(node.getState());
 
 		}
 
@@ -162,7 +153,7 @@ public class AlphaBetaIterative implements IA {
 
 			StatsManager.getInstance().incrementExpandedNodes();
 
-			v = Math.max(v, minValue(n, depth - 1, maxDepth, yourColor, alpha, beta));
+			v = Math.max(v, minValue(n, depth - 1, maxDepth, alpha, beta));
 
 			n.setValue(v);
 
@@ -177,7 +168,7 @@ public class AlphaBetaIterative implements IA {
 
 			alpha = Math.max(alpha, v);
 
-		if (System.currentTimeMillis() > this.endTime) {
+			if (System.currentTimeMillis() > this.endTime) {
 
 				return 0;
 			}
@@ -187,18 +178,18 @@ public class AlphaBetaIterative implements IA {
 		return v;
 	}
 
-	private double minValue(Node node, int depth, int maxDepth, Turn yourColor, double alpha, double beta)
+	private double minValue(Node node, int depth, int maxDepth, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-	if (System.currentTimeMillis() > this.endTime) {
+		if (System.currentTimeMillis() > this.endTime) {
 
 			return 0;
 		}
 		if (depth == 0) {
 			// return this.heuristic.heuristicWhite(node.getState());
 			// return this.heuristic.heuristicBlack(node.getState());
-			return this.heuristic.heuristic(node.getState(), yourColor);
+			return this.heuristic.heuristic(node.getState());
 		}
 
 		List<Action> possibleMoves = GameManager.getInstance().getRules().getNextMovesFromState(node.getState());
@@ -211,7 +202,7 @@ public class AlphaBetaIterative implements IA {
 
 			StatsManager.getInstance().incrementExpandedNodes();
 
-			v = Math.min(v, maxValue(n, depth - 1, maxDepth, yourColor, alpha, beta));
+			v = Math.min(v, maxValue(n, depth - 1, maxDepth, alpha, beta));
 
 			n.setValue(v);
 
@@ -226,7 +217,7 @@ public class AlphaBetaIterative implements IA {
 
 			beta = Math.min(beta, v);
 
-			 if (System.currentTimeMillis() > this.endTime) {
+			if (System.currentTimeMillis() > this.endTime) {
 
 				return 0;
 			}
