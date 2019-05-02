@@ -23,87 +23,74 @@ import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.BasicHeuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
+import it.unibo.ai.didattica.competition.tablut.luca.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.luca.util.StatsManager;
 
 public class MinMaxAlphaBeta implements IA {
 
-	public final static int DEPTH = 10;
-
-	private MyRules rules;
-	private int timeout;
 	private List<Node> rootChildren;
 
 	private long endTime;
 
 	private Heuristic heuristic;
 
-	public MinMaxAlphaBeta(MyRules rules, int timeout) {
-		this.timeout = timeout;
+	public MinMaxAlphaBeta() {
 
-		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
 		this.heuristic = new RandomHeuristic();
 
 	}
 
 	@Override
-	public Action getBestAction(State state, Turn yourColor)
+	public Action getBestAction(State state)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
-		return this.minmaxAlg(state, DEPTH, yourColor);
+		return this.minmaxAlg(state, GameManager.getInstance().getMaxDepth());
 	}
 
-	private Action minmaxAlg(State state, int depth, Turn yourColor)
+	private Action minmaxAlg(State state, int depth)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		this.endTime = System.currentTimeMillis() + this.timeout * 1000;
+		this.endTime = System.currentTimeMillis() + GameManager.getInstance().getTimeout() * 1000;
 
 		Node root = new Node(state);
 
 		StatsManager.getInstance().incrementExpandedNodes();
 
-		if (yourColor.equals(State.Turn.BLACK))
-			root.setValue(maxValue(root, depth, yourColor, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-		else if (yourColor.equals(State.Turn.WHITE))
-			root.setValue(minValue(root, depth, yourColor, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
+		root.setValue(maxValue(root, depth, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
 
-		Node bestNextNode = null;
-		if (yourColor.equals(State.Turn.BLACK)) {
-			bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
-		} else if (yourColor.equals(State.Turn.WHITE)) {
-			bestNextNode = rootChildren.stream().min(Comparator.comparing(n -> n.getValue())).get();
-		}
+		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
 		rootChildren.clear();
 		return bestNextNode.getMove();
 
 	}
 
-	private double maxValue(Node node, int depth, Turn yourColor, double alpha, double beta)
+	private double maxValue(Node node, int depth, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			return this.heuristic.heuristic(node.getState(), yourColor);
+			return this.heuristic.heuristic(node.getState());
 
 		}
 
-		List<Action> possibleMoves = this.rules.getNextMovesFromState(node.getState());
+		List<Action> possibleMoves = GameManager.getInstance().getRules().getNextMovesFromState(node.getState());
 
 		Double v = Double.NEGATIVE_INFINITY;
 
 		for (Action a : possibleMoves) {
-			State nextState = rules.movePawn(node.getState().clone(), a);
+			State nextState = GameManager.getInstance().getRules().movePawn(node.getState().clone(), a);
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();
 
-			v = Math.max(v, minValue(n, depth - 1, yourColor, alpha, beta));
+			v = Math.max(v, minValue(n, depth - 1, alpha, beta));
 
 			n.setValue(v);
 
-			if (depth == DEPTH) {
+			if (depth == GameManager.getInstance().getMaxDepth()) {
 
 				rootChildren.add(n);
 
@@ -119,30 +106,30 @@ public class MinMaxAlphaBeta implements IA {
 		return v;
 	}
 
-	private double minValue(Node node, int depth, Turn yourColor, double alpha, double beta)
+	private double minValue(Node node, int depth, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
 		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
-			return this.heuristic.heuristic(node.getState(), yourColor);
+			return this.heuristic.heuristic(node.getState());
 
 		}
 
-		List<Action> possibleMoves = this.rules.getNextMovesFromState(node.getState());
+		List<Action> possibleMoves = GameManager.getInstance().getRules().getNextMovesFromState(node.getState());
 
 		Double v = Double.POSITIVE_INFINITY;
 		for (Action a : possibleMoves) {
-			State nextState = rules.movePawn(node.getState().clone(), a);
+			State nextState = GameManager.getInstance().getRules().movePawn(node.getState().clone(), a);
 
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();
 
-			v = Math.min(v, maxValue(n, depth - 1, yourColor, alpha, beta));
+			v = Math.min(v, maxValue(n, depth - 1, alpha, beta));
 
 			n.setValue(v);
 
-			if (depth == DEPTH) {
+			if (depth == GameManager.getInstance().getMaxDepth()) {
 				rootChildren.add(n);
 
 			}

@@ -13,10 +13,8 @@ public class RandomHeuristic implements Heuristic {
 		this.r = new Random();
 	}
 
-	// BLACK -> MAX
-	// WHITE -> MIN
 	@Override
-		public double heuristic(State state, Turn yourColor) {
+		public double heuristic(State state) {
 
 		return myRandom(-1, 1);
 	}

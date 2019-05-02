@@ -14,6 +14,7 @@ public class GameManager {
 
 	private static GameManager instance = null;
 
+	public final static int MEMORY_LIMIT = 1024;
 	private final static int MAX_DEPTH = 10;
 	private final static int TIMEOUT = 55;
 
@@ -21,6 +22,7 @@ public class GameManager {
 	private MyRules rules;
 	private String player;
 	private int timeout;
+	private int memoryLimit;
 	private int maxDepth;
 	private List<Integer> statiVisitati;
 
@@ -28,6 +30,7 @@ public class GameManager {
 		this.statiVisitati = new ArrayList<>();
 		this.timeout = TIMEOUT;
 		this.maxDepth = MAX_DEPTH;
+		this.memoryLimit = MEMORY_LIMIT;
 		this.pedineOnBoard = 25;
 		this.player = "";
 		this.stats = StatsManager.getInstance();
@@ -80,6 +83,14 @@ public class GameManager {
 
 	public int getMaxDepth() {
 		return maxDepth;
+	}
+
+	public int getMemoryLimit() {
+		return memoryLimit;
+	}
+
+	public void setMemoryLimit(int memoryLimit) {
+		this.memoryLimit = memoryLimit;
 	}
 
 	public void clearStateCache() {

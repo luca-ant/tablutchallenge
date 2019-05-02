@@ -16,6 +16,8 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 
 public interface IA {
 
-	public Action getBestAction(State state, Turn yourColor) throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException, ThroneException, OccupitedException, ClimbingCitadelException, CitadelException;
-	
+	public Action getBestAction(State state)
+			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
+			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException;
+
 }

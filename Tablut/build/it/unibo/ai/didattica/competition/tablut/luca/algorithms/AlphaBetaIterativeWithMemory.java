@@ -27,27 +27,21 @@ import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.BasicHeuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.RandomHeuristic;
+import it.unibo.ai.didattica.competition.tablut.luca.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.luca.util.StatsManager;
 
 public class AlphaBetaIterativeWithMemory implements IA {
-	public final static int MAX_DEPTH = 10;
-	public final static int MEMORY_LIMIT = 1000;
 
-	private MyRules rules;
-	private int timeout;
 	private List<Node> rootChildren;
 	private Map<Integer, Node> transpositionTable;
 	private long endTime;
 	private Action bestMove;
 	private boolean ww;
 	private boolean bw;
-
 	private Heuristic heuristic;
 
-	public AlphaBetaIterativeWithMemory(MyRules rules, int timeout) {
-		this.timeout = timeout;
+	public AlphaBetaIterativeWithMemory() {
 
-		this.rules = rules;
 		this.rootChildren = new ArrayList<>();
 		this.heuristic = new BasicHeuristic();
 		this.transpositionTable = new Hashtable<Integer, Node>();
@@ -57,22 +51,22 @@ public class AlphaBetaIterativeWithMemory implements IA {
 	}
 
 	@Override
-	public Action getBestAction(State state, Turn yourColor)
+	public Action getBestAction(State state)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		this.endTime = System.currentTimeMillis() + this.timeout * 1000;
+		this.endTime = System.currentTimeMillis() + GameManager.getInstance().getTimeout() * 1000;
 
 		Action temp;
 		this.bestMove = null;
 
-		for (int d = 1; d <= MAX_DEPTH; ++d) {
+		for (int d = 1; d <= GameManager.getInstance().getMaxDepth(); ++d) {
 			System.out.println("\nSTART DEPTH = " + d);
 
 			StatsManager.getInstance().reset();
 			StatsManager.getInstance().setStart(System.currentTimeMillis());
 
-			temp = this.minmaxAlg(state, d, d, yourColor);
+			temp = this.minmaxAlg(state, d, d);
 
 			StatsManager.getInstance().setEnd(System.currentTimeMillis());
 			StatsManager.getInstance().printResults();
@@ -86,12 +80,12 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 			System.out.println("Temp move found: " + temp);
 
-			if (this.ww && yourColor.equals(State.Turn.WHITE)) {
+			if (this.ww && GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
 				this.bestMove = temp;
 				break;
 			}
 
-			if (this.bw && yourColor.equals(State.Turn.BLACK)) {
+			if (this.bw && GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
 				this.bestMove = temp;
 				break;
 			}
@@ -104,7 +98,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 	}
 
-	private Action minmaxAlg(State state, int depth, int maxDepth, Turn yourColor)
+	private Action minmaxAlg(State state, int depth, int maxDepth)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
@@ -112,7 +106,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 		StatsManager.getInstance().incrementExpandedNodes();
 
-		root.setValue(maxValue(root, depth, maxDepth, yourColor, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
+		root.setValue(maxValue(root, depth, maxDepth, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
 
 		if (System.currentTimeMillis() > this.endTime || this.rootChildren.isEmpty()) {
 
@@ -121,12 +115,12 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 		for (Node node : rootChildren) {
 			if (node.getState().getTurn().equalsTurn(State.Turn.WHITEWIN.toString())
-					&& yourColor.equalsTurn(State.Turn.WHITE.toString())) {
+					&& GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
 				this.ww = true;
 				return node.getMove();
 			}
 			if (node.getState().getTurn().equalsTurn(State.Turn.BLACKWIN.toString())
-					&& yourColor.equalsTurn(State.Turn.BLACK.toString())) {
+					&& GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
 
 				this.bw = true;
 				return node.getMove();
@@ -150,7 +144,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 	}
 
-	private double maxValue(Node node, int depth, int maxDepth, Turn yourColor, double alpha, double beta)
+	private double maxValue(Node node, int depth, int maxDepth, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
@@ -160,7 +154,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 		}
 		if (depth == 0) {
 			// return this.heuristic.heuristicBlack(node.getState());
-			return this.heuristic.heuristic(node.getState(), yourColor);
+			return this.heuristic.heuristic(node.getState());
 
 		}
 
@@ -169,23 +163,23 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			return this.transpositionTable.get(node.getState().hashCode()).getValue();
 		}
 
-		List<Action> possibleMoves = this.rules.getNextMovesFromState(node.getState());
+		List<Action> possibleMoves = GameManager.getInstance().getRules().getNextMovesFromState(node.getState());
 
 		Double v = Double.NEGATIVE_INFINITY;
 
 		for (Action a : possibleMoves) {
-			State nextState = this.rules.movePawn(node.getState().clone(), a);
+			State nextState = GameManager.getInstance().getRules().movePawn(node.getState().clone(), a);
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();
 
-			v = Math.max(v, minValue(n, depth - 1, maxDepth, yourColor, alpha, beta));
+			v = Math.max(v, minValue(n, depth - 1, maxDepth, alpha, beta));
 
 			n.setValue(v);
 
 			if (!this.transpositionTable.containsKey(n.getState().hashCode())) {
 
-				if (StatsManager.getInstance().getOccupiedMemoryInMB() > MEMORY_LIMIT) {
+				if (StatsManager.getInstance().getOccupiedMemoryInMB() > GameManager.getInstance().getMemoryLimit()) {
 
 					this.transpositionTable.remove(new ArrayList<>(this.transpositionTable.keySet()).get(0));
 				}
@@ -215,7 +209,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 
 	}
 
-	private double minValue(Node node, int depth, int maxDepth, Turn yourColor, double alpha, double beta)
+	private double minValue(Node node, int depth, int maxDepth, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
@@ -225,7 +219,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 		}
 		if (depth == 0) {
 			// return this.heuristic.heuristicWhite(node.getState());
-			return this.heuristic.heuristic(node.getState(), yourColor);
+			return this.heuristic.heuristic(node.getState());
 
 		}
 
@@ -235,22 +229,22 @@ public class AlphaBetaIterativeWithMemory implements IA {
 			return this.transpositionTable.get(node.getState().hashCode()).getValue();
 		}
 
-		List<Action> possibleMoves = this.rules.getNextMovesFromState(node.getState());
+		List<Action> possibleMoves = GameManager.getInstance().getRules().getNextMovesFromState(node.getState());
 
 		Double v = Double.POSITIVE_INFINITY;
 		for (Action a : possibleMoves) {
-			State nextState = this.rules.movePawn(node.getState().clone(), a);
+			State nextState = GameManager.getInstance().getRules().movePawn(node.getState().clone(), a);
 
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();
 
-			v = Math.min(v, maxValue(n, depth - 1, maxDepth, yourColor, alpha, beta));
+			v = Math.min(v, maxValue(n, depth - 1, maxDepth, alpha, beta));
 
 			n.setValue(v);
 
 			if (!this.transpositionTable.containsKey(n.getState().hashCode())) {
-				if (StatsManager.getInstance().getOccupiedMemoryInMB() > MEMORY_LIMIT) {
+				if (StatsManager.getInstance().getOccupiedMemoryInMB() > GameManager.getInstance().getMemoryLimit()) {
 
 					this.transpositionTable.remove(new ArrayList<>(this.transpositionTable.keySet()).get(0));
 				}

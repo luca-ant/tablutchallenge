@@ -182,16 +182,16 @@ public class BasicHeuristic implements Heuristic {
 
 	}
 
-	// BLACK -> MAX
-	// WHITE -> MIN
 	@Override
-	public double heuristic(State state, Turn yourColor) {
+	public double heuristic(State state) {
 
-		if (yourColor.equalsTurn("W")) {
+		if (GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
 			return this.heuristicWhite(state);
-		} else {
+		} else if (GameManager.getInstance().getPlayer().equalsIgnoreCase("black")){
 			return this.heuristicBlack(state);
 		}
+		
+		return 0;
 
 	}
 
