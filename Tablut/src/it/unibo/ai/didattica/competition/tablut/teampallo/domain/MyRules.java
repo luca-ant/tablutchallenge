@@ -1,4 +1,4 @@
-package it.unibo.ai.didattica.competition.tablut.luca.domain;
+package it.unibo.ai.didattica.competition.tablut.teampallo.domain;
 
 import java.util.List;
 

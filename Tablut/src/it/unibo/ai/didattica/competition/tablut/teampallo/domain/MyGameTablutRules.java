@@ -1,4 +1,4 @@
-package it.unibo.ai.didattica.competition.tablut.luca.domain;
+package it.unibo.ai.didattica.competition.tablut.teampallo.domain;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,19 +16,19 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 
-public class MyGameModernTablutRules implements MyRules {
+public class MyGameTablutRules implements MyRules {
 
-	private static MyGameModernTablutRules instance = null;
+	private static MyGameTablutRules instance = null;
 	private List<String> citadels;
 
-	private MyGameModernTablutRules() {
+	private MyGameTablutRules() {
 		this.citadels = Arrays.asList("a4", "a5", "a6", "b5", "d1", "e1", "f1", "e2", "i4", "i5", "i6", "h5", "d9",
 				"e9", "f9", "e8");
 	}
 
-	public static MyGameModernTablutRules getInstance() {
-		if (MyGameModernTablutRules.instance == null)
-			MyGameModernTablutRules.instance = new MyGameModernTablutRules();
+	public static MyGameTablutRules getInstance() {
+		if (MyGameTablutRules.instance == null)
+			MyGameTablutRules.instance = new MyGameTablutRules();
 		return instance;
 	}
 
@@ -38,7 +38,6 @@ public class MyGameModernTablutRules implements MyRules {
 		return null;
 	}
 
-	
 	public State checkMove(State state, Action a)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, CitadelException, ClimbingCitadelException {

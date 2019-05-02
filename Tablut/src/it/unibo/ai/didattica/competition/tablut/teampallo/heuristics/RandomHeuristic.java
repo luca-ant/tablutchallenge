@@ -1,4 +1,4 @@
-package it.unibo.ai.didattica.competition.tablut.luca.heuristics;
+package it.unibo.ai.didattica.competition.tablut.teampallo.heuristics;
 
 import java.util.Random;
 

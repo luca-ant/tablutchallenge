@@ -1,9 +1,9 @@
-package it.unibo.ai.didattica.competition.tablut.luca.client;
+package it.unibo.ai.didattica.competition.tablut.teampallo.client;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-public class LucaWhiteTablutClient {
+public class TeamPalloWhiteTablutClient {
 
 
 		public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException {
@@ -11,7 +11,7 @@ public class LucaWhiteTablutClient {
 			if (args.length>0){
 				array = new String[]{"WHITE", args[0]};
 			}
-			LucaTablutClient.main(array);
+			TeamPalloTablutClient.main(array);
 		}
 
 	

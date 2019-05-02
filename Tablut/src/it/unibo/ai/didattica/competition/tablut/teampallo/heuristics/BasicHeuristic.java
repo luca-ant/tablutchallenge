@@ -1,4 +1,4 @@
-package it.unibo.ai.didattica.competition.tablut.luca.heuristics;
+package it.unibo.ai.didattica.competition.tablut.teampallo.heuristics;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,8 +13,8 @@ import java.util.Random;
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.StateTablut;
-import it.unibo.ai.didattica.competition.tablut.luca.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
+import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 
 public class BasicHeuristic implements Heuristic {
 

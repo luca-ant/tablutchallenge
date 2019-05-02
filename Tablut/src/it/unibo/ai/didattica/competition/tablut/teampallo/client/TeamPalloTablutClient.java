@@ -1,4 +1,4 @@
-package it.unibo.ai.didattica.competition.tablut.luca.client;
+package it.unibo.ai.didattica.competition.tablut.teampallo.client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,24 +18,24 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.gui.Gui;
-import it.unibo.ai.didattica.competition.tablut.luca.algorithms.AlphaBetaIterative;
-import it.unibo.ai.didattica.competition.tablut.luca.algorithms.AlphaBetaIterativeWithMemory;
-import it.unibo.ai.didattica.competition.tablut.luca.algorithms.IA;
-import it.unibo.ai.didattica.competition.tablut.luca.algorithms.MinMaxAlphaBeta;
-import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameAshtonTablutRules;
-import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameModernTablutRules;
-import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameTablutRules;
-import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
-import it.unibo.ai.didattica.competition.tablut.luca.gui.GuiCli;
-import it.unibo.ai.didattica.competition.tablut.luca.util.GameManager;
+import it.unibo.ai.didattica.competition.tablut.teampallo.algorithms.AlphaBetaIterative;
+import it.unibo.ai.didattica.competition.tablut.teampallo.algorithms.AlphaBetaIterativeWithMemory;
+import it.unibo.ai.didattica.competition.tablut.teampallo.algorithms.IA;
+import it.unibo.ai.didattica.competition.tablut.teampallo.algorithms.MinMaxAlphaBeta;
+import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyGameAshtonTablutRules;
+import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyGameModernTablutRules;
+import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyGameTablutRules;
+import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyRules;
+import it.unibo.ai.didattica.competition.tablut.teampallo.gui.GuiCli;
+import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 
-public class LucaTablutClient extends TablutClient {
+public class TeamPalloTablutClient extends TablutClient {
 
 	private int game;
 	private IA ia;
 	private GuiCli gui;
 
-	public LucaTablutClient(String player, String name, int gameChosen, int timeout)
+	public TeamPalloTablutClient(String player, String name, int gameChosen, int timeout)
 			throws UnknownHostException, IOException {
 		super(player, name);
 		this.game = gameChosen;
@@ -97,7 +97,7 @@ public class LucaTablutClient extends TablutClient {
 
 		GameManager.getInstance().setParameters(timeout, depth, role.toLowerCase());
 
-		LucaTablutClient client = new LucaTablutClient(role, name, gametype, timeout);
+		TeamPalloTablutClient client = new TeamPalloTablutClient(role, name, gametype, timeout);
 		client.run();
 	}
 

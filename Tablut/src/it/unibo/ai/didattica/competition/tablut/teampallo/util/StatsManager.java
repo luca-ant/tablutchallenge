@@ -1,4 +1,4 @@
-package it.unibo.ai.didattica.competition.tablut.luca.util;
+package it.unibo.ai.didattica.competition.tablut.teampallo.util;
 
 public class StatsManager {
 

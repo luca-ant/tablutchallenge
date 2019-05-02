@@ -1,4 +1,4 @@
-package it.unibo.ai.didattica.competition.tablut.luca.algorithms;
+package it.unibo.ai.didattica.competition.tablut.teampallo.algorithms;
 
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.State;

@@ -19,7 +19,7 @@ import java.util.logging.*;
 
 import it.unibo.ai.didattica.competition.tablut.domain.*;
 import it.unibo.ai.didattica.competition.tablut.gui.Gui;
-import it.unibo.ai.didattica.competition.tablut.luca.gui.GuiCli;
+import it.unibo.ai.didattica.competition.tablut.teampallo.gui.GuiCli;
 import it.unibo.ai.didattica.competition.tablut.util.StreamUtils;
 
 import com.google.gson.Gson;

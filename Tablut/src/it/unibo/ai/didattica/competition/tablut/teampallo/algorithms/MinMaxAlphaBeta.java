@@ -1,11 +1,11 @@
-package it.unibo.ai.didattica.competition.tablut.luca.algorithms;
+package it.unibo.ai.didattica.competition.tablut.teampallo.algorithms;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-
 import java.util.List;
 
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
+import it.unibo.ai.didattica.competition.tablut.domain.Game;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ActionException;
@@ -18,28 +18,26 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
-import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
-import it.unibo.ai.didattica.competition.tablut.luca.heuristics.BasicHeuristic;
-import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
-import it.unibo.ai.didattica.competition.tablut.luca.util.GameManager;
-import it.unibo.ai.didattica.competition.tablut.luca.util.StatsManager;
+import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyGameAshtonTablutRules;
+import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyRules;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.BasicHeuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.RandomHeuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
+import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
 
-public class AlphaBetaIterative implements IA {
+public class MinMaxAlphaBeta implements IA {
 
 	private List<Node> rootChildren;
+
 	private long endTime;
-	private Action bestMove;
-	private boolean ww;
-	private boolean bw;
+
 	private Heuristic heuristic;
 
-	public AlphaBetaIterative() {
+	public MinMaxAlphaBeta() {
 
 		this.rootChildren = new ArrayList<>();
-		this.heuristic = new BasicHeuristic();
-		this.bestMove = null;
-		this.ww = false;
-		this.bw = false;
+		this.heuristic = new RandomHeuristic();
 
 	}
 
@@ -47,98 +45,33 @@ public class AlphaBetaIterative implements IA {
 	public Action getBestAction(State state)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
-
-		this.endTime = System.currentTimeMillis() + GameManager.getInstance().getTimeout() * 1000;
-
-		Action temp;
-		this.bestMove = null;
-
-		for (int d = 1; d <= GameManager.getInstance().getMaxDepth(); ++d) {
-			System.out.println("\nSTART DEPTH = " + d);
-
-			StatsManager.getInstance().reset();
-			StatsManager.getInstance().setStart(System.currentTimeMillis());
-
-			temp = this.minmaxAlg(state, d, d);
-
-			StatsManager.getInstance().setEnd(System.currentTimeMillis());
-			StatsManager.getInstance().printResults();
-
-			if (System.currentTimeMillis() > this.endTime) {
-				System.out.println("END DUE TO TIMEOUT\n");
-
-				break;
-			}
-			System.out.println("END DEPTH = " + d + "\n");
-
-			System.out.println("Temp move found: " + temp);
-
-			if (this.ww && GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
-				this.bestMove = temp;
-				break;
-			}
-
-			if (this.bw && GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
-				this.bestMove = temp;
-				break;
-			}
-
-			this.bestMove = temp;
-
-		}
-
-		return this.bestMove;
-
+		return this.minmaxAlg(state, GameManager.getInstance().getMaxDepth());
 	}
 
-	private Action minmaxAlg(State state, int depth, int maxDepth)
+	private Action minmaxAlg(State state, int depth)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
+
+		this.endTime = System.currentTimeMillis() + GameManager.getInstance().getTimeout() * 1000;
 
 		Node root = new Node(state);
 
 		StatsManager.getInstance().incrementExpandedNodes();
 
-		root.setValue(maxValue(root, depth, maxDepth, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
-
-		if (System.currentTimeMillis() > this.endTime || this.rootChildren.isEmpty()) {
-
-			return this.bestMove;
-		}
+		root.setValue(maxValue(root, depth, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
 
 		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
 		rootChildren.clear();
-		if (bestNextNode != null) {
-			if (bestNextNode.getState().getTurn().equalsTurn("WW")) {
+		return bestNextNode.getMove();
 
-				this.ww = true;
-			}
-			if (bestNextNode.getState().getTurn().equalsTurn("BW")) {
-
-				this.bw = true;
-			}
-
-			System.out.println("H: " + bestNextNode.getValue());
-			return bestNextNode.getMove();
-
-		} else {
-			return this.bestMove;
-		}
 	}
 
-	private double maxValue(Node node, int depth, int maxDepth, double alpha, double beta)
+	private double maxValue(Node node, int depth, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (System.currentTimeMillis() > this.endTime) {
-
-			return 0;
-		}
-		if (depth == 0) {
-			// return this.heuristic.heuristicBlack(node.getState());
-			// return this.heuristic.heuristicWhite(node.getState());
-
+		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
 			return this.heuristic.heuristic(node.getState());
 
 		}
@@ -153,11 +86,11 @@ public class AlphaBetaIterative implements IA {
 
 			StatsManager.getInstance().incrementExpandedNodes();
 
-			v = Math.max(v, minValue(n, depth - 1, maxDepth, alpha, beta));
+			v = Math.max(v, minValue(n, depth - 1, alpha, beta));
 
 			n.setValue(v);
 
-			if (depth == maxDepth) {
+			if (depth == GameManager.getInstance().getMaxDepth()) {
 
 				rootChildren.add(n);
 
@@ -168,28 +101,18 @@ public class AlphaBetaIterative implements IA {
 
 			alpha = Math.max(alpha, v);
 
-			if (System.currentTimeMillis() > this.endTime) {
-
-				return 0;
-			}
-
 		}
 
 		return v;
 	}
 
-	private double minValue(Node node, int depth, int maxDepth, double alpha, double beta)
+	private double minValue(Node node, int depth, double alpha, double beta)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-		if (System.currentTimeMillis() > this.endTime) {
-
-			return 0;
-		}
-		if (depth == 0) {
-			// return this.heuristic.heuristicWhite(node.getState());
-			// return this.heuristic.heuristicBlack(node.getState());
+		if (depth == 0 || System.currentTimeMillis() > this.endTime) {
 			return this.heuristic.heuristic(node.getState());
+
 		}
 
 		List<Action> possibleMoves = GameManager.getInstance().getRules().getNextMovesFromState(node.getState());
@@ -202,25 +125,18 @@ public class AlphaBetaIterative implements IA {
 
 			StatsManager.getInstance().incrementExpandedNodes();
 
-			v = Math.min(v, maxValue(n, depth - 1, maxDepth, alpha, beta));
+			v = Math.min(v, maxValue(n, depth - 1, alpha, beta));
 
 			n.setValue(v);
 
-			if (depth == maxDepth) {
+			if (depth == GameManager.getInstance().getMaxDepth()) {
 				rootChildren.add(n);
 
 			}
-
 			if (v <= alpha)
-
 				return v;
 
 			beta = Math.min(beta, v);
-
-			if (System.currentTimeMillis() > this.endTime) {
-
-				return 0;
-			}
 
 		}
 		possibleMoves.clear();

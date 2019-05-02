@@ -1,10 +1,10 @@
-package it.unibo.ai.didattica.competition.tablut.luca.util;
+package it.unibo.ai.didattica.competition.tablut.teampallo.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import it.unibo.ai.didattica.competition.tablut.domain.State;
-import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
+import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyRules;
 
 public class GameManager {
 
