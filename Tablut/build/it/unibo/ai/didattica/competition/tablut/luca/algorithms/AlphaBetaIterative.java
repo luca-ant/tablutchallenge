@@ -21,13 +21,12 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.BasicHeuristic;
 import it.unibo.ai.didattica.competition.tablut.luca.heuristics.Heuristic;
+import it.unibo.ai.didattica.competition.tablut.luca.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.luca.util.StatsManager;
 
 public class AlphaBetaIterative implements IA {
-	public final static int MAX_DEPTH = 10;
 
-	private MyRules rules;
-	private int timeout;
+
 	private List<Node> rootChildren;
 	private long endTime;
 	private Action bestMove;
@@ -37,12 +36,12 @@ public class AlphaBetaIterative implements IA {
 	private Heuristic heuristic;
 
 //	public AlphaBetaIterative(MyRules rules, int timeout, String player) {
-		public AlphaBetaIterative(MyRules rules, int timeout) {
-		this.timeout = timeout;
-		this.rules = rules;
+		public AlphaBetaIterative() {
+		
+
 		this.rootChildren = new ArrayList<>();
 		this.heuristic = new BasicHeuristic();
-//		this.heuristic = new BasicHeuristic(player);
+//		this.heuristic = new BasicHeuristic(GameManager.getInstance().getPlayer);
 		this.bestMove = null;
 		this.ww = false;
 		this.bw = false;
@@ -54,13 +53,13 @@ public class AlphaBetaIterative implements IA {
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
 
-	this.endTime = System.currentTimeMillis() + this.timeout * 1000;
+	this.endTime = System.currentTimeMillis() + GameManager.getInstance().getTimeout() * 1000;
 
 
 		Action temp;
 		this.bestMove = null;
 
-		for (int d = 1; d <= MAX_DEPTH; ++d) {
+		for (int d = 1; d <= GameManager.getInstance().getMaxDepth(); ++d) {
 			System.out.println("\nSTART DEPTH = " + d);
 			
 			StatsManager.getInstance().reset();
@@ -153,12 +152,12 @@ public class AlphaBetaIterative implements IA {
 
 		}
 
-		List<Action> possibleMoves = this.rules.getNextMovesFromState(node.getState());
+		List<Action> possibleMoves = GameManager.getInstance().getRules().getNextMovesFromState(node.getState());
 
 		Double v = Double.NEGATIVE_INFINITY;
 
 		for (Action a : possibleMoves) {
-			State nextState = this.rules.movePawn(node.getState().clone(), a);
+			State nextState = GameManager.getInstance().getRules().movePawn(node.getState().clone(), a);
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();
@@ -202,11 +201,11 @@ public class AlphaBetaIterative implements IA {
 			return this.heuristic.heuristic(node.getState(), yourColor);
 		}
 
-		List<Action> possibleMoves = this.rules.getNextMovesFromState(node.getState());
+		List<Action> possibleMoves = GameManager.getInstance().getRules().getNextMovesFromState(node.getState());
 
 		Double v = Double.POSITIVE_INFINITY;
 		for (Action a : possibleMoves) {
-			State nextState = this.rules.movePawn(node.getState().clone(), a);
+			State nextState = GameManager.getInstance().getRules().movePawn(node.getState().clone(), a);
 
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
