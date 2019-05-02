@@ -1,9 +1,15 @@
 package it.unibo.ai.didattica.competition.tablut.server;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Path;
@@ -13,6 +19,7 @@ import java.util.logging.*;
 
 import it.unibo.ai.didattica.competition.tablut.domain.*;
 import it.unibo.ai.didattica.competition.tablut.gui.Gui;
+import it.unibo.ai.didattica.competition.tablut.teampallo.gui.GuiCli;
 import it.unibo.ai.didattica.competition.tablut.util.StreamUtils;
 
 import com.google.gson.Gson;
@@ -76,7 +83,8 @@ public class Server implements Runnable {
 
 	private Game game;
 	private Gson gson;
-	private Gui theGui;
+//	private Gui theGui;
+	private GuiCli theGui;
 	/**
 	 * Integer that represents the game type
 	 */
@@ -93,17 +101,18 @@ public class Server implements Runnable {
 	}
 
 	public void initializeGUI(State state) {
-		this.theGui = new Gui(this.gameC);
+//		this.theGui = new Gui(this.gameC);
+//		this.theGui.update(state);
+		this.theGui = new GuiCli();
 		this.theGui.update(state);
 	}
 
 	/**
 	 * Server initialiazer.
 	 * 
-	 * @param args
-	 *            the time for the move, the size of the cache for monitoring
-	 *            draws, the number of errors allowed, the type of game, whether
-	 *            the GUI should be used or not
+	 * @param args the time for the move, the size of the cache for monitoring
+	 *             draws, the number of errors allowed, the type of game, whether
+	 *             the GUI should be used or not
 	 * 
 	 */
 	public static void main(String[] args) {
@@ -230,8 +239,8 @@ public class Server implements Runnable {
 	}
 
 	/**
-	 * This class represents the stream who is waiting for the move from the
-	 * client (JSON format)
+	 * This class represents the stream who is waiting for the move from the client
+	 * (JSON format)
 	 * 
 	 * @author A.Piretti
 	 *
@@ -253,9 +262,9 @@ public class Server implements Runnable {
 	}
 
 	/**
-	 * This method starts the proper game. It waits the connections from 2
-	 * clients, check the move and update the state. There is a timeout that
-	 * interrupts games that last too much
+	 * This method starts the proper game. It waits the connections from 2 clients,
+	 * check the move and update the state. There is a timeout that interrupts games
+	 * that last too much
 	 */
 	public void run() {
 		/**
@@ -422,6 +431,8 @@ public class Server implements Runnable {
 				if (Character.isAlphabetic(c) || Character.isDigit(c))
 					temp += c;
 			}
+			blackName = temp;
+
 			System.out.println("Black player name:\t" + blackName);
 			loggSys.fine("Black player name:\t" + blackName);
 
@@ -593,6 +604,43 @@ public class Server implements Runnable {
 				if (state.getTurn().equalsTurn(StateTablut.Turn.BLACKWIN.toString())) {
 					System.out.println("RESULT: PLAYER BLACK WIN");
 				}
+
+				// ADD TO LOG
+
+//				try {
+//
+//					File logFile = new File("/home/luca/tablut_log.txt");
+//					if (!logFile.exists()) {
+//						logFile.createNewFile();
+//					}
+//					PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
+//
+//					String numPartita = System.getenv("NUMERO_PARTITA");
+//
+//					if (numPartita == null) {
+//						numPartita = "--";
+//					}
+//				//	pw.println("RISULTATO PARTITA " + numPartita);
+//
+//					if (state.getTurn().equalsTurn(StateTablut.Turn.DRAW.toString())) {
+//						pw.println("RESULT: DRAW");
+//					}
+//					if (state.getTurn().equalsTurn(StateTablut.Turn.WHITEWIN.toString())) {
+//						pw.println("RESULT: PLAYER WHITE WIN");
+//					}
+//					if (state.getTurn().equalsTurn(StateTablut.Turn.BLACKWIN.toString())) {
+//						pw.println("RESULT: PLAYER BLACK WIN");
+//					}
+//
+//					pw.println("--------------------------------------------------\n");
+//
+//					pw.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+
+				// ***
+
 				endgame = true;
 			}
 		}
