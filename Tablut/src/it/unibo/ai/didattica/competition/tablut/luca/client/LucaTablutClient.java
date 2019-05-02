@@ -17,6 +17,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
+import it.unibo.ai.didattica.competition.tablut.gui.Gui;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.AlphaBetaIterative;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.AlphaBetaIterativeWithMemory;
 import it.unibo.ai.didattica.competition.tablut.luca.algorithms.IA;
@@ -26,18 +27,20 @@ import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameAshtonTablutRu
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameModernTablutRules;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyGameTablutRules;
 import it.unibo.ai.didattica.competition.tablut.luca.domain.MyRules;
+import it.unibo.ai.didattica.competition.tablut.luca.gui.GuiCli;
+import it.unibo.ai.didattica.competition.tablut.luca.util.GameManager;
 
 public class LucaTablutClient extends TablutClient {
 
 	private int game;
 	private IA ia;
-	private int timeout;
+	private GuiCli gui;
 
 	public LucaTablutClient(String player, String name, int gameChosen, int timeout)
 			throws UnknownHostException, IOException {
 		super(player, name);
 		this.game = gameChosen;
-		this.timeout = timeout;
+		this.gui = new GuiCli();
 		MyRules rules = null;
 
 		switch (this.game) {
@@ -59,10 +62,11 @@ public class LucaTablutClient extends TablutClient {
 			System.exit(4);
 		}
 
+		GameManager.getInstance().setRules(rules);
+		
 		// this.ia = new MinMax(rules,this.timeout);
 		// this.ia = new MinMaxAlphaBeta(rules, this.timeout);
-		this.ia = new AlphaBetaIterative(rules, this.timeout);
-		// this.ia = new AlphaBetaIterative(rules, this.timeout, player);
+		this.ia = new AlphaBetaIterative();
 		// this.ia = new AlphaBetaIterativeWithMemory(rules, this.timeout);
 
 	}
@@ -89,7 +93,11 @@ public class LucaTablutClient extends TablutClient {
 		System.out.println("Selected client: " + args[0]);
 		System.out.println("YOUR NAME: " + name);
 
-		int timeout = 50;
+		int timeout = 55;
+		int depth = 10;
+		
+		
+		GameManager.getInstance().setParameters(timeout, depth, role.toLowerCase());
 
 		LucaTablutClient client = new LucaTablutClient(role, name, gametype, timeout);
 		client.run();
@@ -138,7 +146,8 @@ public class LucaTablutClient extends TablutClient {
 			}
 			System.out.println("Current state:");
 			state = this.getCurrentState();
-			System.out.println(state.toString());
+		//	System.out.println(state.toString());
+			this.gui.update(state);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

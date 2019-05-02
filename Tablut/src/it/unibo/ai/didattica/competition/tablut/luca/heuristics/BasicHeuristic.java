@@ -13,6 +13,7 @@ import java.util.Random;
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.StateTablut;
+import it.unibo.ai.didattica.competition.tablut.luca.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 public class BasicHeuristic implements Heuristic {
@@ -59,19 +60,6 @@ public class BasicHeuristic implements Heuristic {
 
 	// *** ***
 
-	private final static double WEIGHT_DIFF_PAWNS = 7;
-	private final static double WEIGHT_COUNT_WHITE_PAWNS = 5;
-	private final static double WEIGHT_COUNT_BLACK_PAWNS = 2;
-	private final static double WEIGHT_BLACK_NEAR_KING = 5;
-	private final static double WEIGHT_WHITE_NEAR_KING = 3;
-	private final static double WEIGHT_FREE_WAY_KING = 7;
-	private final static double WEIGHT_KING_ON_THRONE = 2;
-	private final static double WEIGHT_KING_NEAR_THRONE = 1.5;
-	private final static double WEIGHT_KING_ON_STAR = 10;
-	private final static double WEIGHT_KING_FROM_BORDER = 4;
-	private final static double WEIGHT_BLACK_PAWNS_OVERHANGED = 3;
-	private final static double WEIGHT_WHITE_PAWNS_OVERHANGED = 4;
-
 	private int countB;
 	private int countW;
 	private int blackNearKing;
@@ -101,23 +89,10 @@ public class BasicHeuristic implements Heuristic {
 
 		this.nearsThrone = Arrays.asList("e4", "e6", "d5", "f5");
 		this.throne = "e5";
-	}
 
-	
-	// ADD TO TRAINING
-	public BasicHeuristic(String player) {
-		this.r = new Random(System.currentTimeMillis());
+		// ADD TO TRAINING
 
-		this.citadels = Arrays.asList("a4", "a5", "a6", "b5", "d1", "e1", "f1", "e2", "i4", "i5", "i6", "h5", "d9",
-				"e9", "f9", "e8");
-
-		this.stars = Arrays.asList("a2", "a3", "a7", "a8", "b1", "b9", "c1", "c9", "g1", "g9", "h1", "h9", "i2", "i3",
-				"i7", "i8");
-
-		this.nearsThrone = Arrays.asList("e4", "e6", "d5", "f5");
-		this.throne = "e5";
-
-		generateValues(player);
+		// generateValues(GameManager.getInstance().getPlayer());
 
 	}
 
