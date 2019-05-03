@@ -18,18 +18,18 @@ import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 
 public class MyHeuristic implements Heuristic {
 
-	private static double BLACK_WEIGHT_DIFF_PAWNS = 4;
-	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 1.5;
-	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 1.2;
-	private static double BLACK_WEIGHT_BLACK_NEAR_KING = 5;
-	private static double BLACK_WEIGHT_WHITE_NEAR_KING = 0;
+	private static double BLACK_WEIGHT_DIFF_PAWNS = 7;
+	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 5;
+	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2;
+	private static double BLACK_WEIGHT_BLACK_NEAR_KING = 3;
+	private static double BLACK_WEIGHT_WHITE_NEAR_KING = 1.2;
 	private static double BLACK_WEIGHT_FREE_WAY_KING = 7;
-	private static double BLACK_WEIGHT_KING_ON_THRONE = 1.1;
-	private static double BLACK_WEIGHT_KING_NEAR_THRONE = 1.5;
+	private static double BLACK_WEIGHT_KING_ON_THRONE = 1.5;
+	private static double BLACK_WEIGHT_KING_NEAR_THRONE = 1.2;
 	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
 	private static double BLACK_WEIGHT_KING_FROM_BORDER = 0;
-	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 1.2;
-	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 1.5;
+	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 3;
+	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 4;
 
 	private static double WHITE_WEIGHT_DIFF_PAWNS = 2;
 	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 5;
@@ -92,11 +92,29 @@ public class MyHeuristic implements Heuristic {
 
 		// ADD TO TRAINING
 
-		// generateValues(GameManager.getInstance().getPlayer());
+		// generateVWeightValues(GameManager.getInstance().getPlayer());
 
 	}
 
-	private void generateValues(String player) {
+	private void printValues() {
+
+		double diff = countB - countW;
+
+		System.out.println("countB - countW = " + diff);
+		System.out.println("countB = " + this.countB);
+		System.out.println("countW = " + this.countW);
+		System.out.println("blackNearKing = " + this.blackNearKing);
+		System.out.println("whiteNearKing = " + this.whiteNearKing);
+		System.out.println("kingFreeWay = " + this.kingFreeWay);
+		System.out.println("kingOnThrone = " + this.kingOnThrone);
+		System.out.println("kingNearThrone = " + this.kingNearThrone);
+		System.out.println("kingOnStar = " + this.kingOnStar);
+		System.out.println("kingFromBorder = " + this.kingFromBorder);
+		System.out.println("blackPawnsOverhanged = " + this.blackPawnsOverhanged);
+		System.out.println("whitePawnsOverhanged = " + this.whitePawnsOverhanged);
+	}
+
+	private void generateVWeightValues(String player) {
 
 		// ADD TO LOG
 
@@ -187,10 +205,10 @@ public class MyHeuristic implements Heuristic {
 
 		if (GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
 			return this.heuristicWhite(state);
-		} else if (GameManager.getInstance().getPlayer().equalsIgnoreCase("black")){
+		} else if (GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
 			return this.heuristicBlack(state);
 		}
-		
+
 		return 0;
 
 	}
@@ -199,6 +217,8 @@ public class MyHeuristic implements Heuristic {
 
 		this.resetValues();
 		this.extractValues(state);
+
+	//	printValues();
 
 		double result = myRandom(-1, 1);
 //		double result = 0;
@@ -234,6 +254,8 @@ public class MyHeuristic implements Heuristic {
 
 		this.resetValues();
 		this.extractValues(state);
+
+	//	printValues();
 
 		double result = myRandom(-1, 1);
 //		double result = 0;
@@ -297,36 +319,49 @@ public class MyHeuristic implements Heuristic {
 				}
 
 				// conto le pedine nere con una bianca o un accampamento o il trono vicino
-				if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
+				if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())
+						&& !this.citadels.contains(state.getBox(i, j).toString())) {
 
-					if (i > 0 && (state.getPawn(i - 1, j).equalsPawn(State.Pawn.WHITE.toString())
-							|| state.getPawn(i - 1, j).equalsPawn(State.Pawn.KING.toString())
-							|| this.citadels.contains(state.getBox(i - 1, j))
-							|| state.getBox(i - 1, j).equals(this.throne))) {
+					if (i > 0
+							&& (state.getPawn(i - 1, j).equalsPawn(State.Pawn.WHITE.toString())
+									|| state.getPawn(i - 1, j).equalsPawn(State.Pawn.KING.toString())
+									|| this.citadels.contains(state.getBox(i - 1, j))
+									|| state.getBox(i - 1, j).equals(this.throne))
+							&& i < state.getBoard().length - 1
+							&& (state.getPawn(i + 1, j).equalsPawn(State.Pawn.EMPTY.toString()))) {
+
 						this.blackPawnsOverhanged++;
 					}
 
-					if (i < state.getBoard().length - 1
+					else if (i < state.getBoard().length - 1
 							&& (state.getPawn(i + 1, j).equalsPawn(State.Pawn.WHITE.toString())
 									|| state.getPawn(i + 1, j).equalsPawn(State.Pawn.KING.toString())
 									|| this.citadels.contains(state.getBox(i + 1, j))
-									|| state.getBox(i + 1, j).equals(this.throne))) {
+									|| state.getBox(i + 1, j).equals(this.throne))
+							&& i > 0 && (state.getPawn(i - 1, j).equalsPawn(State.Pawn.EMPTY.toString()))) {
 						this.blackPawnsOverhanged++;
+
 					}
 
-					if (j > 0 && (state.getPawn(i, j - 1).equalsPawn(State.Pawn.WHITE.toString())
-							|| state.getPawn(i, j - 1).equalsPawn(State.Pawn.KING.toString())
-							|| this.citadels.contains(state.getBox(i, j - 1))
-							|| state.getBox(i, j - 1).contentEquals(this.throne))) {
+					else if (j > 0
+							&& (state.getPawn(i, j - 1).equalsPawn(State.Pawn.WHITE.toString())
+									|| state.getPawn(i, j - 1).equalsPawn(State.Pawn.KING.toString())
+									|| this.citadels.contains(state.getBox(i, j - 1))
+									|| state.getBox(i, j - 1).contentEquals(this.throne))
+							&& j < state.getBoard().length - 1
+							&& (state.getPawn(i, j + 1).equalsPawn(State.Pawn.EMPTY.toString()))) {
 						this.blackPawnsOverhanged++;
+
 					}
 
-					if (j < state.getBoard().length - 1
+					else if (j < state.getBoard().length - 1
 							&& (state.getPawn(i, j + 1).equalsPawn(State.Pawn.WHITE.toString())
 									|| state.getPawn(i, j + 1).equalsPawn(State.Pawn.KING.toString())
 									|| this.citadels.contains(state.getBox(i, j + 1))
-									|| state.getBox(i, j + 1).contentEquals(this.throne))) {
+									|| state.getBox(i, j - 1).contentEquals(this.throne))
+							&& j > 0 && (state.getPawn(i, j - 1).equalsPawn(State.Pawn.EMPTY.toString()))) {
 						this.blackPawnsOverhanged++;
+
 					}
 
 				}
@@ -334,30 +369,46 @@ public class MyHeuristic implements Heuristic {
 				// conto le pedine bianche con una nera o un accampamento o il trono vicino
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString())) {
 
-					if (i > 0 && (state.getPawn(i - 1, j).equalsPawn(State.Pawn.BLACK.toString())
-							|| this.citadels.contains(state.getBox(i - 1, j))
-							|| state.getBox(i - 1, j).equals(this.throne))) {
+					if (i > 0
+							&& (state.getPawn(i - 1, j).equalsPawn(State.Pawn.BLACK.toString())
+									|| this.citadels.contains(state.getBox(i - 1, j))
+									|| state.getBox(i - 1, j).equals(this.throne))
+							&& i < state.getBoard().length - 1
+							&& (state.getPawn(i + 1, j).equalsPawn(State.Pawn.EMPTY.toString()))) {
+
 						this.whitePawnsOverhanged++;
+
 					}
 
-					if (i < state.getBoard().length - 1
+					else if (i < state.getBoard().length - 1
 							&& (state.getPawn(i + 1, j).equalsPawn(State.Pawn.BLACK.toString())
 									|| this.citadels.contains(state.getBox(i + 1, j))
-									|| state.getBox(i + 1, j).equals(this.throne))) {
-						this.blackPawnsOverhanged++;
-					}
+									|| state.getBox(i + 1, j).equals(this.throne))
+							&& i > 0 && (state.getPawn(i - 1, j).equalsPawn(State.Pawn.EMPTY.toString()))) {
 
-					if (j > 0 && (state.getPawn(i, j - 1).equalsPawn(State.Pawn.WHITE.toString())
-							|| this.citadels.contains(state.getBox(i, j - 1))
-							|| state.getBox(i, j - 1).contentEquals(this.throne))) {
 						this.whitePawnsOverhanged++;
+
 					}
 
-					if (j < state.getBoard().length - 1
-							&& (state.getPawn(i, j + 1).equalsPawn(State.Pawn.WHITE.toString())
+					else if (j > 0
+							&& (state.getPawn(i, j - 1).equalsPawn(State.Pawn.BLACK.toString())
+									|| this.citadels.contains(state.getBox(i, j - 1))
+									|| state.getBox(i, j - 1).contentEquals(this.throne))
+							&& j < state.getBoard().length - 1
+							&& (state.getPawn(i, j + 1).equalsPawn(State.Pawn.EMPTY.toString()))) {
+
+						this.whitePawnsOverhanged++;
+
+					}
+
+					else if (j < state.getBoard().length - 1
+							&& (state.getPawn(i, j + 1).equalsPawn(State.Pawn.BLACK.toString())
 									|| this.citadels.contains(state.getBox(i, j + 1))
-									|| state.getBox(i, j + 1).contentEquals(this.throne))) {
+									|| state.getBox(i, j + 1).contentEquals(this.throne))
+							&& j > 0 && (state.getPawn(i, j - 1).equalsPawn(State.Pawn.EMPTY.toString()))) {
+
 						this.whitePawnsOverhanged++;
+
 					}
 
 				}
