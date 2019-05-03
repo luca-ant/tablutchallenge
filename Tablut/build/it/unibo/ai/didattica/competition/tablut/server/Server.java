@@ -19,7 +19,7 @@ import java.util.logging.*;
 
 import it.unibo.ai.didattica.competition.tablut.domain.*;
 import it.unibo.ai.didattica.competition.tablut.gui.Gui;
-import it.unibo.ai.didattica.competition.tablut.luca.gui.GuiCli;
+import it.unibo.ai.didattica.competition.tablut.teampallo.gui.GuiCli;
 import it.unibo.ai.didattica.competition.tablut.util.StreamUtils;
 
 import com.google.gson.Gson;
@@ -607,37 +607,37 @@ public class Server implements Runnable {
 
 				// ADD TO LOG
 
-				try {
-
-					File logFile = new File("/home/luca/tablut_log.txt");
-					if (!logFile.exists()) {
-						logFile.createNewFile();
-					}
-					PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
-
-					String numPartita = System.getenv("NUMERO_PARTITA");
-
-					if (numPartita == null) {
-						numPartita = "--";
-					}
-					pw.println("RISULTATO PARTITA " + numPartita);
-
-					if (state.getTurn().equalsTurn(StateTablut.Turn.DRAW.toString())) {
-						pw.println("RESULT: DRAW");
-					}
-					if (state.getTurn().equalsTurn(StateTablut.Turn.WHITEWIN.toString())) {
-						pw.println("RESULT: PLAYER WHITE WIN");
-					}
-					if (state.getTurn().equalsTurn(StateTablut.Turn.BLACKWIN.toString())) {
-						pw.println("RESULT: PLAYER BLACK WIN");
-					}
-
-					pw.println("--------------------------------------------------\n");
-
-					pw.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+//				try {
+//
+//					File logFile = new File("/home/luca/tablut_log.txt");
+//					if (!logFile.exists()) {
+//						logFile.createNewFile();
+//					}
+//					PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
+//
+//					String numPartita = System.getenv("NUMERO_PARTITA");
+//
+//					if (numPartita == null) {
+//						numPartita = "--";
+//					}
+//				//	pw.println("RISULTATO PARTITA " + numPartita);
+//
+//					if (state.getTurn().equalsTurn(StateTablut.Turn.DRAW.toString())) {
+//						pw.println("RESULT: DRAW");
+//					}
+//					if (state.getTurn().equalsTurn(StateTablut.Turn.WHITEWIN.toString())) {
+//						pw.println("RESULT: PLAYER WHITE WIN");
+//					}
+//					if (state.getTurn().equalsTurn(StateTablut.Turn.BLACKWIN.toString())) {
+//						pw.println("RESULT: PLAYER BLACK WIN");
+//					}
+//
+//					pw.println("--------------------------------------------------\n");
+//
+//					pw.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
 
 				// ***
 
