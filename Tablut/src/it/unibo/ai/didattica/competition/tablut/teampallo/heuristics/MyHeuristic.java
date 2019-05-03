@@ -16,20 +16,20 @@ import it.unibo.ai.didattica.competition.tablut.domain.StateTablut;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 
-public class BasicHeuristic implements Heuristic {
+public class MyHeuristic implements Heuristic {
 
-	private static double BLACK_WEIGHT_DIFF_PAWNS = 7;
-	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 5;
-	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2;
+	private static double BLACK_WEIGHT_DIFF_PAWNS = 4;
+	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 1.5;
+	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 1.2;
 	private static double BLACK_WEIGHT_BLACK_NEAR_KING = 5;
-	private static double BLACK_WEIGHT_WHITE_NEAR_KING = 3;
+	private static double BLACK_WEIGHT_WHITE_NEAR_KING = 0;
 	private static double BLACK_WEIGHT_FREE_WAY_KING = 7;
-	private static double BLACK_WEIGHT_KING_ON_THRONE = 2;
+	private static double BLACK_WEIGHT_KING_ON_THRONE = 1.1;
 	private static double BLACK_WEIGHT_KING_NEAR_THRONE = 1.5;
 	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
-	private static double BLACK_WEIGHT_KING_FROM_BORDER = 4;
-	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 3;
-	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 4;
+	private static double BLACK_WEIGHT_KING_FROM_BORDER = 0;
+	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 1.2;
+	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 1.5;
 
 	private static double WHITE_WEIGHT_DIFF_PAWNS = 2;
 	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 5;
@@ -78,7 +78,7 @@ public class BasicHeuristic implements Heuristic {
 	private List<String> nearsThrone;
 	private String throne;
 
-	public BasicHeuristic() {
+	public MyHeuristic() {
 		this.r = new Random(System.currentTimeMillis());
 
 		this.citadels = Arrays.asList("a4", "a5", "a6", "b5", "d1", "e1", "f1", "e2", "i4", "i5", "i6", "h5", "d9",

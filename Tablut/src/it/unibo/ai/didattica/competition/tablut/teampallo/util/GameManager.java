@@ -18,7 +18,6 @@ public class GameManager {
 	private final static int MAX_DEPTH = 10;
 	private final static int TIMEOUT = 55;
 
-	private StatsManager stats;
 	private MyRules rules;
 	private String player;
 	private int timeout;
@@ -33,7 +32,6 @@ public class GameManager {
 		this.memoryLimit = MEMORY_LIMIT;
 		this.pedineOnBoard = 25;
 		this.player = "";
-		this.stats = StatsManager.getInstance();
 
 	}
 
@@ -93,13 +91,12 @@ public class GameManager {
 		this.memoryLimit = memoryLimit;
 	}
 
-	public void clearStateCache() {
+	public void clearVisitedStateCache() {
 		this.statiVisitati.clear();
 	}
 
-	public void addNewState(State state) {
+	public void addVisitedState(State state) {
 		this.statiVisitati.add(state.hashCode());
-		stats.update("cache");
 
 		int num = 0;
 		for (int i = 0; i < 9; i++) {
@@ -111,9 +108,8 @@ public class GameManager {
 		}
 
 		if (num < pedineOnBoard) {
-			stats.update("resetCache");
 			pedineOnBoard = num;
-			this.clearStateCache();
+			this.clearVisitedStateCache();
 		}
 	}
 
