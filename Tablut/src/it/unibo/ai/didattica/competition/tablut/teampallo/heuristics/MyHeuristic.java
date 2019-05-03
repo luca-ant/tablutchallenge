@@ -28,8 +28,8 @@ public class MyHeuristic implements Heuristic {
 	private static double BLACK_WEIGHT_KING_NEAR_THRONE = 1.2;
 	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
 	private static double BLACK_WEIGHT_KING_FROM_BORDER = 0;
-	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 3;
-	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 4;
+	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 1.5;
+	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 2;
 
 	private static double WHITE_WEIGHT_DIFF_PAWNS = 2;
 	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 5;
@@ -42,7 +42,7 @@ public class MyHeuristic implements Heuristic {
 	private static double WHITE_WEIGHT_KING_ON_STAR = 10;
 	private static double WHITE_WEIGHT_KING_FROM_BORDER = 8;
 	private static double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 2;
-	private static double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 3;
+	private static double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 1.5;
 
 	// *** OK BLACK ***
 //	private final static double BLACK_WEIGHT_DIFF_PAWNS = 7;
