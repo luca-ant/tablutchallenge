@@ -20,6 +20,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.GeneticHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
@@ -36,7 +37,7 @@ public class AlphaBetaIterative implements IA {
 	public AlphaBetaIterative() {
 
 		this.rootChildren = new ArrayList<>();
-		this.heuristic = new MyHeuristic();
+		this.heuristic = new GeneticHeuristic();
 		this.bestMove = null;
 		this.ww = false;
 		this.bw = false;

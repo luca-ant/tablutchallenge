@@ -279,13 +279,13 @@ public class TablutRandomClient extends TablutClient {
 					System.out.println("Waiting for your opponent move... ");
 				} else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 					System.out.println("YOU LOSE!");
-					System.exit(0);
+					//System.exit(0);
 				} else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 					System.out.println("YOU WIN!");
-					System.exit(0);
+					//System.exit(0);
 				} else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
 					System.out.println("DRAW!");
-					System.exit(0);
+					//System.exit(0);
 				}
 
 			}

@@ -1,48 +1,13 @@
 package it.unibo.ai.didattica.competition.tablut.teampallo.heuristics;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
-import it.unibo.ai.didattica.competition.tablut.domain.StateTablut;
-import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
+import it.unibo.ai.didattica.competition.tablut.teampallo.genetics.Environment;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 
-public class MyHeuristic implements Heuristic {
-
-	private static double BLACK_WEIGHT_DIFF_PAWNS = 7;
-	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 5;
-	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2;
-	private static double BLACK_WEIGHT_BLACK_NEAR_KING = 3;
-	private static double BLACK_WEIGHT_WHITE_NEAR_KING = 1.2;
-	private static double BLACK_WEIGHT_FREE_WAY_KING = 7;
-	private static double BLACK_WEIGHT_KING_ON_THRONE = 1.5;
-	private static double BLACK_WEIGHT_KING_NEAR_THRONE = 1.2;
-	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
-	private static double BLACK_WEIGHT_KING_FROM_BORDER = 0;
-	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 1.5;
-	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 2;
-
-	private static double WHITE_WEIGHT_DIFF_PAWNS = 2;
-	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 5;
-	private static double WHITE_WEIGHT_COUNT_BLACK_PAWNS = 3;
-	private static double WHITE_WEIGHT_BLACK_NEAR_KING = 3;
-	private static double WHITE_WEIGHT_WHITE_NEAR_KING = 1.5;
-	private static double WHITE_WEIGHT_FREE_WAY_KING = 10;
-	private static double WHITE_WEIGHT_KING_ON_THRONE = 2;
-	private static double WHITE_WEIGHT_KING_NEAR_THRONE = 1.5;
-	private static double WHITE_WEIGHT_KING_ON_STAR = 10;
-	private static double WHITE_WEIGHT_KING_FROM_BORDER = 8;
-	private static double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 2;
-	private static double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 1.5;
+public class GeneticHeuristic implements Heuristic {
 
 	// *** OK BLACK ***
 //	private final static double BLACK_WEIGHT_DIFF_PAWNS = 7;
@@ -77,8 +42,10 @@ public class MyHeuristic implements Heuristic {
 	private List<String> stars;
 	private List<String> nearsThrone;
 	private String throne;
+	
+	private Environment env=Environment.getInstance();
 
-	public MyHeuristic() {
+	public GeneticHeuristic() {
 		this.r = new Random(System.currentTimeMillis());
 
 		this.citadels = Arrays.asList("a4", "a5", "a6", "b5", "d1", "e1", "f1", "e2", "i4", "i5", "i6", "h5", "d9",
@@ -113,93 +80,7 @@ public class MyHeuristic implements Heuristic {
 		System.out.println("blackPawnsOverhanged = " + this.blackPawnsOverhanged);
 		System.out.println("whitePawnsOverhanged = " + this.whitePawnsOverhanged);
 	}
-
-	private void generateVWeightValues(String player) {
-
-		// ADD TO LOG
-
-		try {
-
-			File logFile = new File("/home/luca/tablut_log.txt");
-			if (!logFile.exists()) {
-				logFile.createNewFile();
-			}
-
-			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
-
-			String numPartita = System.getenv("NUMERO_PARTITA");
-
-			if (numPartita == null) {
-				numPartita = "--";
-			}
-			pw.println("\nVALORI " + player.toUpperCase() + " PARTITA " + numPartita);
-
-			if (player.equalsIgnoreCase("white")) {
-
-				WHITE_WEIGHT_DIFF_PAWNS = myRandom(0, 10);
-				WHITE_WEIGHT_COUNT_WHITE_PAWNS = myRandom(0, 10);
-				WHITE_WEIGHT_COUNT_BLACK_PAWNS = myRandom(0, 10);
-				WHITE_WEIGHT_BLACK_NEAR_KING = myRandom(0, 10);
-				WHITE_WEIGHT_WHITE_NEAR_KING = myRandom(0, 10);
-				WHITE_WEIGHT_FREE_WAY_KING = myRandom(0, 10);
-				WHITE_WEIGHT_KING_ON_THRONE = myRandom(0, 10);
-				WHITE_WEIGHT_KING_NEAR_THRONE = myRandom(0, 10);
-				WHITE_WEIGHT_KING_ON_STAR = myRandom(0, 10);
-				WHITE_WEIGHT_KING_FROM_BORDER = myRandom(0, 10);
-				WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = myRandom(0, 10);
-				WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = myRandom(0, 10);
-
-				pw.println("WHITE_WEIGHT_DIFF_PAWNS = " + WHITE_WEIGHT_DIFF_PAWNS);
-				pw.println("WHITE_WEIGHT_COUNT_WHITE_PAWNS = " + WHITE_WEIGHT_COUNT_WHITE_PAWNS);
-				pw.println("WHITE_WEIGHT_COUNT_BLACK_PAWNS = " + WHITE_WEIGHT_COUNT_BLACK_PAWNS);
-				pw.println("WHITE_WEIGHT_BLACK_NEAR_KING = " + WHITE_WEIGHT_BLACK_NEAR_KING);
-				pw.println("WHITE_WEIGHT_WHITE_NEAR_KING = " + WHITE_WEIGHT_WHITE_NEAR_KING);
-				pw.println("WHITE_WEIGHT_FREE_WAY_KING = " + WHITE_WEIGHT_FREE_WAY_KING);
-				pw.println("WHITE_WEIGHT_KING_ON_THRONE = " + WHITE_WEIGHT_KING_ON_THRONE);
-				pw.println("WHITE_WEIGHT_KING_NEAR_THRONE = " + WHITE_WEIGHT_KING_NEAR_THRONE);
-				pw.println("WHITE_WEIGHT_KING_ON_STAR = " + WHITE_WEIGHT_KING_ON_STAR);
-				pw.println("WHITE_WEIGHT_KING_FROM_BORDER = " + WHITE_WEIGHT_KING_FROM_BORDER);
-				pw.println("WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = " + WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED);
-				pw.println("WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = " + WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED);
-
-			} else if (player.equalsIgnoreCase("black")) {
-
-				BLACK_WEIGHT_DIFF_PAWNS = myRandom(0, 10);
-				BLACK_WEIGHT_COUNT_WHITE_PAWNS = myRandom(0, 10);
-				BLACK_WEIGHT_COUNT_BLACK_PAWNS = myRandom(0, 10);
-				BLACK_WEIGHT_BLACK_NEAR_KING = myRandom(0, 10);
-				BLACK_WEIGHT_WHITE_NEAR_KING = myRandom(0, 10);
-				BLACK_WEIGHT_FREE_WAY_KING = myRandom(0, 10);
-				BLACK_WEIGHT_KING_ON_THRONE = myRandom(0, 10);
-				BLACK_WEIGHT_KING_NEAR_THRONE = myRandom(0, 10);
-				BLACK_WEIGHT_KING_ON_STAR = myRandom(0, 10);
-				BLACK_WEIGHT_KING_FROM_BORDER = myRandom(0, 10);
-				BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = myRandom(0, 10);
-				BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = myRandom(0, 10);
-
-				pw.println("BLACK_WEIGHT_DIFF_PAWNS = " + BLACK_WEIGHT_DIFF_PAWNS);
-				pw.println("BLACK_WEIGHT_COUNT_WHITE_PAWNS = " + BLACK_WEIGHT_COUNT_WHITE_PAWNS);
-				pw.println("BLACK_WEIGHT_COUNT_BLACK_PAWNS = " + BLACK_WEIGHT_COUNT_BLACK_PAWNS);
-				pw.println("BLACK_WEIGHT_BLACK_NEAR_KING = " + BLACK_WEIGHT_BLACK_NEAR_KING);
-				pw.println("BLACK_WEIGHT_WHITE_NEAR_KING = " + BLACK_WEIGHT_WHITE_NEAR_KING);
-				pw.println("BLACK_WEIGHT_FREE_WAY_KING = " + BLACK_WEIGHT_FREE_WAY_KING);
-				pw.println("BLACK_WEIGHT_KING_ON_THRONE = " + BLACK_WEIGHT_KING_ON_THRONE);
-				pw.println("BLACK_WEIGHT_KING_NEAR_THRONE = " + BLACK_WEIGHT_KING_NEAR_THRONE);
-				pw.println("BLACK_WEIGHT_KING_ON_STAR = " + BLACK_WEIGHT_KING_ON_STAR);
-				pw.println("BLACK_WEIGHT_KING_FROM_BORDER = " + BLACK_WEIGHT_DIFF_PAWNS);
-				pw.println("BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = " + BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED);
-				pw.println("BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = " + BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED);
-			}
-
-			pw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// ***
-
-	}
-
+	
 	@Override
 	public double heuristic(State state) {
 
@@ -223,29 +104,29 @@ public class MyHeuristic implements Heuristic {
 		double result = myRandom(-1, 1);
 //		double result = 0;
 
-		result -= WHITE_WEIGHT_DIFF_PAWNS * (this.countW - this.countB);
+		result -= env.getWeight("WHITE_WEIGHT_DIFF_PAWNS") * (this.countW - this.countB);
 
-		result -= WHITE_WEIGHT_COUNT_BLACK_PAWNS * this.countB;
+		result -= env.getWeight("WHITE_WEIGHT_COUNT_BLACK_PAWNS") * this.countB;
 
-		result -= WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED * this.whitePawnsOverhanged;
+		result -= env.getWeight("WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED") * this.whitePawnsOverhanged;
 
-		result -= WHITE_WEIGHT_BLACK_NEAR_KING * this.blackNearKing;
+		result -= env.getWeight("WHITE_WEIGHT_BLACK_NEAR_KING") * this.blackNearKing;
 
-		result += WHITE_WEIGHT_COUNT_WHITE_PAWNS * this.countW;
+		result += env.getWeight("WHITE_WEIGHT_COUNT_WHITE_PAWNS") * this.countW;
 
-		result += WHITE_WEIGHT_WHITE_NEAR_KING * this.whiteNearKing;
+		result += env.getWeight("WHITE_WEIGHT_WHITE_NEAR_KING") * this.whiteNearKing;
 
-		result += WHITE_WEIGHT_FREE_WAY_KING * this.kingFreeWay;
+		result += env.getWeight("WHITE_WEIGHT_FREE_WAY_KING") * this.kingFreeWay;
 
-		result += WHITE_WEIGHT_KING_ON_THRONE * this.kingOnThrone;
+		result += env.getWeight("WHITE_WEIGHT_KING_ON_THRONE") * this.kingOnThrone;
 
-		result += WHITE_WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
+		result += env.getWeight("WHITE_WEIGHT_KING_NEAR_THRONE") * this.kingNearThrone;
 
-		result += WHITE_WEIGHT_KING_FROM_BORDER * (state.getBoard().length - this.kingFromBorder);
+		result += env.getWeight("WHITE_WEIGHT_KING_FROM_BORDER") * (state.getBoard().length - this.kingFromBorder);
 
-		result += WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED * this.blackPawnsOverhanged;
+		result += env.getWeight("WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED") * this.blackPawnsOverhanged;
 
-		result += WHITE_WEIGHT_KING_ON_STAR * this.kingOnStar;
+		result += env.getWeight("WHITE_WEIGHT_KING_ON_STAR") * this.kingOnStar;
 
 		return result;
 	}
@@ -260,29 +141,29 @@ public class MyHeuristic implements Heuristic {
 		double result = myRandom(-1, 1);
 //		double result = 0;
 
-		result += BLACK_WEIGHT_DIFF_PAWNS * (this.countB - this.countW);
+		result += env.getWeight("BLACK_WEIGHT_DIFF_PAWNS") * (this.countB - this.countW);
 
-		result += BLACK_WEIGHT_COUNT_BLACK_PAWNS * this.countB;
+		result += env.getWeight("BLACK_WEIGHT_COUNT_BLACK_PAWNS") * this.countB;
 
-		result += BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED * this.whitePawnsOverhanged;
+		result += env.getWeight("BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED") * this.whitePawnsOverhanged;
 
-		result += BLACK_WEIGHT_BLACK_NEAR_KING * this.blackNearKing;
+		result += env.getWeight("BLACK_WEIGHT_BLACK_NEAR_KING") * this.blackNearKing;
 
-		result -= BLACK_WEIGHT_COUNT_WHITE_PAWNS * this.countW;
+		result -= env.getWeight("BLACK_WEIGHT_COUNT_WHITE_PAWNS") * this.countW;
 
-		result -= BLACK_WEIGHT_WHITE_NEAR_KING * this.whiteNearKing;
+		result -= env.getWeight("BLACK_WEIGHT_WHITE_NEAR_KING") * this.whiteNearKing;
 
-		result -= BLACK_WEIGHT_FREE_WAY_KING * this.kingFreeWay;
+		result -= env.getWeight("BLACK_WEIGHT_FREE_WAY_KING") * this.kingFreeWay;
 
-		result -= BLACK_WEIGHT_KING_ON_THRONE * this.kingOnThrone;
+		result -= env.getWeight("BLACK_WEIGHT_KING_ON_THRONE") * this.kingOnThrone;
 
-		result -= BLACK_WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
+		result -= env.getWeight("BLACK_WEIGHT_KING_NEAR_THRONE") * this.kingNearThrone;
 
-		result -= BLACK_WEIGHT_KING_FROM_BORDER * (state.getBoard().length - this.kingFromBorder);
+		result -= env.getWeight("BLACK_WEIGHT_KING_FROM_BORDER") * (state.getBoard().length - this.kingFromBorder);
 
-		result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * this.blackPawnsOverhanged;
+		result -= env.getWeight("BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED") * this.blackPawnsOverhanged;
 
-		result -= BLACK_WEIGHT_KING_ON_STAR * this.kingOnStar;
+		result -= env.getWeight("BLACK_WEIGHT_KING_ON_STAR") * this.kingOnStar;
 
 		return result;
 	}

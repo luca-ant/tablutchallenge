@@ -33,6 +33,8 @@ import com.google.gson.Gson;
  */
 public class Server implements Runnable {
 
+	public static String WINNER;
+	
 	/**
 	 * State of the game
 	 */
@@ -83,8 +85,8 @@ public class Server implements Runnable {
 
 	private Game game;
 	private Gson gson;
-//	private Gui theGui;
-	private GuiCli theGui;
+	private Gui theGui;
+	//private GuiCli theGui;
 	/**
 	 * Integer that represents the game type
 	 */
@@ -101,10 +103,10 @@ public class Server implements Runnable {
 	}
 
 	public void initializeGUI(State state) {
-//		this.theGui = new Gui(this.gameC);
-//		this.theGui.update(state);
-		this.theGui = new GuiCli();
+		this.theGui = new Gui(this.gameC);
 		this.theGui.update(state);
+		//this.theGui = new GuiCli();
+		//this.theGui.update(state);
 	}
 
 	/**
@@ -597,12 +599,15 @@ public class Server implements Runnable {
 				System.out.println("END OF THE GAME");
 				if (state.getTurn().equalsTurn(StateTablut.Turn.DRAW.toString())) {
 					System.out.println("RESULT: DRAW");
+					WINNER="draw";
 				}
 				if (state.getTurn().equalsTurn(StateTablut.Turn.WHITEWIN.toString())) {
 					System.out.println("RESULT: PLAYER WHITE WIN");
+					WINNER="white";
 				}
 				if (state.getTurn().equalsTurn(StateTablut.Turn.BLACKWIN.toString())) {
 					System.out.println("RESULT: PLAYER BLACK WIN");
+					WINNER="black";
 				}
 
 				// ADD TO LOG
@@ -644,7 +649,7 @@ public class Server implements Runnable {
 				endgame = true;
 			}
 		}
-		System.exit(0);
+		//System.exit(0);
 	}
 
 }
