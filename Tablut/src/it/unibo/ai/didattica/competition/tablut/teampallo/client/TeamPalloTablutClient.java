@@ -191,17 +191,17 @@ public class TeamPalloTablutClient extends TablutClient {
 				// ho vinto
 				else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 					System.out.println("YOU WIN!");
-					System.exit(0);
+					//System.exit(0);
 				}
 				// ho perso
 				else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 					System.out.println("YOU LOSE!");
-					System.exit(0);
+					//System.exit(0);
 				}
 				// pareggio
 				else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
 					System.out.println("DRAW!");
-					System.exit(0);
+					//System.exit(0);
 				}
 
 			} else {

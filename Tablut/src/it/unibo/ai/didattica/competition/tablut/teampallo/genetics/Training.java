@@ -24,37 +24,38 @@ public class Training {
 		
 		String[] empty=new String[0];
 		
-		Thread server=new Thread() {
-			public void run() {
-				Server.main(empty);
-			}
-		};
 		
-		Thread myclient=new Thread() {
-			public void run() {
-				try {
-					TeamPalloWhiteTablutClient.main(empty);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};
-		
-		Thread randomblack=new Thread() {
-			public void run() {
-				try {
-				TablutRandomBlackClient.main(empty);
-				}catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
-		};
 		
 		while(true) {
 			for(int i=0;i<POPOLATION;i++) {
 				
-			
+				Thread server=new Thread() {
+					public void run() {
+						Server.main(empty);
+					}
+				};
+				
+				Thread myclient=new Thread() {
+					public void run() {
+						try {
+							TeamPalloWhiteTablutClient.main(empty);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				};
+				
+				Thread randomblack=new Thread() {
+					public void run() {
+						try {
+							TablutRandomBlackClient.main(empty);
+						}catch(Exception e) {
+							e.printStackTrace();
+						}
+					}
+				};	
+				
 			server.start();
 			myclient.start();
 			randomblack.start();
