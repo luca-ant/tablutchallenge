@@ -20,7 +20,6 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
-import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.GeneticHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
@@ -37,7 +36,7 @@ public class AlphaBetaIterative implements IA {
 	public AlphaBetaIterative() {
 
 		this.rootChildren = new ArrayList<>();
-		this.heuristic = new GeneticHeuristic();
+		this.heuristic = new MyHeuristic();
 		this.bestMove = null;
 		this.ww = false;
 		this.bw = false;
@@ -63,14 +62,17 @@ public class AlphaBetaIterative implements IA {
 			temp = this.minmaxAlg(state, d, d);
 
 			StatsManager.getInstance().setEnd(System.currentTimeMillis());
-			StatsManager.getInstance().printResults();
 
 			if (System.currentTimeMillis() > this.endTime) {
 				System.out.println("END DUE TO TIMEOUT\n");
+				StatsManager.getInstance().printResults();
+
 
 				break;
 			}
 			System.out.println("END DEPTH = " + d + "\n");
+			StatsManager.getInstance().printResults();
+
 
 			System.out.println("Temp move found: " + temp);
 

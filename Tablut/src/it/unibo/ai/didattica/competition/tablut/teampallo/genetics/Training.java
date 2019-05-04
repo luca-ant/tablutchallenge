@@ -17,6 +17,7 @@ public class Training {
 	
 	public static void main(String[] args) {
 		
+		String daAllenare="white";
 		int vinte=0;
 		int perse=0;
 		int draw=0;
@@ -88,9 +89,9 @@ public class Training {
 			publishStats(vinte,perse,draw);
 			
 			if(((double)vinte/POPOLATION)>POSITIVE_BEHAVIOUR) {
-				alg.mutate(true);
+				alg.mutate(true,daAllenare);
 			}else {
-				alg.mutate(false);
+				alg.mutate(false,daAllenare);
 			}
 			
 			vinte=0;

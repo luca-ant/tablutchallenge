@@ -2,11 +2,8 @@ package it.unibo.ai.didattica.competition.tablut.teampallo.genetics;
 
 import java.util.Random;
 
-import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
-
 public class GeneticAlgorithm {
 	
-	private GameManager game=GameManager.getInstance();
 	private Environment env=Environment.getInstance();
 	private String[] parametersW;
 	private String[] parametersB;
@@ -18,9 +15,9 @@ public class GeneticAlgorithm {
 		parametersB=(String[])env.getVariablesB().keySet().toArray(new String[0]);
 	}
 	
-	public void mutate(boolean renforce) {
+	public void mutate(boolean renforce, String daAllenare) {
 		Random rand=new Random();
-		switch(game.getPlayer()){
+		switch(daAllenare){
 		case "white":{
 			/*SCELGO UN PARAMETRO*/
 			String scelta=parametersW[rand.nextInt(parametersW.length)];

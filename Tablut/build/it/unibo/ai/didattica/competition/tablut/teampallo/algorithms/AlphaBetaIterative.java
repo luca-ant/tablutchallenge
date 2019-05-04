@@ -62,14 +62,17 @@ public class AlphaBetaIterative implements IA {
 			temp = this.minmaxAlg(state, d, d);
 
 			StatsManager.getInstance().setEnd(System.currentTimeMillis());
-			StatsManager.getInstance().printResults();
 
 			if (System.currentTimeMillis() > this.endTime) {
 				System.out.println("END DUE TO TIMEOUT\n");
+				StatsManager.getInstance().printResults();
+
 
 				break;
 			}
 			System.out.println("END DEPTH = " + d + "\n");
+			StatsManager.getInstance().printResults();
+
 
 			System.out.println("Temp move found: " + temp);
 
