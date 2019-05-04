@@ -28,7 +28,7 @@ public class MyHeuristic implements Heuristic {
 	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 2;
 	private static double BLACK_WEIGHT_BLACKBARRIER = 2.3;
 
-	private static double WHITE_WEIGHT_DIFF_PAWNS = 3;
+	private static double WHITE_WEIGHT_DIFF_PAWNS = 5;
 	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 4;
 	private static double WHITE_WEIGHT_COUNT_BLACK_PAWNS = 3;
 	private static double WHITE_WEIGHT_BLACK_NEAR_KING = 3;
