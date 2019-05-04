@@ -18,20 +18,18 @@ import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 
 public class MyHeuristic implements Heuristic {
 
-	private static double BLACK_WEIGHT_DIFF_PAWNS = 7;
-	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 5;
+	private static double BLACK_WEIGHT_DIFF_PAWNS = 5;
+	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 3;
 	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2;
 	private static double BLACK_WEIGHT_BLACK_NEAR_KING = 3;
 	private static double BLACK_WEIGHT_FREE_WAY_KING = 7;
-	private static double BLACK_WEIGHT_KING_ON_THRONE = 1.5;
-	private static double BLACK_WEIGHT_KING_NEAR_THRONE = 1.2;
 	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
 	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 1.5;
 	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 2;
 	private static double BLACK_WEIGHT_BLACKBARRIER = 2.3;
 
-	private static double WHITE_WEIGHT_DIFF_PAWNS = 2;
-	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 5;
+	private static double WHITE_WEIGHT_DIFF_PAWNS = 3;
+	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 4;
 	private static double WHITE_WEIGHT_COUNT_BLACK_PAWNS = 3;
 	private static double WHITE_WEIGHT_BLACK_NEAR_KING = 3;
 	private static double WHITE_WEIGHT_WHITE_NEAR_KING = 1.5;
@@ -39,23 +37,34 @@ public class MyHeuristic implements Heuristic {
 	private static double WHITE_WEIGHT_KING_ON_THRONE = 2;
 	private static double WHITE_WEIGHT_KING_NEAR_THRONE = 1.5;
 	private static double WHITE_WEIGHT_KING_ON_STAR = 10;
-	private static double WHITE_WEIGHT_KING_FROM_BORDER = 8;
+	private static double WHITE_WEIGHT_KING_FROM_BORDER = 0;
 	private static double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 2;
 	private static double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 1.5;
 
-	// *** OK BLACK ***
-//	private final static double BLACK_WEIGHT_DIFF_PAWNS = 7;
-//	private final static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 5;
-//	private final static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2;
-//	private final static double BLACK_WEIGHT_BLACK_NEAR_KING = 5;
-//	private final static double BLACK_WEIGHT_WHITE_NEAR_KING = 3;
-//	private final static double BLACK_WEIGHT_FREE_WAY_KING = 7;
-//  private final static double BLACK_WEIGHT_KING_ON_THRONE = 2;
-//	private final static double BLACK_WEIGHT_KING_NEAR_THRONE = 1.5;
-//	private final static double BLACK_WEIGHT_KING_ON_STAR = 10;
-//	private final static double BLACK_WEIGHT_KING_FROM_BORDER = 4;
-//	private final static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 3;
-//	private final static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 4;
+	// *** OK ***
+
+//	private static double BLACK_WEIGHT_DIFF_PAWNS = 5;
+//	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 3;
+//	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2;
+//	private static double BLACK_WEIGHT_BLACK_NEAR_KING = 3;
+//	private static double BLACK_WEIGHT_FREE_WAY_KING = 7;
+//	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
+//	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 1.5;
+//	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 2;
+//	private static double BLACK_WEIGHT_BLACKBARRIER = 2.3;
+//
+//	private static double WHITE_WEIGHT_DIFF_PAWNS = 2;
+//	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 4;
+//	private static double WHITE_WEIGHT_COUNT_BLACK_PAWNS = 3;
+//	private static double WHITE_WEIGHT_BLACK_NEAR_KING = 3;
+//	private static double WHITE_WEIGHT_WHITE_NEAR_KING = 1.5;
+//	private static double WHITE_WEIGHT_FREE_WAY_KING = 10;
+//	private static double WHITE_WEIGHT_KING_ON_THRONE = 2;
+//	private static double WHITE_WEIGHT_KING_NEAR_THRONE = 1.5;
+//	private static double WHITE_WEIGHT_KING_ON_STAR = 10;
+//	private static double WHITE_WEIGHT_KING_FROM_BORDER = 0;
+//	private static double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 2;
+//	private static double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 1.5;
 
 	// *** ***
 
@@ -118,8 +127,6 @@ public class MyHeuristic implements Heuristic {
 		System.out.println("blackBarrierPawns = " + this.blackBarrierPawns);
 	}
 
-	
-
 	@Override
 	public double heuristic(State state) {
 
@@ -138,7 +145,7 @@ public class MyHeuristic implements Heuristic {
 		this.resetValues();
 		this.extractValues(state);
 
-	//	 printValues();
+		// printValues();
 
 		double result = myRandom(-1, 1);
 //		double result = 0;
@@ -192,14 +199,10 @@ public class MyHeuristic implements Heuristic {
 
 		result -= BLACK_WEIGHT_FREE_WAY_KING * this.kingFreeWay;
 
-		result -= BLACK_WEIGHT_KING_ON_THRONE * this.kingOnThrone;
-
-		result -= BLACK_WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
-
 		result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * this.blackPawnsOverhanged;
 
 		result -= BLACK_WEIGHT_KING_ON_STAR * this.kingOnStar;
-		
+
 		result += BLACK_WEIGHT_BLACKBARRIER * this.blackBarrierPawns;
 
 		return result;
@@ -492,8 +495,6 @@ public class MyHeuristic implements Heuristic {
 
 	}
 
-	
-	
 	private double myRandom(double start, double end) {
 
 		double random = this.r.nextDouble();
@@ -556,8 +557,6 @@ public class MyHeuristic implements Heuristic {
 				BLACK_WEIGHT_COUNT_BLACK_PAWNS = myRandom(0, 10);
 				BLACK_WEIGHT_BLACK_NEAR_KING = myRandom(0, 10);
 				BLACK_WEIGHT_FREE_WAY_KING = myRandom(0, 10);
-				BLACK_WEIGHT_KING_ON_THRONE = myRandom(0, 10);
-				BLACK_WEIGHT_KING_NEAR_THRONE = myRandom(0, 10);
 				BLACK_WEIGHT_KING_ON_STAR = myRandom(0, 10);
 				BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = myRandom(0, 10);
 				BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = myRandom(0, 10);
@@ -567,8 +566,6 @@ public class MyHeuristic implements Heuristic {
 				pw.println("BLACK_WEIGHT_COUNT_BLACK_PAWNS = " + BLACK_WEIGHT_COUNT_BLACK_PAWNS);
 				pw.println("BLACK_WEIGHT_BLACK_NEAR_KING = " + BLACK_WEIGHT_BLACK_NEAR_KING);
 				pw.println("BLACK_WEIGHT_FREE_WAY_KING = " + BLACK_WEIGHT_FREE_WAY_KING);
-				pw.println("BLACK_WEIGHT_KING_ON_THRONE = " + BLACK_WEIGHT_KING_ON_THRONE);
-				pw.println("BLACK_WEIGHT_KING_NEAR_THRONE = " + BLACK_WEIGHT_KING_NEAR_THRONE);
 				pw.println("BLACK_WEIGHT_KING_ON_STAR = " + BLACK_WEIGHT_KING_ON_STAR);
 				pw.println("BLACK_WEIGHT_KING_FROM_BORDER = " + BLACK_WEIGHT_DIFF_PAWNS);
 				pw.println("BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = " + BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED);
@@ -583,6 +580,5 @@ public class MyHeuristic implements Heuristic {
 		// ***
 
 	}
-	
-	
+
 }
