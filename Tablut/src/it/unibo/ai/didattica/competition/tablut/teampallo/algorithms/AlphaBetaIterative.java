@@ -67,8 +67,8 @@ public class AlphaBetaIterative implements IA {
 				System.out.println("END DUE TO TIMEOUT\n");
 				StatsManager.getInstance().printResults();
 
+				return this.bestMove;
 
-				break;
 			}
 			System.out.println("END DEPTH = " + d + "\n");
 			StatsManager.getInstance().printResults();
@@ -77,13 +77,12 @@ public class AlphaBetaIterative implements IA {
 			System.out.println("Temp move found: " + temp);
 
 			if (this.ww && GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
-				this.bestMove = temp;
-				break;
+				return temp;
 			}
 
 			if (this.bw && GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
-				this.bestMove = temp;
-				break;
+				return temp;
+
 			}
 
 			this.bestMove = temp;
