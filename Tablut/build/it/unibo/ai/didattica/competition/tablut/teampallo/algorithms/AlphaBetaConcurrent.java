@@ -101,6 +101,7 @@ public class AlphaBetaConcurrent implements IA {
 			if (System.currentTimeMillis() > this.endTime) {
 				System.out.println("END DUE TO TIMEOUT\n");
 				StatsManager.getInstance().printResults();
+				this.rootChildren.clear();
 
 				return this.bestMove;
 
@@ -117,6 +118,7 @@ public class AlphaBetaConcurrent implements IA {
 			threads.clear();
 		}
 
+		this.rootChildren.clear();
 		return this.bestMove;
 
 	}
