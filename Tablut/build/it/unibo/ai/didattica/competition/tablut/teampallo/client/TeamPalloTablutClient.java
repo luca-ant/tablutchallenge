@@ -18,8 +18,10 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.gui.Gui;
+import it.unibo.ai.didattica.competition.tablut.teampallo.algorithms.AlphaBetaConcurrent;
 import it.unibo.ai.didattica.competition.tablut.teampallo.algorithms.AlphaBetaIterative;
 import it.unibo.ai.didattica.competition.tablut.teampallo.algorithms.AlphaBetaIterativeWithMemory;
+import it.unibo.ai.didattica.competition.tablut.teampallo.algorithms.AlphaBetaParallel;
 import it.unibo.ai.didattica.competition.tablut.teampallo.algorithms.IA;
 import it.unibo.ai.didattica.competition.tablut.teampallo.algorithms.MinMaxAlphaBeta;
 import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyGameAshtonTablutRules;
@@ -65,7 +67,9 @@ public class TeamPalloTablutClient extends TablutClient {
 
 		// this.ia = new MinMax();
 		// this.ia = new MinMaxAlphaBeta();
-		this.ia = new AlphaBetaIterative();
+		// this.ia = new AlphaBetaIterative();
+		// this.ia = new AlphaBetaParallel();
+		this.ia = new AlphaBetaConcurrent();
 		// this.ia = new AlphaBetaIterativeWithMemory();
 
 	}
@@ -152,7 +156,7 @@ public class TeamPalloTablutClient extends TablutClient {
 			}
 
 			GameManager.getInstance().addVisitedState(state);
-			
+
 			if (this.getPlayer().equals(Turn.WHITE)) {
 				// � il mio turno quando sono il bianco
 				if (this.getCurrentState().getTurn().equals(StateTablut.Turn.WHITE)) {

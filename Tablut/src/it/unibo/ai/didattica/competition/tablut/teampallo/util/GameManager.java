@@ -15,7 +15,7 @@ public class GameManager {
 	private static GameManager instance = null;
 
 	public final static int MEMORY_LIMIT = 1024;
-	private final static int MAX_DEPTH = 10;
+	private final static int MAX_DEPTH = 7;
 	private final static int TIMEOUT = 55;
 
 	private MyRules rules;
