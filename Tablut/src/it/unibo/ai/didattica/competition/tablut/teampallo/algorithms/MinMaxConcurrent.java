@@ -28,8 +28,6 @@ public class MinMaxConcurrent extends Thread {
 	private Heuristic heuristic;
 	private int depthToReach;
 
-	private AlphaBetaParallel alphaBetaParallel;
-
 	public MinMaxConcurrent(Node n, int d, long endTime) {
 
 		this.node = n;
@@ -42,8 +40,8 @@ public class MinMaxConcurrent extends Thread {
 	public void run() {
 
 		try {
-			this.node.setValue(minValue(this.node, this.depthToReach, this.depthToReach, Double.POSITIVE_INFINITY,
-					Double.NEGATIVE_INFINITY));
+			this.node.setValue(minValue(this.node, this.depthToReach, this.depthToReach, Double.NEGATIVE_INFINITY,
+					Double.POSITIVE_INFINITY));
 		} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
 				| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
 				| CitadelException e) {

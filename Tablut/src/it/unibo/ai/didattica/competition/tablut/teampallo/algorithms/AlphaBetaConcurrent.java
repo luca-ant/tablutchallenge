@@ -29,17 +29,11 @@ public class AlphaBetaConcurrent implements IA {
 	private List<Node> rootChildren;
 	private long endTime;
 	private Action bestMove;
-	private boolean ww;
-	private boolean bw;
-	private Heuristic heuristic;
 
 	public AlphaBetaConcurrent() {
 
 		this.rootChildren = new ArrayList<>();
-		this.heuristic = new MyHeuristic();
 		this.bestMove = null;
-		this.ww = false;
-		this.bw = false;
 
 	}
 
@@ -73,17 +67,16 @@ public class AlphaBetaConcurrent implements IA {
 
 		}
 
-		Action temp;
 		this.bestMove = null;
+
+		List<MinMaxConcurrent> threads = new ArrayList<MinMaxConcurrent>();
 
 		for (int d = 1; d <= GameManager.getInstance().getMaxDepth(); ++d) {
 
-			System.out.println("\nSTART DEPTH = " + d);
+			System.out.println("\nSTART DEPTH = " + (d+1));
 
 			StatsManager.getInstance().reset();
 			StatsManager.getInstance().setStart(System.currentTimeMillis());
-
-			List<Thread> threads = new ArrayList<Thread>();
 
 			for (Node n : this.rootChildren) {
 
@@ -93,10 +86,9 @@ public class AlphaBetaConcurrent implements IA {
 
 			}
 
-			for (Thread t : threads) {
+			for (MinMaxConcurrent t : threads) {
 
 				try {
-					System.out.println("Attendo i risultati...");
 					t.join();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -113,26 +105,20 @@ public class AlphaBetaConcurrent implements IA {
 				return this.bestMove;
 
 			}
-			System.out.println("END DEPTH = " + d + "\n");
+			System.out.println("END DEPTH = " + (d+1)+ "\n");
 			StatsManager.getInstance().printResults();
 
-			
-			
 			Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
-			
-			
-			
 			System.out.println("Temp move found: " + bestNextNode.getMove());
 
 			this.bestMove = bestNextNode.getMove();
 
+			threads.clear();
 		}
 
 		return this.bestMove;
 
 	}
-
-	
 
 }
