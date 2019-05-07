@@ -194,17 +194,20 @@ public class TablutRandomClient extends TablutClient {
 				// ho vinto
 				else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 					System.out.println("YOU WIN!");
-					System.exit(0);
+					//System.exit(0);
+					this.close();
 				}
 				// ho perso
 				else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 					System.out.println("YOU LOSE!");
-					System.exit(0);
+					//System.exit(0);
+					this.close();
 				}
 				// pareggio
 				else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
 					System.out.println("DRAW!");
-					System.exit(0);
+					//System.exit(0);
+					this.close();
 				}
 
 			} else {
@@ -280,12 +283,15 @@ public class TablutRandomClient extends TablutClient {
 				} else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 					System.out.println("YOU LOSE!");
 					//System.exit(0);
+					this.close();
 				} else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 					System.out.println("YOU WIN!");
 					//System.exit(0);
+					this.close();
 				} else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
 					System.out.println("DRAW!");
 					//System.exit(0);
+					this.close();
 				}
 
 			}

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import it.unibo.ai.didattica.competition.tablut.client.TablutHumanWhiteClient;
 import it.unibo.ai.didattica.competition.tablut.client.TablutRandomBlackClient;
 import it.unibo.ai.didattica.competition.tablut.server.Server;
 
@@ -39,7 +40,8 @@ public class Training {
 				Thread myclient=new Thread() {
 					public void run() {
 						try {
-							TeamPalloWhiteTablutClient.main(empty);
+							//TeamPalloWhiteTablutClient.main(empty);
+							TablutHumanWhiteClient.main(empty);
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -57,33 +59,40 @@ public class Training {
 					}
 				};	
 				
-			server.start();
-			myclient.start();
-			randomblack.start();
+				server.start();
+				myclient.start();
+				randomblack.start();
 			
-			while(server.isAlive()) {
+				while(server.isAlive()) {
+					try {
+						Thread.sleep(60000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				/*CAPIRE CHI VINCE*/
+				String winner=Server.WINNER;
+				System.out.println("winner:"+winner);
+				
+				/*AGGIORNARE STATS*/
+				if(winner.compareTo("draw")==0) {
+					draw++;
+				}
+				else if(winner.compareTo(GameManager.getInstance().getPlayer())==0) {
+					vinte++;
+				}
+				else {
+					perse++;
+				}
+				/**/
+				
 				try {
-					Thread.sleep(60000);
+					Thread.sleep(10000);
 				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
-			
-			/*CAPIRE CHI VINCE*/
-			String winner=Server.WINNER;
-			System.out.println("winner:"+winner);
-			
-			/*AGGIORNARE STATS*/
-			if(winner.compareTo("draw")==0) {
-				draw++;
-			}
-			else if(winner.compareTo(GameManager.getInstance().getPlayer())==0) {
-				vinte++;
-			}
-			else {
-				perse++;
-			}
-			/**/
 			}
 			
 			publishStats(vinte,perse,draw);

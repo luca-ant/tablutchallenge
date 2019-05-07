@@ -355,15 +355,16 @@ public class Server implements Runnable {
 
 		// ESTABLISH CONNECTIONS AND NAME READING
 		try {
-			this.socketWhite = new ServerSocket(5800);
-			this.socketBlack = new ServerSocket(5801);
+			this.socketWhite = new ServerSocket(5800);	this.socketWhite.setReuseAddress(true);
+			this.socketBlack = new ServerSocket(5801);	this.socketBlack.setReuseAddress(true);
 
+			System.out.println("qua1");
 			white = this.socketWhite.accept();
 			loggSys.fine("Accettata connessione con client giocatore Bianco");
 			whiteMove = new DataInputStream(white.getInputStream());
 			whiteState = new DataOutputStream(white.getOutputStream());
 			Turnwhite = new TCPInput(whiteMove);
-
+			System.out.println("qua2");
 			// NAME READING
 			t = new Thread(Turnwhite);
 			t.start();
@@ -385,7 +386,7 @@ public class Server implements Runnable {
 				loggSys.warning("Chiusura sistema per timeout");
 				System.exit(0);
 			}
-
+			System.out.println("qua3");
 			whiteName = this.gson.fromJson(theGson, String.class);
 			// SECURITY STEP: dropping unproper characters
 			String temp = "";
@@ -403,7 +404,7 @@ public class Server implements Runnable {
 			blackMove = new DataInputStream(black.getInputStream());
 			blackState = new DataOutputStream(black.getOutputStream());
 			Turnblack = new TCPInput(blackMove);
-
+			System.out.println("qua4");
 			// NAME READING
 			t = new Thread(Turnblack);
 			t.start();
@@ -649,6 +650,14 @@ public class Server implements Runnable {
 				endgame = true;
 			}
 		}
+		try {
+			this.socketBlack.close();
+			this.socketWhite.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		//System.exit(0);
 	}
 

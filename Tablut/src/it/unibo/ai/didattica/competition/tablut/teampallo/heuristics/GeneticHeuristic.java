@@ -101,8 +101,8 @@ public class GeneticHeuristic implements Heuristic {
 
 	//	printValues();
 
-		double result = myRandom(-1, 1);
-//		double result = 0;
+		//double result = myRandom(-1, 1);
+		double result = 0;
 
 		result -= env.getWeight("WHITE_WEIGHT_DIFF_PAWNS") * (this.countW - this.countB);
 

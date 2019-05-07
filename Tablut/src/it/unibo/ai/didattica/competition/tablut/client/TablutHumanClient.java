@@ -67,13 +67,16 @@ public class TablutHumanClient extends TablutClient {
 						System.out.println("Waiting for your opponent move... ");
 					} else if (this.getCurrentState().getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 						System.out.println("YOU WIN!");
-						System.exit(0);
+						//System.exit(0);
+						this.close();
 					} else if (this.getCurrentState().getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 						System.out.println("YOU LOSE!");
-						System.exit(0);
+						//System.exit(0);
+						this.close();
 					} else if (this.getCurrentState().getTurn().equals(StateTablut.Turn.DRAW)) {
 						System.out.println("DRAW!");
-						System.exit(0);
+						//System.exit(0);
+						this.close();
 					}
 
 				} catch (Exception e) {
@@ -100,13 +103,16 @@ public class TablutHumanClient extends TablutClient {
 						System.out.println("Waiting for your opponent move... ");
 					} else if (this.getCurrentState().getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 						System.out.println("YOU LOSE!");
-						System.exit(0);
+						this.close();
+						//System.exit(0);
 					} else if (this.getCurrentState().getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 						System.out.println("YOU WIN!");
-						System.exit(0);
+						//System.exit(0);
+						this.close();
 					} else if (this.getCurrentState().getTurn().equals(StateTablut.Turn.DRAW)) {
 						System.out.println("DRAW!");
-						System.exit(0);
+						//System.exit(0);
+						this.close();
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
