@@ -24,6 +24,9 @@ public class GameManager {
 	private int memoryLimit;
 	private int maxDepth;
 	private List<Integer> statiVisitati;
+	
+	private static GameManager whiteInstance;
+	private static GameManager blackInstance;
 
 	private GameManager() {
 		this.statiVisitati = new ArrayList<>();
@@ -31,8 +34,15 @@ public class GameManager {
 		this.maxDepth = MAX_DEPTH;
 		this.memoryLimit = MEMORY_LIMIT;
 		this.pedineOnBoard = 25;
-		this.player = "";
+		this.player = player;
 
+		/*****************************/
+		/*if(player.compareTo("white")==0) {
+			whiteInstance=this;
+		}else {
+			blackInstance=this;
+		}
+		/*****************************/
 	}
 
 	public static GameManager getInstance() {
@@ -41,6 +51,14 @@ public class GameManager {
 		}
 
 		return instance;
+		
+		/*********************************/
+		/*if(player.compareTo("white")==0) {
+			return whiteInstance;
+		}else {
+			return blackInstance;
+		}
+		/*********************************/
 	}
 
 	public void setParameters(int timeout, int maxDepth, String player) {

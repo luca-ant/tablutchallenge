@@ -20,6 +20,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.GeneticHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
@@ -32,14 +33,18 @@ public class AlphaBetaIterative implements IA {
 	private boolean ww;
 	private boolean bw;
 	private Heuristic heuristic;
+	private String player;
 
-	public AlphaBetaIterative() {
+	public AlphaBetaIterative(String player) {
 
 		this.rootChildren = new ArrayList<>();
-		this.heuristic = new MyHeuristic();
+		this.heuristic = new GeneticHeuristic(player);
 		this.bestMove = null;
 		this.ww = false;
 		this.bw = false;
+		this.player=player;
+		
+		System.out.println("Istanziato minmax per "+player);
 
 	}
 
@@ -76,12 +81,12 @@ public class AlphaBetaIterative implements IA {
 
 			System.out.println("Temp move found: " + temp);
 
-			if (this.ww && GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
+			if (this.ww && player.equalsIgnoreCase("white")) {
 				this.bestMove = temp;
 				break;
 			}
 
-			if (this.bw && GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
+			if (this.bw && player.equalsIgnoreCase("black")) {
 				this.bestMove = temp;
 				break;
 			}
@@ -112,12 +117,12 @@ public class AlphaBetaIterative implements IA {
 		
 		for (Node node : rootChildren) {
 			if (node.getState().getTurn().equalsTurn(State.Turn.WHITEWIN.toString())
-					&& GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
+					&& player.equalsIgnoreCase("white")) {
 				this.ww = true;
 				return node.getMove();
 			}
 			if (node.getState().getTurn().equalsTurn(State.Turn.BLACKWIN.toString())
-					&& GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
+					&& player.equalsIgnoreCase("black")) {
 
 				this.bw = true;
 				return node.getMove();

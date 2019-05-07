@@ -15,9 +15,11 @@ import it.unibo.ai.didattica.competition.tablut.domain.StateTablut;
  *
  */
 public class TablutHumanClient extends TablutClient {
+	
+	private static int port;
 
-	public TablutHumanClient(String player) throws UnknownHostException, IOException {
-		super(player, "humanInterface");
+	public TablutHumanClient(String player,int port) throws UnknownHostException, IOException {
+		super(player, "humanInterface",port);
 	}
 
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
@@ -28,8 +30,9 @@ public class TablutHumanClient extends TablutClient {
 		}
 		System.out.println("Selected this: " + args[0]);
 
-		TablutClient client = new TablutHumanClient(args[0]);
-
+		TablutClient client = new TablutHumanClient(args[0],Integer.parseInt(args[1]));
+		System.out.println("[TRAINING]: TablutHumanClient"+args[0]+" in ascolto su "+args[1]);
+		
 		client.run();
 
 	}
@@ -49,7 +52,9 @@ public class TablutHumanClient extends TablutClient {
 
 		if (this.getPlayer() == Turn.WHITE) {
 			System.out.println("You are player " + this.getPlayer().toString() + "!");
-			while (true) {
+
+			boolean endgame = false;
+			while (!endgame) {
 				try {
 					this.read();
 
@@ -67,13 +72,19 @@ public class TablutHumanClient extends TablutClient {
 						System.out.println("Waiting for your opponent move... ");
 					} else if (this.getCurrentState().getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 						System.out.println("YOU WIN!");
-						System.exit(0);
+						// System.exit(0);
+						endgame = true;
+
 					} else if (this.getCurrentState().getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 						System.out.println("YOU LOSE!");
-						System.exit(0);
+						// System.exit(0);
+						endgame = true;
+
 					} else if (this.getCurrentState().getTurn().equals(StateTablut.Turn.DRAW)) {
 						System.out.println("DRAW!");
-						System.exit(0);
+						// System.exit(0);
+						endgame = true;
+
 					}
 
 				} catch (Exception e) {
@@ -83,7 +94,9 @@ public class TablutHumanClient extends TablutClient {
 			}
 		} else {
 			System.out.println("You are player " + this.getPlayer().toString() + "!");
-			while (true) {
+			boolean endgame = false;
+
+			while (!endgame) {
 				try {
 					this.read();
 					System.out.println("Current state:");
@@ -100,12 +113,16 @@ public class TablutHumanClient extends TablutClient {
 						System.out.println("Waiting for your opponent move... ");
 					} else if (this.getCurrentState().getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 						System.out.println("YOU LOSE!");
-						System.exit(0);
+						// System.exit(0);
+						endgame = true;
+
 					} else if (this.getCurrentState().getTurn().equals(StateTablut.Turn.BLACKWIN)) {
-						System.out.println("YOU WIN!");
-						System.exit(0);
+						// System.exit(0);
 					} else if (this.getCurrentState().getTurn().equals(StateTablut.Turn.DRAW)) {
 						System.out.println("DRAW!");
+						endgame = true;
+
+						//
 						System.exit(0);
 					}
 				} catch (Exception e) {
@@ -114,6 +131,9 @@ public class TablutHumanClient extends TablutClient {
 				}
 			}
 		}
+
+		closeSocket();
+
 	}
 
 }

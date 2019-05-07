@@ -186,7 +186,7 @@ public class MyHeuristic implements Heuristic {
 		this.resetValues();
 		this.extractValues(state);
 
-		 printValues();
+		// printValues();
 
 		double result = myRandom(-1, 1);
 //		double result = 0;
@@ -209,7 +209,7 @@ public class MyHeuristic implements Heuristic {
 
 		result += BLACK_WEIGHT_BLACKBARRIER * this.blackBarrierPawns;
 
-		result += BLACK_WEIGHT_KING_CAPTURED * this.kingCaptured;
+	//	result += BLACK_WEIGHT_KING_CAPTURED * this.kingCaptured;
 
 		return result;
 	}
