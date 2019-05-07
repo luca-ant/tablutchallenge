@@ -35,9 +35,9 @@ public class TeamPalloTablutClient extends TablutClient {
 	private IA ia;
 	//private GuiCli gui;
 
-	public TeamPalloTablutClient(String player, String name, int gameChosen, int timeout)
+	public TeamPalloTablutClient(String player, String name, int gameChosen, int timeout,int port)
 			throws UnknownHostException, IOException {
-		super(player, name);
+		super(player, name,port);
 		this.game = gameChosen;
 		//this.gui = new GuiCli();
 		MyRules rules = null;
@@ -57,7 +57,7 @@ public class TeamPalloTablutClient extends TablutClient {
 			rules = MyGameAshtonTablutRules.getInstance();
 			break;
 		default:
-			System.out.println("Error in game selection");
+			System.out.println("Error in game selection...it was "+this.game);
 			System.exit(4);
 		}
 
@@ -65,7 +65,7 @@ public class TeamPalloTablutClient extends TablutClient {
 
 		// this.ia = new MinMax();
 		// this.ia = new MinMaxAlphaBeta();
-		this.ia = new AlphaBetaIterative();
+		this.ia = new AlphaBetaIterative(player);
 		// this.ia = new AlphaBetaIterativeWithMemory();
 
 	}
@@ -82,13 +82,13 @@ public class TeamPalloTablutClient extends TablutClient {
 			System.out.println(args[0]);
 			role = (args[0]);
 		}
-		if (args.length == 2) {
+		/*if (args.length == 2) {
 			System.out.println(args[1]);
 			gametype = Integer.parseInt(args[1]);
 		}
 		if (args.length == 3) {
 			name = args[2];
-		}
+		}*/
 		System.out.println("Selected client: " + args[0]);
 		System.out.println("YOUR NAME: " + name);
 
@@ -97,7 +97,9 @@ public class TeamPalloTablutClient extends TablutClient {
 
 		GameManager.getInstance().setParameters(timeout, depth, role.toLowerCase());
 
-		TeamPalloTablutClient client = new TeamPalloTablutClient(role, name, gametype, timeout);
+		TeamPalloTablutClient client = new TeamPalloTablutClient(role, name, gametype, timeout,Integer.parseInt(args[1]));
+		System.out.println("[TRAINING]: TeamPalloTablutClient"+role+" in ascolto su "+args[1]);
+
 		client.run();
 	}
 

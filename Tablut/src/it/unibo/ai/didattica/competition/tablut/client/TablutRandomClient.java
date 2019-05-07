@@ -18,21 +18,21 @@ public class TablutRandomClient extends TablutClient {
 
 	private int game;
 
-	public TablutRandomClient(String player, String name, int gameChosen) throws UnknownHostException, IOException {
-		super(player, name);
+	public TablutRandomClient(String player, String name, int gameChosen,int port) throws UnknownHostException, IOException {
+		super(player, name,port);
 		game = gameChosen;
 	}
 
-	public TablutRandomClient(String player) throws UnknownHostException, IOException {
-		this(player, "random", 4);
+	public TablutRandomClient(String player,int port) throws UnknownHostException, IOException {
+		this(player, "random", 4,port);
 	}
 
-	public TablutRandomClient(String player, String name) throws UnknownHostException, IOException {
-		this(player, name, 4);
+	public TablutRandomClient(String player, String name,int port) throws UnknownHostException, IOException {
+		this(player, name, 4,port);
 	}
 
-	public TablutRandomClient(String player, int gameChosen) throws UnknownHostException, IOException {
-		this(player, "random", gameChosen);
+	public TablutRandomClient(String player, int gameChosen,int port) throws UnknownHostException, IOException {
+		this(player, "random", gameChosen,port);
 	}
 
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
@@ -47,16 +47,17 @@ public class TablutRandomClient extends TablutClient {
 			System.out.println(args[0]);
 			role = (args[0]);
 		}
-		if (args.length == 2) {
+		/*if (args.length == 2) {
 			System.out.println(args[1]);
 			gametype = Integer.parseInt(args[1]);
 		}
 		if (args.length == 3) {
 			name = args[2];
-		}
+		}*/
 		System.out.println("Selected client: " + args[0]);
 
-		TablutRandomClient client = new TablutRandomClient(role, name, gametype);
+		TablutRandomClient client = new TablutRandomClient(role, name, gametype,Integer.parseInt(args[1]));
+		System.out.println("[TRAINING]: TablutRandomClient"+role+" in ascolto su "+args[1]);
 		client.run();
 	}
 

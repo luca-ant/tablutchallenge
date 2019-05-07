@@ -15,9 +15,11 @@ import it.unibo.ai.didattica.competition.tablut.domain.StateTablut;
  *
  */
 public class TablutHumanClient extends TablutClient {
+	
+	private static int port;
 
-	public TablutHumanClient(String player) throws UnknownHostException, IOException {
-		super(player, "humanInterface");
+	public TablutHumanClient(String player,int port) throws UnknownHostException, IOException {
+		super(player, "humanInterface",port);
 	}
 
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
@@ -28,8 +30,9 @@ public class TablutHumanClient extends TablutClient {
 		}
 		System.out.println("Selected this: " + args[0]);
 
-		TablutClient client = new TablutHumanClient(args[0]);
-
+		TablutClient client = new TablutHumanClient(args[0],Integer.parseInt(args[1]));
+		System.out.println("[TRAINING]: TablutHumanClient"+args[0]+" in ascolto su "+args[1]);
+		
 		client.run();
 
 	}

@@ -32,6 +32,9 @@ import com.google.gson.Gson;
  *
  */
 public class Server implements Runnable {
+	
+	private static int portWhite;
+	private static int portBlack;
 
 	public static String WINNER;
 	
@@ -125,7 +128,7 @@ public class Server implements Runnable {
 		int gameChosen = 4;
 		boolean enableGui = true;
 
-		String usage = "Usage: java Server [-t <time>] [-c <cache>] [-e <errors>] [-s <repeatedState>] [-r <game rules>] [-g <enableGUI>]\n"
+		/*String usage = "Usage: java Server [-t <time>] [-c <cache>] [-e <errors>] [-s <repeatedState>] [-r <game rules>] [-g <enableGUI>]\n"
 				+ "\tenableGUI must be >0 for enabling it; default 1"
 				+ "\tgame rules must be an integer; 1 for Tablut, 2 for Modern, 3 for Brandub, 4 for Ashton; default: 4\n"
 				+ "\trepeatedStates must be an integer >= 0; default: 0\n"
@@ -233,6 +236,14 @@ public class Server implements Runnable {
 				}
 			}
 
+		}*/
+		
+		//ARGS[0]-ARGS[1]: Porta white-Porta black
+		if(args.length<2) {
+			System.err.println("[TRAINING]: Porte server non specificate");
+		}else {
+			portWhite=Integer.parseInt(args[0]);
+			portBlack=Integer.parseInt(args[1]);
 		}
 
 		// Start the server
@@ -355,16 +366,17 @@ public class Server implements Runnable {
 
 		// ESTABLISH CONNECTIONS AND NAME READING
 		try {
-			this.socketWhite = new ServerSocket(5800);	this.socketWhite.setReuseAddress(true);
-			this.socketBlack = new ServerSocket(5801);	this.socketBlack.setReuseAddress(true);
+			this.socketWhite = new ServerSocket(portWhite);	this.socketWhite.setReuseAddress(true);
+			this.socketBlack = new ServerSocket(portBlack);	this.socketBlack.setReuseAddress(true);
 
+			System.out.println("[TRAINING]: Server in ascolto su "+portWhite+" per il bianco e "+portBlack+" per il nero");
+			//System.out.println("[TRAINING]: this.gameC="+this.gameC);
 			System.out.println("qua1");
 			white = this.socketWhite.accept();
 			loggSys.fine("Accettata connessione con client giocatore Bianco");
 			whiteMove = new DataInputStream(white.getInputStream());
 			whiteState = new DataOutputStream(white.getOutputStream());
 			Turnwhite = new TCPInput(whiteMove);
-			System.out.println("qua2");
 			// NAME READING
 			t = new Thread(Turnwhite);
 			t.start();
@@ -386,7 +398,6 @@ public class Server implements Runnable {
 				loggSys.warning("Chiusura sistema per timeout");
 				System.exit(0);
 			}
-			System.out.println("qua3");
 			whiteName = this.gson.fromJson(theGson, String.class);
 			// SECURITY STEP: dropping unproper characters
 			String temp = "";
@@ -404,7 +415,6 @@ public class Server implements Runnable {
 			blackMove = new DataInputStream(black.getInputStream());
 			blackState = new DataOutputStream(black.getOutputStream());
 			Turnblack = new TCPInput(blackMove);
-			System.out.println("qua4");
 			// NAME READING
 			t = new Thread(Turnblack);
 			t.start();

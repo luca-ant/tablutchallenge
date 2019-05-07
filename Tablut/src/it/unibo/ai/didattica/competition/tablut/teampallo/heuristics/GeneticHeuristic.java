@@ -45,7 +45,10 @@ public class GeneticHeuristic implements Heuristic {
 	
 	private Environment env=Environment.getInstance();
 
-	public GeneticHeuristic() {
+	private String player;
+	
+	public GeneticHeuristic(String player) {
+		this.player=player;
 		this.r = new Random(System.currentTimeMillis());
 
 		this.citadels = Arrays.asList("a4", "a5", "a6", "b5", "d1", "e1", "f1", "e2", "i4", "i5", "i6", "h5", "d9",
@@ -59,7 +62,7 @@ public class GeneticHeuristic implements Heuristic {
 
 		// ADD TO TRAINING
 
-		// generateVWeightValues(GameManager.getInstance().getPlayer());
+		// generateVWeightValues(player);
 
 	}
 
@@ -84,9 +87,9 @@ public class GeneticHeuristic implements Heuristic {
 	@Override
 	public double heuristic(State state) {
 
-		if (GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
+		if (player.equalsIgnoreCase("white")) {
 			return this.heuristicWhite(state);
-		} else if (GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
+		} else if (player.equalsIgnoreCase("black")) {
 			return this.heuristicBlack(state);
 		}
 

@@ -7,7 +7,7 @@ public class TeamPalloWhiteTablutClient {
 
 
 		public static void main(String[] args) throws UnknownHostException, ClassNotFoundException, IOException {
-			String[] array = new String[]{"WHITE"};
+			String[] array = new String[]{"WHITE",args[0]};
 			if (args.length>0){
 				array = new String[]{"WHITE", args[0]};
 			}

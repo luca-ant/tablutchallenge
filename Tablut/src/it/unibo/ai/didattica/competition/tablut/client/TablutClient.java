@@ -53,15 +53,15 @@ public abstract class TablutClient implements Runnable {
 	 * @throws UnknownHostException
 	 * @throws IOException
 	 */
-	public TablutClient(String player, String name) throws UnknownHostException, IOException {
-		int port = 0;
+	public TablutClient(String player, String name,int portN) throws UnknownHostException, IOException {
+		int port = portN;
 		this.gson = new Gson();
 		if (player.toLowerCase().equals("white")) {
 			this.player = State.Turn.WHITE;
-			port = 5800;
+			//port = 5800;
 		} else if (player.toLowerCase().equals("black")) {
 			this.player = State.Turn.BLACK;
-			port = 5801;
+			//port = 5801;
 		} else {
 			throw new InvalidParameterException("Player role must be BLACK or WHITE");
 		}
