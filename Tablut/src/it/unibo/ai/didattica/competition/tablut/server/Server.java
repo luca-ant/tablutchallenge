@@ -33,6 +33,8 @@ import com.google.gson.Gson;
  */
 public class Server implements Runnable {
 
+	public static String WINNER;
+	
 	/**
 	 * State of the game
 	 */
@@ -83,8 +85,8 @@ public class Server implements Runnable {
 
 	private Game game;
 	private Gson gson;
-//	private Gui theGui;
-	private GuiCli theGui;
+	private Gui theGui;
+	//private GuiCli theGui;
 	/**
 	 * Integer that represents the game type
 	 */
@@ -101,10 +103,10 @@ public class Server implements Runnable {
 	}
 
 	public void initializeGUI(State state) {
-//		this.theGui = new Gui(this.gameC);
-//		this.theGui.update(state);
-		this.theGui = new GuiCli();
+		this.theGui = new Gui(this.gameC);
 		this.theGui.update(state);
+		//this.theGui = new GuiCli();
+		//this.theGui.update(state);
 	}
 
 	/**
@@ -353,15 +355,16 @@ public class Server implements Runnable {
 
 		// ESTABLISH CONNECTIONS AND NAME READING
 		try {
-			this.socketWhite = new ServerSocket(5800);
-			this.socketBlack = new ServerSocket(5801);
+			this.socketWhite = new ServerSocket(5800);	this.socketWhite.setReuseAddress(true);
+			this.socketBlack = new ServerSocket(5801);	this.socketBlack.setReuseAddress(true);
 
+			System.out.println("qua1");
 			white = this.socketWhite.accept();
 			loggSys.fine("Accettata connessione con client giocatore Bianco");
 			whiteMove = new DataInputStream(white.getInputStream());
 			whiteState = new DataOutputStream(white.getOutputStream());
 			Turnwhite = new TCPInput(whiteMove);
-
+			System.out.println("qua2");
 			// NAME READING
 			t = new Thread(Turnwhite);
 			t.start();
@@ -383,7 +386,7 @@ public class Server implements Runnable {
 				loggSys.warning("Chiusura sistema per timeout");
 				System.exit(0);
 			}
-
+			System.out.println("qua3");
 			whiteName = this.gson.fromJson(theGson, String.class);
 			// SECURITY STEP: dropping unproper characters
 			String temp = "";
@@ -401,7 +404,7 @@ public class Server implements Runnable {
 			blackMove = new DataInputStream(black.getInputStream());
 			blackState = new DataOutputStream(black.getOutputStream());
 			Turnblack = new TCPInput(blackMove);
-
+			System.out.println("qua4");
 			// NAME READING
 			t = new Thread(Turnblack);
 			t.start();
@@ -597,12 +600,15 @@ public class Server implements Runnable {
 				System.out.println("END OF THE GAME");
 				if (state.getTurn().equalsTurn(StateTablut.Turn.DRAW.toString())) {
 					System.out.println("RESULT: DRAW");
+					WINNER="draw";
 				}
 				if (state.getTurn().equalsTurn(StateTablut.Turn.WHITEWIN.toString())) {
 					System.out.println("RESULT: PLAYER WHITE WIN");
+					WINNER="white";
 				}
 				if (state.getTurn().equalsTurn(StateTablut.Turn.BLACKWIN.toString())) {
 					System.out.println("RESULT: PLAYER BLACK WIN");
+					WINNER="black";
 				}
 
 				// ADD TO LOG
@@ -644,7 +650,15 @@ public class Server implements Runnable {
 				endgame = true;
 			}
 		}
-		System.exit(0);
+		try {
+			this.socketBlack.close();
+			this.socketWhite.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//System.exit(0);
 	}
 
 }

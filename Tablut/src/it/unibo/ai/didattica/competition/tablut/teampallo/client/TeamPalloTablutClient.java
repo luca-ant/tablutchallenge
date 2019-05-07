@@ -33,13 +33,13 @@ public class TeamPalloTablutClient extends TablutClient {
 
 	private int game;
 	private IA ia;
-	private GuiCli gui;
+	//private GuiCli gui;
 
 	public TeamPalloTablutClient(String player, String name, int gameChosen, int timeout)
 			throws UnknownHostException, IOException {
 		super(player, name);
 		this.game = gameChosen;
-		this.gui = new GuiCli();
+		//this.gui = new GuiCli();
 		MyRules rules = null;
 
 		switch (this.game) {
@@ -134,7 +134,8 @@ public class TeamPalloTablutClient extends TablutClient {
 
 		System.out.println("You are player " + this.getPlayer().toString() + "!");
 
-		while (true) {
+		boolean endgame = false;
+		while (!endgame) {
 			try {
 				this.read();
 			} catch (ClassNotFoundException | IOException e1) {
@@ -144,8 +145,8 @@ public class TeamPalloTablutClient extends TablutClient {
 			}
 			System.out.println("Current state:");
 			state = this.getCurrentState();
-			// System.out.println(state.toString());
-			this.gui.update(state);
+			System.out.println(state.toString());
+			//this.gui.update(state);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -191,17 +192,20 @@ public class TeamPalloTablutClient extends TablutClient {
 				// ho vinto
 				else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 					System.out.println("YOU WIN!");
-					System.exit(0);
+					//System.exit(0);
+					endgame = true;
 				}
 				// ho perso
 				else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 					System.out.println("YOU LOSE!");
-					System.exit(0);
+					//System.exit(0);
+					endgame = true;
 				}
 				// pareggio
 				else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
 					System.out.println("DRAW!");
-					System.exit(0);
+					//System.exit(0);
+					endgame = true;
 				}
 
 			} else {
@@ -241,18 +245,21 @@ public class TeamPalloTablutClient extends TablutClient {
 					System.out.println("Waiting for your opponent move... ");
 				} else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 					System.out.println("YOU LOSE!");
-					System.exit(0);
+					//System.exit(0);
+					endgame = true;
 				} else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 					System.out.println("YOU WIN!");
-					System.exit(0);
+					//System.exit(0);
+					endgame = true;
 				} else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
 					System.out.println("DRAW!");
-					System.exit(0);
+					//System.exit(0);
+					endgame = true;
 				}
 
 			}
 		}
-
+		closeSocket();
 	}
 
 }
