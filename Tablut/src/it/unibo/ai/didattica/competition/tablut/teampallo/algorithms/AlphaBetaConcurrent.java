@@ -44,6 +44,9 @@ public class AlphaBetaConcurrent implements IA {
 
 		this.endTime = System.currentTimeMillis() + GameManager.getInstance().getTimeout() * 1000;
 
+		this.rootChildren.clear();
+
+	
 		List<Action> actionFromRoot = GameManager.getInstance().getRules().getNextMovesFromState(state);
 
 		for (Action a : actionFromRoot) {
