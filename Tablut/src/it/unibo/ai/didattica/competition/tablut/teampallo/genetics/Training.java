@@ -14,7 +14,7 @@ import it.unibo.ai.didattica.competition.tablut.server.Server;
 public class Training {
 
 	private static int POPOLATION=2;
-	private static double POSITIVE_BEHAVIOUR=75.0;
+	private static double POSITIVE_BEHAVIOUR=0.75;
 	
 	public static void main(String[] args) {
 		
@@ -79,7 +79,7 @@ public class Training {
 				if(winner.compareTo("draw")==0) {
 					draw++;
 				}
-				else if(winner.compareTo(GameManager.getInstance().getPlayer())==0) {
+				else if(winner.compareTo(daAllenare)==0) {
 					vinte++;
 				}
 				else {
@@ -98,8 +98,9 @@ public class Training {
 			publishStats(vinte,perse,draw);
 			
 			if(((double)vinte/POPOLATION)>POSITIVE_BEHAVIOUR) {
-				alg.mutate(true,daAllenare);
+				//alg.mutate(true,daAllenare);
 			}else {
+				alg.mutate(true,daAllenare);
 				alg.mutate(false,daAllenare);
 			}
 			
@@ -118,7 +119,7 @@ public class Training {
 			writer.append(""+System.currentTimeMillis()+"\n");
 			writer.append("-------------------STATS------------------------\n");
 			writer.append("\t\tWIN\t\tLOSE\t\tDRAW\n");
-			writer.append("\t\t"+vinte+"\t\t"+perse+"\t\t"+draw+"\n");
+			writer.append("\t\t"+vinte+"\t\t"+perse+"\t\t\t"+draw+"\n");
 			writer.append("\nENVIRONMENT:\n");
 			writer.append("BLACK:\n");
 			for(String s : env.getVariablesB().keySet()) {

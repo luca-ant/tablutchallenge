@@ -49,8 +49,7 @@ public abstract class TablutClient implements Runnable {
 	/**
 	 * Creates a new player initializing the sockets and the logger
 	 * 
-	 * @param player
-	 *            The role of the player (black or white)
+	 * @param player The role of the player (black or white)
 	 * @throws UnknownHostException
 	 * @throws IOException
 	 */
@@ -67,7 +66,8 @@ public abstract class TablutClient implements Runnable {
 			throw new InvalidParameterException("Player role must be BLACK or WHITE");
 		}
 		playerSocket = new Socket("localhost", port);
-	//	playerSocket = new Socket("192.168.43.115", port);
+		playerSocket.setReuseAddress(true);
+		// playerSocket = new Socket("192.168.43.115", port);
 		out = new DataOutputStream(playerSocket.getOutputStream());
 		in = new DataInputStream(playerSocket.getInputStream());
 		this.name = name;
@@ -87,7 +87,7 @@ public abstract class TablutClient implements Runnable {
 	public void write(Action action) throws IOException, ClassNotFoundException {
 		StreamUtils.writeString(out, this.gson.toJson(action));
 	}
-	
+
 	/**
 	 * Write the name to the server
 	 */
@@ -101,8 +101,8 @@ public abstract class TablutClient implements Runnable {
 	public void read() throws ClassNotFoundException, IOException {
 		this.currentState = this.gson.fromJson(StreamUtils.readString(in), StateTablut.class);
 	}
-	
-	public void close() {
+
+	public void closeSocket() {
 		try {
 			this.playerSocket.close();
 		} catch (IOException e) {

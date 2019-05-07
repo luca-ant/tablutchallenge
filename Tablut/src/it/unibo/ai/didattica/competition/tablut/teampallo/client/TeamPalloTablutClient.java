@@ -134,7 +134,8 @@ public class TeamPalloTablutClient extends TablutClient {
 
 		System.out.println("You are player " + this.getPlayer().toString() + "!");
 
-		while (true) {
+		boolean endgame = false;
+		while (!endgame) {
 			try {
 				this.read();
 			} catch (ClassNotFoundException | IOException e1) {
@@ -192,16 +193,19 @@ public class TeamPalloTablutClient extends TablutClient {
 				else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 					System.out.println("YOU WIN!");
 					//System.exit(0);
+					endgame = true;
 				}
 				// ho perso
 				else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 					System.out.println("YOU LOSE!");
 					//System.exit(0);
+					endgame = true;
 				}
 				// pareggio
 				else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
 					System.out.println("DRAW!");
 					//System.exit(0);
+					endgame = true;
 				}
 
 			} else {
@@ -242,17 +246,20 @@ public class TeamPalloTablutClient extends TablutClient {
 				} else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 					System.out.println("YOU LOSE!");
 					//System.exit(0);
+					endgame = true;
 				} else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 					System.out.println("YOU WIN!");
 					//System.exit(0);
+					endgame = true;
 				} else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
 					System.out.println("DRAW!");
 					//System.exit(0);
+					endgame = true;
 				}
 
 			}
 		}
-
+		closeSocket();
 	}
 
 }
