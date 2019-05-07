@@ -29,8 +29,6 @@ public class AlphaBetaIterative implements IA {
 	private List<Node> rootChildren;
 	private long endTime;
 	private Action bestMove;
-	private boolean ww;
-	private boolean bw;
 	private Heuristic heuristic;
 
 	public AlphaBetaIterative() {
@@ -38,8 +36,6 @@ public class AlphaBetaIterative implements IA {
 		this.rootChildren = new ArrayList<>();
 		this.heuristic = new MyHeuristic();
 		this.bestMove = null;
-		this.ww = false;
-		this.bw = false;
 
 	}
 
@@ -50,10 +46,33 @@ public class AlphaBetaIterative implements IA {
 
 		this.endTime = System.currentTimeMillis() + GameManager.getInstance().getTimeout() * 1000;
 
+		this.rootChildren.clear();
+
+		List<Action> actionFromRoot = GameManager.getInstance().getRules().getNextMovesFromState(state);
+
+		for (Action a : actionFromRoot) {
+
+			State nextState = GameManager.getInstance().getRules().movePawn(state.clone(), a);
+
+			Node n = new Node(nextState, 0, a);
+
+			if (n.getState().getTurn().equalsTurn(State.Turn.WHITEWIN.toString())
+					&& GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
+				return n.getMove();
+			}
+			if (n.getState().getTurn().equalsTurn(State.Turn.BLACKWIN.toString())
+					&& GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
+
+				return n.getMove();
+
+			}
+
+		}
+
 		Action temp;
 		this.bestMove = null;
 
-		for (int d = 1; d <= GameManager.getInstance().getMaxDepth(); ++d) {
+		for (int d = 2; d <= GameManager.getInstance().getMaxDepth(); ++d) {
 			System.out.println("\nSTART DEPTH = " + d);
 
 			StatsManager.getInstance().reset();
@@ -73,20 +92,10 @@ public class AlphaBetaIterative implements IA {
 			System.out.println("END DEPTH = " + d + "\n");
 			StatsManager.getInstance().printResults();
 
-
-			System.out.println("Temp move found: " + temp);
-
-			if (this.ww && GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
-				return temp;
+			if (temp != null) {
+				System.out.println("Temp move found: " + temp);
+				this.bestMove = temp;
 			}
-
-			if (this.bw && GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
-				return temp;
-
-			}
-
-			this.bestMove = temp;
-
 		}
 
 		return this.bestMove;
@@ -103,29 +112,13 @@ public class AlphaBetaIterative implements IA {
 
 		root.setValue(maxValue(root, depth, maxDepth, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY));
 
-		if (System.currentTimeMillis() > this.endTime || this.rootChildren.isEmpty()) {
+		if (System.currentTimeMillis() > this.endTime) {
 
-			return this.bestMove;
+			rootChildren.clear();
+			// return this.bestMove;
+			return null;
 		}
 
-		
-		for (Node node : rootChildren) {
-			if (node.getState().getTurn().equalsTurn(State.Turn.WHITEWIN.toString())
-					&& GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
-				this.ww = true;
-				return node.getMove();
-			}
-			if (node.getState().getTurn().equalsTurn(State.Turn.BLACKWIN.toString())
-					&& GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
-
-				this.bw = true;
-				return node.getMove();
-
-			}
-
-		}
-		
-		
 		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
 		rootChildren.clear();

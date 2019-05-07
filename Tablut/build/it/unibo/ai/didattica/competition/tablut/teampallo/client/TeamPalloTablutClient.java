@@ -67,9 +67,11 @@ public class TeamPalloTablutClient extends TablutClient {
 
 		// this.ia = new MinMax();
 		// this.ia = new MinMaxAlphaBeta();
-		// this.ia = new AlphaBetaIterative();
+		
+		this.ia = new AlphaBetaIterative();
+		//this.ia = new AlphaBetaConcurrent();
+		
 		// this.ia = new AlphaBetaParallel();
-		this.ia = new AlphaBetaConcurrent();
 		// this.ia = new AlphaBetaIterativeWithMemory();
 
 	}

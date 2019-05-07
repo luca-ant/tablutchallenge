@@ -44,11 +44,14 @@ public class AlphaBetaConcurrent implements IA {
 
 		this.endTime = System.currentTimeMillis() + GameManager.getInstance().getTimeout() * 1000;
 
+		this.rootChildren.clear();
+
+	
 		List<Action> actionFromRoot = GameManager.getInstance().getRules().getNextMovesFromState(state);
 
 		for (Action a : actionFromRoot) {
 
-			State nextState = GameManager.getInstance().getRules().movePawn(state, a);
+			State nextState = GameManager.getInstance().getRules().movePawn(state.clone(), a);
 
 			Node n = new Node(nextState, 0, a);
 

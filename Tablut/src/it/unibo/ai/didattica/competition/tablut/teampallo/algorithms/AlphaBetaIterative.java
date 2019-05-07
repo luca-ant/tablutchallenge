@@ -52,7 +52,7 @@ public class AlphaBetaIterative implements IA {
 
 		for (Action a : actionFromRoot) {
 
-			State nextState = GameManager.getInstance().getRules().movePawn(state, a);
+			State nextState = GameManager.getInstance().getRules().movePawn(state.clone(), a);
 
 			Node n = new Node(nextState, 0, a);
 
