@@ -27,13 +27,13 @@ public class TestHeuristic {
 
 		board[4][4] = Pawn.THRONE;
 
-		board[1][3] = Pawn.KING;
+		board[4][4] = Pawn.KING;
 
 		board[2][4] = Pawn.WHITE;
 		board[3][4] = Pawn.WHITE;
 		board[5][4] = Pawn.WHITE;
 		board[6][4] = Pawn.WHITE;
-		board[4][2] = Pawn.WHITE;
+		board[8][2] = Pawn.WHITE;
 		board[4][3] = Pawn.WHITE;
 		board[4][5] = Pawn.WHITE;
 		board[4][6] = Pawn.WHITE;
@@ -56,7 +56,7 @@ public class TestHeuristic {
 		board[4][7] = Pawn.BLACK;
 
 		
-		board[1][2] = Pawn.BLACK;
+		board[0][3] = Pawn.BLACK;
 
 		
 		

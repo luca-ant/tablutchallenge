@@ -21,26 +21,26 @@ public class MyHeuristic implements Heuristic {
 	private static double BLACK_WEIGHT_DIFF_PAWNS = 5;
 	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 3;
 	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2;
-	private static double BLACK_WEIGHT_BLACK_NEAR_KING = 3.5;
-	private static double BLACK_WEIGHT_FREE_WAY_KING = 7;
+	private static double BLACK_WEIGHT_BLACK_NEAR_KING = 3;
+	private static double BLACK_WEIGHT_FREE_WAY_KING = 5;
 	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
-	private static double BLACK_WEIGHT_KING_CAPTURED = 50;
-	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 1.5;
-	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 2;
-	private static double BLACK_WEIGHT_BLACKBARRIER = 3;
+	private static double BLACK_WEIGHT_KING_CAPTURED = 10;
+	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 0.7;
+	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 3;
+	private static double BLACK_WEIGHT_BLACKBARRIER = 2.5;
 
 	private static double WHITE_WEIGHT_DIFF_PAWNS = 5;
-	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 4;
+	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 5;
 	private static double WHITE_WEIGHT_COUNT_BLACK_PAWNS = 3;
 	private static double WHITE_WEIGHT_BLACK_NEAR_KING = 3;
 	private static double WHITE_WEIGHT_WHITE_NEAR_KING = 1.5;
 	private static double WHITE_WEIGHT_FREE_WAY_KING = 10;
-	private static double WHITE_WEIGHT_KING_ON_THRONE = 2;
-	private static double WHITE_WEIGHT_KING_NEAR_THRONE = 1.5;
-	private static double WHITE_WEIGHT_KING_ON_STAR = 50;
+	private static double WHITE_WEIGHT_KING_ON_THRONE = 0.5;
+	private static double WHITE_WEIGHT_KING_NEAR_THRONE = 0.3;
+	private static double WHITE_WEIGHT_KING_ON_STAR = 10;
 	private static double WHITE_WEIGHT_KING_FROM_BORDER = 0;
-	private static double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 2;
-	private static double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 1.5;
+	private static double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 5;
+	private static double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 7;
 
 	// *** OK ***
 
@@ -149,34 +149,34 @@ public class MyHeuristic implements Heuristic {
 		this.resetValues();
 		this.extractValues(state);
 
-		// printValues();
+	//	 printValues();
 
-		double result = myRandom(-1, 1);
-//		double result = 0;
+	//	double result = myRandom(-1, 1);
+	double result = 0;
 
-		result -= WHITE_WEIGHT_DIFF_PAWNS * (this.countW - this.countB);
+//		result -= WHITE_WEIGHT_DIFF_PAWNS * (((double)this.countW/16) - ((double)this.countB/9));
 
-		result -= WHITE_WEIGHT_COUNT_BLACK_PAWNS * this.countB;
+		result -= WHITE_WEIGHT_COUNT_BLACK_PAWNS * ((double)this.countB / 16);
 
-		result -= WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED * this.whitePawnsOverhanged;
+		result -= WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double)this.whitePawnsOverhanged / this.countW);
 
-		result -= WHITE_WEIGHT_BLACK_NEAR_KING * this.blackNearKing;
+	//	result -= WHITE_WEIGHT_BLACK_NEAR_KING * (this.blackNearKing / 4);
 
-		result += WHITE_WEIGHT_COUNT_WHITE_PAWNS * this.countW;
+		result += WHITE_WEIGHT_COUNT_WHITE_PAWNS * ((double)this.countW/9);
 
-		result += WHITE_WEIGHT_WHITE_NEAR_KING * this.whiteNearKing;
+//		result += WHITE_WEIGHT_WHITE_NEAR_KING * this.whiteNearKing;
 
-		result += WHITE_WEIGHT_FREE_WAY_KING * this.kingFreeWay;
+		result += WHITE_WEIGHT_FREE_WAY_KING * ((double)this.kingFreeWay / 4);
 
 		result += WHITE_WEIGHT_KING_ON_THRONE * this.kingOnThrone;
 
-		result += WHITE_WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
+//		result += WHITE_WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
 
-		result += WHITE_WEIGHT_KING_FROM_BORDER * (state.getBoard().length - this.kingFromBorder);
+//		result += WHITE_WEIGHT_KING_FROM_BORDER * (state.getBoard().length - this.kingFromBorder);
 
-		result += WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED * this.blackPawnsOverhanged;
+		result += WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double)this.blackPawnsOverhanged / this.countB);
 
-		result += WHITE_WEIGHT_KING_ON_STAR * this.kingOnStar;
+//		result += WHITE_WEIGHT_KING_ON_STAR * this.kingOnStar;
 
 		return result;
 	}
@@ -188,22 +188,22 @@ public class MyHeuristic implements Heuristic {
 
 		// printValues();
 
-		double result = myRandom(-1, 1);
-//		double result = 0;
+//		double result = myRandom(-1, 1);
+		double result = 0;
 
-		result += BLACK_WEIGHT_DIFF_PAWNS * (this.countB - this.countW);
+//		result += BLACK_WEIGHT_DIFF_PAWNS * (((double)this.countB/16) - ((double)this.countW/9));
 
-		result += BLACK_WEIGHT_COUNT_BLACK_PAWNS * this.countB;
+		result += BLACK_WEIGHT_COUNT_BLACK_PAWNS * ((double)this.countB /16);
 
-		result += BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED * this.whitePawnsOverhanged;
+		result += BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double)this.whitePawnsOverhanged /this.countW);
 
-		result += BLACK_WEIGHT_BLACK_NEAR_KING * this.blackNearKing;
+		result += BLACK_WEIGHT_BLACK_NEAR_KING * ((double)this.blackNearKing / 4);
 
-		result -= BLACK_WEIGHT_COUNT_WHITE_PAWNS * this.countW;
+		result -= BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double)this.countW / 9);
 
-		result -= BLACK_WEIGHT_FREE_WAY_KING * this.kingFreeWay;
+		result -= BLACK_WEIGHT_FREE_WAY_KING * ((double)this.kingFreeWay /4);
 
-		result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * this.blackPawnsOverhanged;
+		result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double)this.blackPawnsOverhanged / this.countB);
 
 		result -= BLACK_WEIGHT_KING_ON_STAR * this.kingOnStar;
 
