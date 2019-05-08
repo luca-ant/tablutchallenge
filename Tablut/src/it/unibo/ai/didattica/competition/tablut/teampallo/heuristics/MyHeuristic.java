@@ -81,7 +81,6 @@ public class MyHeuristic implements Heuristic {
 	private int blackPawnsOverhanged;
 	private int whitePawnsOverhanged;
 	private int blackBarrierPawns;
-	private int kingCaptured;
 
 	private Random r;
 	private List<String> citadels;
@@ -127,7 +126,6 @@ public class MyHeuristic implements Heuristic {
 		System.out.println("blackPawnsOverhanged = " + this.blackPawnsOverhanged);
 		System.out.println("whitePawnsOverhanged = " + this.whitePawnsOverhanged);
 		System.out.println("blackBarrierPawns = " + this.blackBarrierPawns);
-		System.out.println("kingCaptured = " + this.kingCaptured);
 
 	}
 
@@ -227,7 +225,6 @@ public class MyHeuristic implements Heuristic {
 		this.blackPawnsOverhanged = 0;
 		this.whitePawnsOverhanged = 0;
 		this.blackBarrierPawns = 0;
-		this.kingCaptured = 0;
 
 	}
 
@@ -474,30 +471,7 @@ public class MyHeuristic implements Heuristic {
 
 				}
 
-				// controllo se il re è stato catturato
-				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
-
-					if (i > 0 && (state.getPawn(i - 1, j).equalsPawn(State.Pawn.BLACK.toString())
-							|| this.citadels.contains(state.getBox(i - 1, j))
-							|| state.getBox(i - 1, j).equals(this.throne)) && i < state.getBoard().length - 1 &&
-
-							(state.getPawn(i + 1, j).equalsPawn(State.Pawn.BLACK.toString())
-									|| this.citadels.contains(state.getBox(i + 1, j))
-									|| state.getBox(i + 1, j).equals(this.throne))) {
-						this.kingCaptured = 1;
-
-					} else if (j > 0 && (state.getPawn(i, j - 1).equalsPawn(State.Pawn.BLACK.toString())
-							|| this.citadels.contains(state.getBox(i, j - 1))
-							|| state.getBox(i, j - 1).equals(this.throne)) && i < state.getBoard().length - 1 &&
-
-							(state.getPawn(i, j + 1).equalsPawn(State.Pawn.BLACK.toString())
-									|| this.citadels.contains(state.getBox(i, j + 1))
-									|| state.getBox(i, j + 1).equals(this.throne))) {
-						this.kingCaptured = 1;
-
-					}
-
-				}
+				
 				// controllo se il re è sul trono
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
 						&& state.getBox(i, j).equals(this.throne)) {
