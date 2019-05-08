@@ -16,7 +16,7 @@ import it.unibo.ai.didattica.competition.tablut.server.Server;
 
 public class Training {
 
-	private static int POPOLATION=10;
+	private static int POPOLATION=1;
 	private static double POSITIVE_BEHAVIOUR=0.75;
 	
 	private static AtomicInteger win=new AtomicInteger(0);
@@ -31,6 +31,7 @@ public class Training {
 	public static void main(String[] args) {
 		
 		String daAllenare="white";
+		String daAllenare2="black";
 		GeneticAlgorithm alg=new GeneticAlgorithm();
 		
 		String[] empty=new String[0];
@@ -60,8 +61,8 @@ public class Training {
 						Thread myclient=new Thread() {
 							public void run() {
 								try {
-									TeamPalloWhiteTablutClient.main(new String[] {serverPortW});
-									//TablutHumanWhiteClient.main(empty);
+									//TeamPalloWhiteTablutClient.main(new String[] {serverPortW});
+									TablutHumanWhiteClient.main(new String[] {serverPortW});
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -114,7 +115,7 @@ public class Training {
 						/**/
 						
 						try {
-							Thread.sleep(10000);
+							Thread.sleep(2000);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -152,11 +153,20 @@ public class Training {
 			
 			publishStats(win.get(),lose.get(),draw.get());
 			
+			/*DA ALLENARE 1*/
 			if(((double)win.get()/POPOLATION)>POSITIVE_BEHAVIOUR) {
 				//alg.mutate(true,daAllenare);
 			}else {
 				alg.mutate(true,daAllenare);
 				alg.mutate(false,daAllenare);
+			}
+			
+			/*DA ALLENARE 2*/
+			if(((double)lose.get()/POPOLATION)>POSITIVE_BEHAVIOUR) {
+				//alg.mutate(true,daAllenare2);
+			}else {
+				alg.mutate(true,daAllenare2);
+				alg.mutate(false,daAllenare2);
 			}
 			
 			win.set(0);
