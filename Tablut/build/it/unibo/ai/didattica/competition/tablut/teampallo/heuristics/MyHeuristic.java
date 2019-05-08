@@ -24,13 +24,12 @@ public class MyHeuristic implements Heuristic {
 	private static double BLACK_WEIGHT_BLACK_NEAR_KING = 3;
 	private static double BLACK_WEIGHT_FREE_WAY_KING = 5;
 	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
-	private static double BLACK_WEIGHT_KING_CAPTURED = 10;
 	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 0.7;
 	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 3;
 	private static double BLACK_WEIGHT_BLACKBARRIER = 2.5;
 
 	private static double WHITE_WEIGHT_DIFF_PAWNS = 5;
-	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 4;
+	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 5;
 	private static double WHITE_WEIGHT_COUNT_BLACK_PAWNS = 3;
 	private static double WHITE_WEIGHT_BLACK_NEAR_KING = 3;
 	private static double WHITE_WEIGHT_WHITE_NEAR_KING = 1.5;
@@ -38,8 +37,7 @@ public class MyHeuristic implements Heuristic {
 	private static double WHITE_WEIGHT_KING_ON_THRONE = 0.5;
 	private static double WHITE_WEIGHT_KING_NEAR_THRONE = 0.3;
 	private static double WHITE_WEIGHT_KING_ON_STAR = 10;
-	private static double WHITE_WEIGHT_KING_FROM_BORDER = 0;
-	private static double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 4;
+	private static double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 5;
 	private static double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 7;
 
 	// *** OK ***
@@ -77,11 +75,9 @@ public class MyHeuristic implements Heuristic {
 	private int kingOnThrone;
 	private int kingNearThrone;
 	private int kingOnStar;
-	private int kingFromBorder;
 	private int blackPawnsOverhanged;
 	private int whitePawnsOverhanged;
 	private int blackBarrierPawns;
-	private int kingCaptured;
 
 	private Random r;
 	private List<String> citadels;
@@ -123,11 +119,9 @@ public class MyHeuristic implements Heuristic {
 		System.out.println("kingOnThrone = " + this.kingOnThrone);
 		System.out.println("kingNearThrone = " + this.kingNearThrone);
 		System.out.println("kingOnStar = " + this.kingOnStar);
-		System.out.println("kingFromBorder = " + this.kingFromBorder);
 		System.out.println("blackPawnsOverhanged = " + this.blackPawnsOverhanged);
 		System.out.println("whitePawnsOverhanged = " + this.whitePawnsOverhanged);
 		System.out.println("blackBarrierPawns = " + this.blackBarrierPawns);
-		System.out.println("kingCaptured = " + this.kingCaptured);
 
 	}
 
@@ -149,32 +143,30 @@ public class MyHeuristic implements Heuristic {
 		this.resetValues();
 		this.extractValues(state);
 
-	//	 printValues();
+		// printValues();
 
-	//	double result = myRandom(-1, 1);
-	double result = 0;
+		// double result = myRandom(-1, 1);
+		double result = 0;
 
 //		result -= WHITE_WEIGHT_DIFF_PAWNS * (((double)this.countW/16) - ((double)this.countB/9));
 
-		result -= WHITE_WEIGHT_COUNT_BLACK_PAWNS * ((double)this.countB / 16);
+		result -= WHITE_WEIGHT_COUNT_BLACK_PAWNS * ((double) this.countB / 16);
 
-		result -= WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double)this.whitePawnsOverhanged / this.countW);
+		result -= WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double) this.whitePawnsOverhanged / this.countW);
 
-	//	result -= WHITE_WEIGHT_BLACK_NEAR_KING * (this.blackNearKing / 4);
+		// result -= WHITE_WEIGHT_BLACK_NEAR_KING * (this.blackNearKing / 4);
 
-		result += WHITE_WEIGHT_COUNT_WHITE_PAWNS * ((double)this.countW/9);
+		result += WHITE_WEIGHT_COUNT_WHITE_PAWNS * ((double) this.countW / 9);
 
 //		result += WHITE_WEIGHT_WHITE_NEAR_KING * this.whiteNearKing;
 
-		result += WHITE_WEIGHT_FREE_WAY_KING * ((double)this.kingFreeWay / 4);
+		result += WHITE_WEIGHT_FREE_WAY_KING * ((double) this.kingFreeWay / 4);
 
 		result += WHITE_WEIGHT_KING_ON_THRONE * this.kingOnThrone;
 
 //		result += WHITE_WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
 
-//		result += WHITE_WEIGHT_KING_FROM_BORDER * (state.getBoard().length - this.kingFromBorder);
-
-		result += WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double)this.blackPawnsOverhanged / this.countB);
+		result += WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double) this.blackPawnsOverhanged / this.countB);
 
 //		result += WHITE_WEIGHT_KING_ON_STAR * this.kingOnStar;
 
@@ -193,23 +185,21 @@ public class MyHeuristic implements Heuristic {
 
 //		result += BLACK_WEIGHT_DIFF_PAWNS * (((double)this.countB/16) - ((double)this.countW/9));
 
-		result += BLACK_WEIGHT_COUNT_BLACK_PAWNS * ((double)this.countB /16);
+		result += BLACK_WEIGHT_COUNT_BLACK_PAWNS * ((double) this.countB / 16);
 
-		result += BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double)this.whitePawnsOverhanged /this.countW);
+		result += BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double) this.whitePawnsOverhanged / this.countW);
 
-		result += BLACK_WEIGHT_BLACK_NEAR_KING * ((double)this.blackNearKing / 4);
+		result += BLACK_WEIGHT_BLACK_NEAR_KING * ((double) this.blackNearKing / 4);
 
-		result -= BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double)this.countW / 9);
+		result -= BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double) this.countW / 9);
 
-		result -= BLACK_WEIGHT_FREE_WAY_KING * ((double)this.kingFreeWay /4);
+		result -= BLACK_WEIGHT_FREE_WAY_KING * ((double) this.kingFreeWay / 4);
 
-		result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double)this.blackPawnsOverhanged / this.countB);
+		result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double) this.blackPawnsOverhanged / this.countB);
 
 		result -= BLACK_WEIGHT_KING_ON_STAR * this.kingOnStar;
 
 		result += BLACK_WEIGHT_BLACKBARRIER * this.blackBarrierPawns;
-
-	//	result += BLACK_WEIGHT_KING_CAPTURED * this.kingCaptured;
 
 		return result;
 	}
@@ -223,11 +213,9 @@ public class MyHeuristic implements Heuristic {
 		this.kingOnThrone = 0;
 		this.kingOnStar = 0;
 		this.kingNearThrone = 0;
-		this.kingFromBorder = 0;
 		this.blackPawnsOverhanged = 0;
 		this.whitePawnsOverhanged = 0;
 		this.blackBarrierPawns = 0;
-		this.kingCaptured = 0;
 
 	}
 
@@ -474,30 +462,6 @@ public class MyHeuristic implements Heuristic {
 
 				}
 
-				// controllo se il re è stato catturato
-				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
-
-					if (i > 0 && (state.getPawn(i - 1, j).equalsPawn(State.Pawn.BLACK.toString())
-							|| this.citadels.contains(state.getBox(i - 1, j))
-							|| state.getBox(i - 1, j).equals(this.throne)) && i < state.getBoard().length - 1 &&
-
-							(state.getPawn(i + 1, j).equalsPawn(State.Pawn.BLACK.toString())
-									|| this.citadels.contains(state.getBox(i + 1, j))
-									|| state.getBox(i + 1, j).equals(this.throne))) {
-						this.kingCaptured = 1;
-
-					} else if (j > 0 && (state.getPawn(i, j - 1).equalsPawn(State.Pawn.BLACK.toString())
-							|| this.citadels.contains(state.getBox(i, j - 1))
-							|| state.getBox(i, j - 1).equals(this.throne)) && i < state.getBoard().length - 1 &&
-
-							(state.getPawn(i, j + 1).equalsPawn(State.Pawn.BLACK.toString())
-									|| this.citadels.contains(state.getBox(i, j + 1))
-									|| state.getBox(i, j + 1).equals(this.throne))) {
-						this.kingCaptured = 1;
-
-					}
-
-				}
 				// controllo se il re è sul trono
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
 						&& state.getBox(i, j).equals(this.throne)) {
@@ -514,11 +478,6 @@ public class MyHeuristic implements Heuristic {
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
 						&& this.stars.contains(state.getBox(i, j))) {
 					this.kingOnStar = 1;
-				}
-
-				// controllo se il re è vicino al bordo
-				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
-					this.kingFromBorder = Math.min(state.getBoard().length - 1 - i, state.getBoard().length - 1 - j);
 				}
 
 			}
@@ -564,7 +523,6 @@ public class MyHeuristic implements Heuristic {
 				WHITE_WEIGHT_KING_ON_THRONE = myRandom(0, 10);
 				WHITE_WEIGHT_KING_NEAR_THRONE = myRandom(0, 10);
 				WHITE_WEIGHT_KING_ON_STAR = myRandom(0, 10);
-				WHITE_WEIGHT_KING_FROM_BORDER = myRandom(0, 10);
 				WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = myRandom(0, 10);
 				WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = myRandom(0, 10);
 
@@ -577,7 +535,6 @@ public class MyHeuristic implements Heuristic {
 				pw.println("WHITE_WEIGHT_KING_ON_THRONE = " + WHITE_WEIGHT_KING_ON_THRONE);
 				pw.println("WHITE_WEIGHT_KING_NEAR_THRONE = " + WHITE_WEIGHT_KING_NEAR_THRONE);
 				pw.println("WHITE_WEIGHT_KING_ON_STAR = " + WHITE_WEIGHT_KING_ON_STAR);
-				pw.println("WHITE_WEIGHT_KING_FROM_BORDER = " + WHITE_WEIGHT_KING_FROM_BORDER);
 				pw.println("WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = " + WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED);
 				pw.println("WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = " + WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED);
 
