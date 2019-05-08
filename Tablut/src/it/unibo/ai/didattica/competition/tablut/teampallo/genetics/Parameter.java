@@ -9,12 +9,12 @@ public class Parameter {
 	private double limitDown;
 	private boolean reinforcePositive;
 	
-	public Parameter(String name, double initialValue, double step, double limitUp, double limitDown,
+	public Parameter(String name, double initialValue, double step, double limitDown, double limitUp,
 			boolean reinforcePositive) {
 		super();
 		this.name = name;
 		this.value = initialValue;
-		this.step = step;
+		this.step = limitUp*0.10;
 		this.limitUp = limitUp;
 		this.limitDown = limitDown;
 		this.reinforcePositive = reinforcePositive;
