@@ -1,22 +1,15 @@
 package it.unibo.ai.didattica.competition.tablut.teampallo.heuristics;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
-import it.unibo.ai.didattica.competition.tablut.domain.StateTablut;
-import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 
-public class MyHeuristic implements Heuristic {
+public class AdvancedHeuristic implements Heuristic {
+
+	
 
 	private static double BLACK_WEIGHT_DIFF_PAWNS = 5;
 	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 3;
@@ -86,7 +79,7 @@ public class MyHeuristic implements Heuristic {
 	private List<String> nearsThrone;
 	private String throne;
 
-	public MyHeuristic() {
+	public AdvancedHeuristic() {
 		this.r = new Random(System.currentTimeMillis());
 
 		this.citadels = Arrays.asList("a4", "a5", "a6", "b5", "d1", "e1", "f1", "e2", "i4", "i5", "i6", "h5", "d9",
@@ -183,7 +176,7 @@ public class MyHeuristic implements Heuristic {
 //		double result = myRandom(-1, 1);
 		double result = 0;
 
-	//	result += BLACK_WEIGHT_DIFF_PAWNS * (((double)this.countB/16) - ((double)this.countW/9));
+//		result += BLACK_WEIGHT_DIFF_PAWNS * (((double)this.countB/16) - ((double)this.countW/9));
 
 		result += BLACK_WEIGHT_COUNT_BLACK_PAWNS * ((double) this.countB / 16);
 
@@ -482,90 +475,6 @@ public class MyHeuristic implements Heuristic {
 
 			}
 		}
-
-	}
-
-	private double myRandom(double start, double end) {
-
-		double random = this.r.nextDouble();
-		double result = start + (random * (end - start));
-		return result;
-	}
-
-	private void generateVWeightValues(String player) {
-
-		// ADD TO LOG
-
-		try {
-
-			File logFile = new File("/home/luca/tablut_log.txt");
-			if (!logFile.exists()) {
-				logFile.createNewFile();
-			}
-
-			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)));
-
-			String numPartita = System.getenv("NUMERO_PARTITA");
-
-			if (numPartita == null) {
-				numPartita = "--";
-			}
-			pw.println("\nVALORI " + player.toUpperCase() + " PARTITA " + numPartita);
-
-			if (player.equalsIgnoreCase("white")) {
-
-				WHITE_WEIGHT_DIFF_PAWNS = myRandom(0, 10);
-				WHITE_WEIGHT_COUNT_WHITE_PAWNS = myRandom(0, 10);
-				WHITE_WEIGHT_COUNT_BLACK_PAWNS = myRandom(0, 10);
-				WHITE_WEIGHT_BLACK_NEAR_KING = myRandom(0, 10);
-				WHITE_WEIGHT_WHITE_NEAR_KING = myRandom(0, 10);
-				WHITE_WEIGHT_FREE_WAY_KING = myRandom(0, 10);
-				WHITE_WEIGHT_KING_ON_THRONE = myRandom(0, 10);
-				WHITE_WEIGHT_KING_NEAR_THRONE = myRandom(0, 10);
-				WHITE_WEIGHT_KING_ON_STAR = myRandom(0, 10);
-				WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = myRandom(0, 10);
-				WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = myRandom(0, 10);
-
-				pw.println("WHITE_WEIGHT_DIFF_PAWNS = " + WHITE_WEIGHT_DIFF_PAWNS);
-				pw.println("WHITE_WEIGHT_COUNT_WHITE_PAWNS = " + WHITE_WEIGHT_COUNT_WHITE_PAWNS);
-				pw.println("WHITE_WEIGHT_COUNT_BLACK_PAWNS = " + WHITE_WEIGHT_COUNT_BLACK_PAWNS);
-				pw.println("WHITE_WEIGHT_BLACK_NEAR_KING = " + WHITE_WEIGHT_BLACK_NEAR_KING);
-				pw.println("WHITE_WEIGHT_WHITE_NEAR_KING = " + WHITE_WEIGHT_WHITE_NEAR_KING);
-				pw.println("WHITE_WEIGHT_FREE_WAY_KING = " + WHITE_WEIGHT_FREE_WAY_KING);
-				pw.println("WHITE_WEIGHT_KING_ON_THRONE = " + WHITE_WEIGHT_KING_ON_THRONE);
-				pw.println("WHITE_WEIGHT_KING_NEAR_THRONE = " + WHITE_WEIGHT_KING_NEAR_THRONE);
-				pw.println("WHITE_WEIGHT_KING_ON_STAR = " + WHITE_WEIGHT_KING_ON_STAR);
-				pw.println("WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = " + WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED);
-				pw.println("WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = " + WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED);
-
-			} else if (player.equalsIgnoreCase("black")) {
-
-				BLACK_WEIGHT_DIFF_PAWNS = myRandom(0, 10);
-				BLACK_WEIGHT_COUNT_WHITE_PAWNS = myRandom(0, 10);
-				BLACK_WEIGHT_COUNT_BLACK_PAWNS = myRandom(0, 10);
-				BLACK_WEIGHT_BLACK_NEAR_KING = myRandom(0, 10);
-				BLACK_WEIGHT_FREE_WAY_KING = myRandom(0, 10);
-				BLACK_WEIGHT_KING_ON_STAR = myRandom(0, 10);
-				BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = myRandom(0, 10);
-				BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = myRandom(0, 10);
-
-				pw.println("BLACK_WEIGHT_DIFF_PAWNS = " + BLACK_WEIGHT_DIFF_PAWNS);
-				pw.println("BLACK_WEIGHT_COUNT_WHITE_PAWNS = " + BLACK_WEIGHT_COUNT_WHITE_PAWNS);
-				pw.println("BLACK_WEIGHT_COUNT_BLACK_PAWNS = " + BLACK_WEIGHT_COUNT_BLACK_PAWNS);
-				pw.println("BLACK_WEIGHT_BLACK_NEAR_KING = " + BLACK_WEIGHT_BLACK_NEAR_KING);
-				pw.println("BLACK_WEIGHT_FREE_WAY_KING = " + BLACK_WEIGHT_FREE_WAY_KING);
-				pw.println("BLACK_WEIGHT_KING_ON_STAR = " + BLACK_WEIGHT_KING_ON_STAR);
-				pw.println("BLACK_WEIGHT_KING_FROM_BORDER = " + BLACK_WEIGHT_DIFF_PAWNS);
-				pw.println("BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = " + BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED);
-				pw.println("BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = " + BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED);
-			}
-
-			pw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// ***
 
 	}
 
