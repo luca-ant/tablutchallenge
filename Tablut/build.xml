@@ -82,4 +82,13 @@
 			</classpath>
 		</java>
 	</target>
+	
+	<target name="training">
+			<java classname="it.unibo.ai.didattica.competition.tablut.teampallo.genetics.Training" fork="true">
+				<classpath>
+					<pathelement location="lib/gson-2.2.2.jar" />
+					<pathelement location="build" />
+				</classpath>
+			</java>
+		</target>
 </project>

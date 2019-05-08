@@ -33,13 +33,13 @@ public class TeamPalloTablutClient extends TablutClient {
 
 	private int game;
 	private IA ia;
-	private GuiCli gui;
+	//private GuiCli gui;
 
-	public TeamPalloTablutClient(String player, String name, int gameChosen, int timeout)
+	public TeamPalloTablutClient(String player, String name, int gameChosen, int timeout,int port)
 			throws UnknownHostException, IOException {
-		super(player, name);
+		super(player, name,port);
 		this.game = gameChosen;
-		this.gui = new GuiCli();
+		//this.gui = new GuiCli();
 		MyRules rules = null;
 
 		switch (this.game) {
@@ -57,7 +57,7 @@ public class TeamPalloTablutClient extends TablutClient {
 			rules = MyGameAshtonTablutRules.getInstance();
 			break;
 		default:
-			System.out.println("Error in game selection");
+			System.out.println("Error in game selection...it was "+this.game);
 			System.exit(4);
 		}
 
@@ -65,7 +65,7 @@ public class TeamPalloTablutClient extends TablutClient {
 
 		// this.ia = new MinMax();
 		// this.ia = new MinMaxAlphaBeta();
-		this.ia = new AlphaBetaIterative();
+		this.ia = new AlphaBetaIterative(player);
 		// this.ia = new AlphaBetaIterativeWithMemory();
 
 	}
@@ -82,13 +82,13 @@ public class TeamPalloTablutClient extends TablutClient {
 			System.out.println(args[0]);
 			role = (args[0]);
 		}
-		if (args.length == 2) {
+		/*if (args.length == 2) {
 			System.out.println(args[1]);
 			gametype = Integer.parseInt(args[1]);
 		}
 		if (args.length == 3) {
 			name = args[2];
-		}
+		}*/
 		System.out.println("Selected client: " + args[0]);
 		System.out.println("YOUR NAME: " + name);
 
@@ -97,7 +97,9 @@ public class TeamPalloTablutClient extends TablutClient {
 
 		GameManager.getInstance().setParameters(timeout, depth, role.toLowerCase());
 
-		TeamPalloTablutClient client = new TeamPalloTablutClient(role, name, gametype, timeout);
+		TeamPalloTablutClient client = new TeamPalloTablutClient(role, name, gametype, timeout,Integer.parseInt(args[1]));
+		System.out.println("[TRAINING]: TeamPalloTablutClient"+role+" in ascolto su "+args[1]);
+
 		client.run();
 	}
 
@@ -134,7 +136,8 @@ public class TeamPalloTablutClient extends TablutClient {
 
 		System.out.println("You are player " + this.getPlayer().toString() + "!");
 
-		while (true) {
+		boolean endgame = false;
+		while (!endgame) {
 			try {
 				this.read();
 			} catch (ClassNotFoundException | IOException e1) {
@@ -144,8 +147,8 @@ public class TeamPalloTablutClient extends TablutClient {
 			}
 			System.out.println("Current state:");
 			state = this.getCurrentState();
-			// System.out.println(state.toString());
-			this.gui.update(state);
+			System.out.println(state.toString());
+			//this.gui.update(state);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -191,17 +194,20 @@ public class TeamPalloTablutClient extends TablutClient {
 				// ho vinto
 				else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 					System.out.println("YOU WIN!");
-					System.exit(0);
+					//System.exit(0);
+					endgame = true;
 				}
 				// ho perso
 				else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 					System.out.println("YOU LOSE!");
-					System.exit(0);
+					//System.exit(0);
+					endgame = true;
 				}
 				// pareggio
 				else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
 					System.out.println("DRAW!");
-					System.exit(0);
+					//System.exit(0);
+					endgame = true;
 				}
 
 			} else {
@@ -241,18 +247,21 @@ public class TeamPalloTablutClient extends TablutClient {
 					System.out.println("Waiting for your opponent move... ");
 				} else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
 					System.out.println("YOU LOSE!");
-					System.exit(0);
+					//System.exit(0);
+					endgame = true;
 				} else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
 					System.out.println("YOU WIN!");
-					System.exit(0);
+					//System.exit(0);
+					endgame = true;
 				} else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
 					System.out.println("DRAW!");
-					System.exit(0);
+					//System.exit(0);
+					endgame = true;
 				}
 
 			}
 		}
-
+		closeSocket();
 	}
 
 }
