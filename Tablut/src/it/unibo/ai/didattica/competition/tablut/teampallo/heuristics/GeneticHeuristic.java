@@ -36,6 +36,7 @@ public class GeneticHeuristic implements Heuristic {
 	private int kingFromBorder;
 	private int blackPawnsOverhanged;
 	private int whitePawnsOverhanged;
+	private int blackBarrierPawns;
 
 	private Random r;
 	private List<String> citadels;
@@ -46,6 +47,7 @@ public class GeneticHeuristic implements Heuristic {
 	private Environment env=Environment.getInstance();
 
 	private String player;
+	private List<String> blackBarrier;
 	
 	public GeneticHeuristic(String player) {
 		this.player=player;
@@ -59,6 +61,8 @@ public class GeneticHeuristic implements Heuristic {
 
 		this.nearsThrone = Arrays.asList("e4", "e6", "d5", "f5");
 		this.throne = "e5";
+		
+		this.blackBarrier = Arrays.asList("b3", "b7", "c2", "c8", "g2", "g8", "h3", "h7");
 
 		// ADD TO TRAINING
 
@@ -107,25 +111,23 @@ public class GeneticHeuristic implements Heuristic {
 		//double result = myRandom(-1, 1);
 		double result = 0;
 
-		result -= env.getWeight("WHITE_WEIGHT_DIFF_PAWNS") * (this.countW - this.countB);
+		//result -= env.getWeight("WHITE_WEIGHT_DIFF_PAWNS") * (this.countW - this.countB);
 
 		result -= env.getWeight("WHITE_WEIGHT_COUNT_BLACK_PAWNS") * this.countB;
 
 		result -= env.getWeight("WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED") * this.whitePawnsOverhanged;
 
-		result -= env.getWeight("WHITE_WEIGHT_BLACK_NEAR_KING") * this.blackNearKing;
+		//result -= env.getWeight("WHITE_WEIGHT_BLACK_NEAR_KING") * this.blackNearKing;
 
 		result += env.getWeight("WHITE_WEIGHT_COUNT_WHITE_PAWNS") * this.countW;
 
-		result += env.getWeight("WHITE_WEIGHT_WHITE_NEAR_KING") * this.whiteNearKing;
+		//result += env.getWeight("WHITE_WEIGHT_WHITE_NEAR_KING") * this.whiteNearKing;
 
 		result += env.getWeight("WHITE_WEIGHT_FREE_WAY_KING") * this.kingFreeWay;
 
 		result += env.getWeight("WHITE_WEIGHT_KING_ON_THRONE") * this.kingOnThrone;
 
-		result += env.getWeight("WHITE_WEIGHT_KING_NEAR_THRONE") * this.kingNearThrone;
-
-		result += env.getWeight("WHITE_WEIGHT_KING_FROM_BORDER") * (state.getBoard().length - this.kingFromBorder);
+		//result += env.getWeight("WHITE_WEIGHT_KING_NEAR_THRONE") * this.kingNearThrone;
 
 		result += env.getWeight("WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED") * this.blackPawnsOverhanged;
 
@@ -144,7 +146,7 @@ public class GeneticHeuristic implements Heuristic {
 		double result = myRandom(-1, 1);
 //		double result = 0;
 
-		result += env.getWeight("BLACK_WEIGHT_DIFF_PAWNS") * (this.countB - this.countW);
+		//result += env.getWeight("BLACK_WEIGHT_DIFF_PAWNS") * (this.countB - this.countW);
 
 		result += env.getWeight("BLACK_WEIGHT_COUNT_BLACK_PAWNS") * this.countB;
 
@@ -154,19 +156,13 @@ public class GeneticHeuristic implements Heuristic {
 
 		result -= env.getWeight("BLACK_WEIGHT_COUNT_WHITE_PAWNS") * this.countW;
 
-		result -= env.getWeight("BLACK_WEIGHT_WHITE_NEAR_KING") * this.whiteNearKing;
-
 		result -= env.getWeight("BLACK_WEIGHT_FREE_WAY_KING") * this.kingFreeWay;
-
-		result -= env.getWeight("BLACK_WEIGHT_KING_ON_THRONE") * this.kingOnThrone;
-
-		result -= env.getWeight("BLACK_WEIGHT_KING_NEAR_THRONE") * this.kingNearThrone;
-
-		result -= env.getWeight("BLACK_WEIGHT_KING_FROM_BORDER") * (state.getBoard().length - this.kingFromBorder);
 
 		result -= env.getWeight("BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED") * this.blackPawnsOverhanged;
 
 		result -= env.getWeight("BLACK_WEIGHT_KING_ON_STAR") * this.kingOnStar;
+		
+		result += env.getWeight("BLACK_WEIGHT_BLACKBARRIER") * this.blackBarrierPawns;
 
 		return result;
 	}
@@ -183,6 +179,7 @@ public class GeneticHeuristic implements Heuristic {
 		this.kingFromBorder = 0;
 		this.blackPawnsOverhanged = 0;
 		this.whitePawnsOverhanged = 0;
+		this.blackBarrierPawns = 0;
 
 	}
 
@@ -200,6 +197,11 @@ public class GeneticHeuristic implements Heuristic {
 				// conto le pedine nere
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
 					this.countB++;
+
+					// conto le nere che formano la barriera
+					if (this.blackBarrier.contains(state.getBox(i, j))) {
+						this.blackBarrierPawns++;
+					}
 				}
 
 				// conto le pedine nere con una bianca o un accampamento o il trono vicino
@@ -424,25 +426,26 @@ public class GeneticHeuristic implements Heuristic {
 
 				}
 
-				// controllo se il re Ã¨ sul trono
+				
+				// controllo se il re è sul trono
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
 						&& state.getBox(i, j).equals(this.throne)) {
 					this.kingOnThrone = 1;
 				}
 
-				// controllo se il re Ã¨ vicino al trono
+				// controllo se il re è vicino al trono
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
 						&& this.nearsThrone.contains(state.getBox(i, j))) {
 					this.kingNearThrone = 1;
 				}
 
-				// controllo se il re Ã¨ su una stella
+				// controllo se il re è su una stella
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
 						&& this.stars.contains(state.getBox(i, j))) {
 					this.kingOnStar = 1;
 				}
 
-				// controllo se il re Ã¨ vicino al bordo
+				// controllo se il re è vicino al bordo
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
 					this.kingFromBorder = Math.min(state.getBoard().length - 1 - i, state.getBoard().length - 1 - j);
 				}
