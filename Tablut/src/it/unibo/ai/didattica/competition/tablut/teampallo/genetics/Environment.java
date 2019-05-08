@@ -13,6 +13,7 @@ public class Environment {
 	
 	private Map<String,Double> envW;
 	private Map<String,Double> envB;
+	private Map<String,Parameter> parameter;
 	
 	public static Environment getInstance() {
 		if(instance==null) {
@@ -25,6 +26,7 @@ public class Environment {
 	private Environment() {
 		this.envW=new HashMap<>();
 		this.envB=new HashMap<>();
+		this.parameter=new HashMap<>();
 		
 		/*PESI BIANCHI*/
 		envW.put("WHITE_WEIGHT_DIFF_PAWNS",2.0);
@@ -53,6 +55,8 @@ public class Environment {
 		envB.put("BLACK_WEIGHT_KING_FROM_BORDER",0.0);
 		envB.put("BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED",1.5);
 		envB.put("BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED",2.0);
+		
+		/*PARAMETRI*/
 	}
 	
 	public double getWeight(String parameterName) {
@@ -72,6 +76,18 @@ public class Environment {
 		}
 		
 		return 0.0;
+	}
+	
+	public Parameter getParameter(String parameterName) {
+		if(this.parameter.containsKey(parameterName)) {
+			if(this.parameter.get(parameterName)==null) {
+				return null;
+			}
+			
+			return this.parameter.get(parameterName);
+		}
+		
+		return null;
 	}
 	
 	public Map<String,Double> getVariablesW(){
