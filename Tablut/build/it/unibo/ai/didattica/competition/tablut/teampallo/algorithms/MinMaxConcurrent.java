@@ -23,14 +23,14 @@ import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
 
 public class MinMaxConcurrent extends Thread {
 
-	private Node node;
+	private List<Node> nodes;
 	private long endTime;
 	private Heuristic heuristic;
 	private int depthToReach;
 
-	public MinMaxConcurrent(Node n, int d, long endTime) {
+	public MinMaxConcurrent(List<Node> nodes, int d, long endTime) {
 
-		this.node = n;
+		this.nodes = nodes;
 		this.heuristic = new MyHeuristic();
 		this.endTime = endTime;
 		this.depthToReach = d;
@@ -39,14 +39,18 @@ public class MinMaxConcurrent extends Thread {
 	@Override
 	public void run() {
 
-		try {
-			this.node.setValue(minValue(this.node, this.depthToReach, this.depthToReach, Double.NEGATIVE_INFINITY,
-					Double.POSITIVE_INFINITY));
-		} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
-				| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
-				| CitadelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		System.out.println(this.getName() + "calcolo " + this.nodes.size() + " nodi");
+		for (Node n : this.nodes) {
+
+			try {
+				n.setValue(minValue(n, this.depthToReach, this.depthToReach, Double.NEGATIVE_INFINITY,
+						Double.POSITIVE_INFINITY));
+			} catch (BoardException | ActionException | StopException | PawnException | DiagonalException
+					| ClimbingException | ThroneException | OccupitedException | ClimbingCitadelException
+					| CitadelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}

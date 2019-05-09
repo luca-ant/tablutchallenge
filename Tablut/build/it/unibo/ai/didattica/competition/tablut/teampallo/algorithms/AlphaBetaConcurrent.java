@@ -26,6 +26,7 @@ import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
 
 public class AlphaBetaConcurrent implements IA {
 
+	private static final int NUM_THREAD = 8;
 	private List<Node> rootChildren;
 	private long endTime;
 	private Action bestMove;
@@ -46,7 +47,6 @@ public class AlphaBetaConcurrent implements IA {
 
 		this.rootChildren.clear();
 
-	
 		List<Action> actionFromRoot = GameManager.getInstance().getRules().getNextMovesFromState(state);
 
 		for (Action a : actionFromRoot) {
@@ -72,22 +72,38 @@ public class AlphaBetaConcurrent implements IA {
 
 		this.bestMove = null;
 
+	
 		List<MinMaxConcurrent> threads = new ArrayList<MinMaxConcurrent>();
 
 		for (int d = 1; d <= GameManager.getInstance().getMaxDepth(); ++d) {
 
-			System.out.println("\nSTART DEPTH = " + (d+1));
+			System.out.println("\nSTART DEPTH = " + (d + 1));
 
 			StatsManager.getInstance().reset();
 			StatsManager.getInstance().setStart(System.currentTimeMillis());
 
-			for (Node n : this.rootChildren) {
+			int size = this.rootChildren.size() / NUM_THREAD + 1;
+			int from = 0;
+			int to =0;
+			for (int i = 0; i < NUM_THREAD; ++i) {
 
-				MinMaxConcurrent t = new MinMaxConcurrent(n, d, this.endTime);
+				 to = Math.min(from + size, this.rootChildren.size());
+
+				MinMaxConcurrent t = new MinMaxConcurrent(this.rootChildren.subList(from, to), d, this.endTime);
 				threads.add(t);
 				t.start();
+				from += size;
+
 
 			}
+			/*
+			 * for (Node n : this.rootChildren) {
+			 * 
+			 * MinMaxConcurrent t = new MinMaxConcurrent(n, d, this.endTime);
+			 * threads.add(t); t.start();
+			 * 
+			 * }
+			 */
 
 			for (MinMaxConcurrent t : threads) {
 
@@ -109,7 +125,7 @@ public class AlphaBetaConcurrent implements IA {
 				return this.bestMove;
 
 			}
-			System.out.println("END DEPTH = " + (d+1)+ "\n");
+			System.out.println("END DEPTH = " + (d + 1) + "\n");
 			StatsManager.getInstance().printResults();
 
 			Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
