@@ -42,9 +42,9 @@ public class AlphaBetaIterative implements IA {
 		this.bestMove = null;
 		this.ww = false;
 		this.bw = false;
-		this.player=player;
-		
-		System.out.println("Istanziato minmax per "+player);
+		this.player = player;
+
+		System.out.println("Istanziato minmax per " + player);
 
 	}
 
@@ -72,12 +72,10 @@ public class AlphaBetaIterative implements IA {
 				System.out.println("END DUE TO TIMEOUT\n");
 				StatsManager.getInstance().printResults();
 
-
 				break;
 			}
 			System.out.println("END DEPTH = " + d + "\n");
 			StatsManager.getInstance().printResults();
-
 
 			System.out.println("Temp move found: " + temp);
 
@@ -114,7 +112,6 @@ public class AlphaBetaIterative implements IA {
 			return this.bestMove;
 		}
 
-		
 		for (Node node : rootChildren) {
 			if (node.getState().getTurn().equalsTurn(State.Turn.WHITEWIN.toString())
 					&& player.equalsIgnoreCase("white")) {
@@ -130,8 +127,7 @@ public class AlphaBetaIterative implements IA {
 			}
 
 		}
-		
-		
+
 		Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
 		rootChildren.clear();
