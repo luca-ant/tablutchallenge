@@ -27,7 +27,7 @@ public class Training {
 	private static String[] ports=new String[POPOLATION*2];
 	
 	private static LocalDateTime inizio;
-	
+
 	public static void main(String[] args) {
 		
 		String daAllenare="white";
@@ -39,48 +39,50 @@ public class Training {
 		int start=5000;
 		for(int i=0;i<POPOLATION*2;i++) {
 			ports[i]=""+(start+i);
+
 		}
-		
-		while(true) {
-			inizio=LocalDateTime.now();
+
+		while (true) {
+			inizio = LocalDateTime.now();
 			System.out.println(inizio);
-			for(int i=0;i<POPOLATION;i++) {
-				
-				final String serverPortW=ports[i*2];
-				final String serverPortB=ports[(i*2)+1];
-				
-				System.out.println("[TRAINING]: Creo partita "+(i+1));
-				games[i]=new Thread(){
+			for (int i = 0; i < POPOLATION; i++) {
+
+				final String serverPortW = ports[i * 2];
+				final String serverPortB = ports[(i * 2) + 1];
+
+				System.out.println("[TRAINING]: Creo partita " + (i + 1));
+				games[i] = new Thread() {
 					public void run() {
-						Thread server=new Thread() {
+						Thread server = new Thread() {
 							public void run() {
-								Server.main(new String[] {serverPortW,serverPortB});
+								Server.main(new String[] { serverPortW, serverPortB });
 							}
 						};
-						
-						Thread myclient=new Thread() {
+
+						Thread myclient = new Thread() {
 							public void run() {
 								try {
-									//TeamPalloWhiteTablutClient.main(new String[] {serverPortW});
-									TablutHumanWhiteClient.main(new String[] {serverPortW});
+
+									TeamPalloWhiteTablutClient.main(new String[] { serverPortW });
+									// TablutHumanWhiteClient.main(empty);
 								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
 							}
 						};
-						
-						Thread randomblack=new Thread() {
+
+						Thread randomblack = new Thread() {
 							public void run() {
 								try {
-									//TeamPalloBlackTablutClient.main(new String[] {serverPortB});
-									TablutRandomBlackClient.main(new String[] {serverPortB});
-								}catch(Exception e) {
+									TeamPalloBlackTablutClient.main(new String[] { serverPortB });
+									// TablutRandomBlackClient.main(new String[] {serverPortB});
+								} catch (Exception e) {
 									e.printStackTrace();
 								}
 							}
-						};	
-						
+						};
+
 						server.start();
 						try {
 							Thread.sleep(2000);
@@ -89,31 +91,29 @@ public class Training {
 						}
 						myclient.start();
 						randomblack.start();
-					
-						while(server.isAlive()) {
+
+						while (server.isAlive()) {
 							try {
 								Thread.sleep(60000);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
 						}
-						
-						/*CAPIRE CHI VINCE*/
-						String winner=Server.WINNER;
-						System.out.println("winner:"+winner);
-						
-						/*AGGIORNARE STATS*/
-						if(winner.compareTo("draw")==0) {
+
+						/* CAPIRE CHI VINCE */
+						String winner = Server.WINNER;
+						System.out.println("winner:" + winner);
+
+						/* AGGIORNARE STATS */
+						if (winner.compareTo("draw") == 0) {
 							draw.incrementAndGet();
-						}
-						else if(winner.compareTo(daAllenare)==0) {
+						} else if (winner.compareTo(daAllenare) == 0) {
 							win.incrementAndGet();
-						}
-						else {
+						} else {
 							lose.incrementAndGet();
 						}
 						/**/
-						
+
 						try {
 							Thread.sleep(2000);
 						} catch (InterruptedException e) {
@@ -123,9 +123,9 @@ public class Training {
 					}
 				};
 			}
-			
-			/*avvio i thread*/
-			for(int i=0;i<POPOLATION;i++) {
+
+			/* avvio i thread */
+			for (int i = 0; i < POPOLATION; i++) {
 				games[i].start();
 				try {
 					Thread.sleep(4000);
@@ -134,22 +134,22 @@ public class Training {
 					e.printStackTrace();
 				}
 			}
-			
+
 			System.out.println("[TRAINING]: Partite avviate");
-			
-			
-			for(int i=0;i<POPOLATION;i++) {
-				while(games[i].isAlive()) {
+
+			for (int i = 0; i < POPOLATION; i++) {
+				while (games[i].isAlive()) {
 					try {
-						System.out.println("[TRAINING]: Partita "+(i+1)+" ancora in corso...");
+						System.out.println("[TRAINING]: Partita " + (i + 1) + " ancora in corso...");
 						Thread.sleep(60000);
-					}catch(Exception e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 			}
-			
+
 			System.out.println("[TRAINING]: Partite finite");
+
 			
 			publishStats(win.get(),lose.get(),draw.get());
 			
@@ -169,32 +169,32 @@ public class Training {
 				alg.mutate(false,daAllenare2);
 			}
 			
+
 			win.set(0);
 			lose.set(0);
 			draw.set(0);
 		}
 	}
 
-	
 	private static void publishStats(int vinte, int perse, int draw) {
 		try {
-			Environment env=Environment.getInstance();
-			FileWriter writer=new FileWriter("results.txt",true);
+			Environment env = Environment.getInstance();
+			FileWriter writer = new FileWriter("results.txt", true);
 			writer.append("******************************************************************\n");
-			writer.append("START: "+inizio+"\n");
+			writer.append("START: " + inizio + "\n");
 			writer.append("-------------------STATS------------------------\n");
-			writer.append("\t\tWIN\t\tLOSE\t\tDRAW\n");
-			writer.append("\t\t"+vinte+"\t\t"+perse+"\t\t\t"+draw+"\n");
+			writer.append("WIN WHITE\t\tWIN BLACK\t\tDRAW\n");
+			writer.append(vinte + "\t\t" + perse + "\t\t\t" + draw + "\n");
 			writer.append("\nENVIRONMENT:\n");
 			writer.append("BLACK:\n");
-			for(String s : env.getVariablesB().keySet()) {
-				writer.append(s+":"+env.getVariablesB().get(s)+"\n");
+			for (String s : env.getVariablesB().keySet()) {
+				writer.append(s + ":" + env.getVariablesB().get(s) + "\n");
 			}
 			writer.append("WHITE:\n");
-			for(String s : env.getVariablesW().keySet()) {
-				writer.append(s+":"+env.getVariablesW().get(s)+"\n");
+			for (String s : env.getVariablesW().keySet()) {
+				writer.append(s + ":" + env.getVariablesW().get(s) + "\n");
 			}
-			writer.append("END: "+LocalDateTime.now()+"\n");
+			writer.append("END: " + LocalDateTime.now() + "\n");
 			writer.append("******************************************************************\n\n");
 			writer.close();
 		} catch (IOException e) {

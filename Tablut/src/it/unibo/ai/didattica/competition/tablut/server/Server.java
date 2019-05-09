@@ -88,8 +88,8 @@ public class Server implements Runnable {
 
 	private Game game;
 	private Gson gson;
-	private Gui theGui;
-	//private GuiCli theGui;
+	//private Gui theGui;
+	private GuiCli theGui;
 	/**
 	 * Integer that represents the game type
 	 */
@@ -106,10 +106,10 @@ public class Server implements Runnable {
 	}
 
 	public void initializeGUI(State state) {
-		this.theGui = new Gui(this.gameC);
+	//	this.theGui = new Gui(this.gameC);
+	// this.theGui.update(state);
+		this.theGui = new GuiCli();
 		this.theGui.update(state);
-		//this.theGui = new GuiCli();
-		//this.theGui.update(state);
 	}
 
 	/**
