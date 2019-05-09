@@ -39,7 +39,6 @@ public class MinMaxConcurrent extends Thread {
 	@Override
 	public void run() {
 
-		System.out.println(this.getName() + "calcolo " + this.nodes.size() + " nodi");
 		for (Node n : this.nodes) {
 
 			try {
