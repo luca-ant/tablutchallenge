@@ -3,6 +3,7 @@ package it.unibo.ai.didattica.competition.tablut.teampallo.test;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.StateTablut;
 import it.unibo.ai.didattica.competition.tablut.teampallo.gui.GuiCli;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.AdvancedHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Pawn;
@@ -69,7 +70,7 @@ public class TestHeuristic {
 		
 		System.out.println();
 
-		Heuristic h = new MyHeuristic();
+		Heuristic h = new AdvancedHeuristic();
 		System.out.println("\nBLACK HEURISTIC: "+ h.heuristicBlack(s)+ "\n");
 		System.out.println("\nWHITE HEURISTIC: "+ h.heuristicWhite(s)+ "\n");
 		

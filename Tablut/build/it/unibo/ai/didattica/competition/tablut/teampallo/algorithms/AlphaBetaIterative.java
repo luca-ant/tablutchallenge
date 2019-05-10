@@ -20,6 +20,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyRules;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.AdvancedHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
@@ -34,7 +35,9 @@ public class AlphaBetaIterative implements IA {
 	public AlphaBetaIterative() {
 
 		this.rootChildren = new ArrayList<>();
-		this.heuristic = new MyHeuristic();
+//		this.heuristic = new MyHeuristic();
+		this.heuristic = new AdvancedHeuristic();
+
 		this.bestMove = null;
 
 	}
@@ -142,7 +145,7 @@ public class AlphaBetaIterative implements IA {
 			return 0;
 		}
 
-		if (depth == 0) {
+		if (depth == 0 || node.getState().getTurn().equalsTurn("WW") || node.getState().getTurn().equalsTurn("BW")) {
 			// return this.heuristic.heuristicBlack(node.getState());
 			// return this.heuristic.heuristicWhite(node.getState());
 
@@ -157,13 +160,12 @@ public class AlphaBetaIterative implements IA {
 		for (Action a : possibleMoves) {
 
 			State nextState = GameManager.getInstance().getRules().movePawn(node.getState().clone(), a);
-/*
-			if (GameManager.getInstance().contains(nextState.hashCode())) {
-				System.out.println("Salto lo stato");
-
-				continue;
-			}
-*/
+			/*
+			 * if (GameManager.getInstance().contains(nextState.hashCode())) {
+			 * System.out.println("Salto lo stato");
+			 * 
+			 * continue; }
+			 */
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();
@@ -201,7 +203,7 @@ public class AlphaBetaIterative implements IA {
 
 			return 0;
 		}
-		if (depth == 0) {
+		if (depth == 0 || node.getState().getTurn().equalsTurn("WW") || node.getState().getTurn().equalsTurn("BW")) {
 			// return this.heuristic.heuristicWhite(node.getState());
 			// return this.heuristic.heuristicBlack(node.getState());
 			return this.heuristic.heuristic(node.getState());
@@ -212,12 +214,10 @@ public class AlphaBetaIterative implements IA {
 		Double v = Double.POSITIVE_INFINITY;
 		for (Action a : possibleMoves) {
 			State nextState = GameManager.getInstance().getRules().movePawn(node.getState().clone(), a);
-/*
-			if (GameManager.getInstance().contains(nextState.hashCode())) {
-				System.out.println("Salto lo stato");
-				continue;
-			}
-*/
+			/*
+			 * if (GameManager.getInstance().contains(nextState.hashCode())) {
+			 * System.out.println("Salto lo stato"); continue; }
+			 */
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();

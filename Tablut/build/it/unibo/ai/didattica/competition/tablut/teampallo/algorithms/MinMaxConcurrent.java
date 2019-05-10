@@ -16,6 +16,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.AdvancedHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
@@ -31,7 +32,8 @@ public class MinMaxConcurrent extends Thread {
 	public MinMaxConcurrent(List<Node> nodes, int d, long endTime) {
 
 		this.nodes = nodes;
-		this.heuristic = new MyHeuristic();
+		//	this.heuristic = new MyHeuristic();
+		this.heuristic = new AdvancedHeuristic();
 		this.endTime = endTime;
 		this.depthToReach = d;
 	}
@@ -63,7 +65,7 @@ public class MinMaxConcurrent extends Thread {
 			return 0;
 		}
 
-		if (depth == 0) {
+		if (depth == 0 || node.getState().getTurn().equalsTurn("WW") || node.getState().getTurn().equalsTurn("BW")) {
 			// return this.heuristic.heuristicBlack(node.getState());
 			// return this.heuristic.heuristicWhite(node.getState());
 
@@ -117,7 +119,7 @@ public class MinMaxConcurrent extends Thread {
 
 			return 0;
 		}
-		if (depth == 0) {
+		if (depth == 0 || node.getState().getTurn().equalsTurn("WW") || node.getState().getTurn().equalsTurn("BW")) {
 			// return this.heuristic.heuristicWhite(node.getState());
 			// return this.heuristic.heuristicBlack(node.getState());
 			return this.heuristic.heuristic(node.getState());
