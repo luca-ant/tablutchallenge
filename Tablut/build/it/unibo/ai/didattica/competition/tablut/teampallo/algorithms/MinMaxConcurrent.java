@@ -39,7 +39,6 @@ public class MinMaxConcurrent extends Thread {
 	@Override
 	public void run() {
 
-		System.out.println(this.getName() + "calcolo " + this.nodes.size() + " nodi");
 		for (Node n : this.nodes) {
 
 			try {
@@ -80,13 +79,13 @@ public class MinMaxConcurrent extends Thread {
 
 			it.unibo.ai.didattica.competition.tablut.domain.State nextState = GameManager.getInstance().getRules()
 					.movePawn(node.getState().clone(), a);
-
+/*
 			if (GameManager.getInstance().contains(nextState.hashCode())) {
 				System.out.println("Salto lo stato");
 
 				continue;
 			}
-
+*/
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();

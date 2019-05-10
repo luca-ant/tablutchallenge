@@ -99,7 +99,7 @@ public class TeamPalloTablutClient extends TablutClient {
 		System.out.println("YOUR NAME: " + name);
 
 		int timeout = 30;
-		int depth = 10;
+		int depth = 8;
 
 		GameManager.getInstance().setParameters(timeout, depth, role.toLowerCase());
 
@@ -157,7 +157,7 @@ public class TeamPalloTablutClient extends TablutClient {
 			} catch (InterruptedException e) {
 			}
 
-			GameManager.getInstance().addVisitedState(state);
+	//		GameManager.getInstance().addVisitedState(state);
 
 			if (this.getPlayer().equals(Turn.WHITE)) {
 				// � il mio turno quando sono il bianco

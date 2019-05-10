@@ -79,13 +79,13 @@ public class MinMaxConcurrent extends Thread {
 
 			it.unibo.ai.didattica.competition.tablut.domain.State nextState = GameManager.getInstance().getRules()
 					.movePawn(node.getState().clone(), a);
-
+/*
 			if (GameManager.getInstance().contains(nextState.hashCode())) {
 				System.out.println("Salto lo stato");
 
 				continue;
 			}
-
+*/
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();
@@ -129,12 +129,12 @@ public class MinMaxConcurrent extends Thread {
 		for (Action a : possibleMoves) {
 			it.unibo.ai.didattica.competition.tablut.domain.State nextState = GameManager.getInstance().getRules()
 					.movePawn(node.getState().clone(), a);
-
+/*
 			if (GameManager.getInstance().contains(nextState.hashCode())) {
 				System.out.println("Salto lo stato");
 				continue;
 			}
-
+*/
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();
