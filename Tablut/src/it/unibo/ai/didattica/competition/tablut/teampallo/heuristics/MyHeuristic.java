@@ -179,8 +179,7 @@ public class MyHeuristic implements Heuristic {
 //		double result = myRandom(-1, 1);
 		double result = 0;
 
-		// result += BLACK_WEIGHT_DIFF_PAWNS * (((double)this.countB/16) -
-		// ((double)this.countW/9));
+		 result += BLACK_WEIGHT_DIFF_PAWNS * (((double)this.countB/16) - ((double)this.countW/9));
 
 		result += BLACK_WEIGHT_COUNT_BLACK_PAWNS * ((double) this.countB / 16);
 
