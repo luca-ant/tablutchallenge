@@ -348,7 +348,8 @@ public class MyGameAshtonTablutRules implements MyRules {
 								&& !(a.getColumnTo() + 2 == 0 && a.getRowTo() == 4)))) {
 			state.removePawn(a.getRowTo(), a.getColumnTo() + 1);
 			this.movesWithutCapturing = -1;
-	//		this.loggGame.fine("Pedina nera rimossa in: " + state.getBox(a.getRowTo(), a.getColumnTo() + 1));
+			// this.loggGame.fine("Pedina nera rimossa in: " + state.getBox(a.getRowTo(),
+			// a.getColumnTo() + 1));
 		}
 		// controllo se mangio a sinistra
 		if (a.getColumnTo() > 1 && state.getPawn(a.getRowTo(), a.getColumnTo() - 1).equalsPawn("B")
@@ -362,7 +363,8 @@ public class MyGameAshtonTablutRules implements MyRules {
 								&& !(a.getColumnTo() - 2 == 0 && a.getRowTo() == 4)))) {
 			state.removePawn(a.getRowTo(), a.getColumnTo() - 1);
 			this.movesWithutCapturing = -1;
-	//		this.loggGame.fine("Pedina nera rimossa in: " + state.getBox(a.getRowTo(), a.getColumnTo() - 1));
+			// this.loggGame.fine("Pedina nera rimossa in: " + state.getBox(a.getRowTo(),
+			// a.getColumnTo() - 1));
 		}
 		// controllo se mangio sopra
 		if (a.getRowTo() > 1 && state.getPawn(a.getRowTo() - 1, a.getColumnTo()).equalsPawn("B")
@@ -376,7 +378,8 @@ public class MyGameAshtonTablutRules implements MyRules {
 								&& !(a.getColumnTo() == 0 && a.getRowTo() - 2 == 4)))) {
 			state.removePawn(a.getRowTo() - 1, a.getColumnTo());
 			this.movesWithutCapturing = -1;
-	//		this.loggGame.fine("Pedina nera rimossa in: " + state.getBox(a.getRowTo() - 1, a.getColumnTo()));
+			// this.loggGame.fine("Pedina nera rimossa in: " + state.getBox(a.getRowTo() -
+			// 1, a.getColumnTo()));
 		}
 		// controllo se mangio sotto
 		if (a.getRowTo() < state.getBoard().length - 2
@@ -391,14 +394,15 @@ public class MyGameAshtonTablutRules implements MyRules {
 								&& !(a.getColumnTo() == 0 && a.getRowTo() + 2 == 4)))) {
 			state.removePawn(a.getRowTo() + 1, a.getColumnTo());
 			this.movesWithutCapturing = -1;
-	//		this.loggGame.fine("Pedina nera rimossa in: " + state.getBox(a.getRowTo() + 1, a.getColumnTo()));
+			// this.loggGame.fine("Pedina nera rimossa in: " + state.getBox(a.getRowTo() +
+			// 1, a.getColumnTo()));
 		}
 		// controllo se ho vinto
 		if (a.getRowTo() == 0 || a.getRowTo() == state.getBoard().length - 1 || a.getColumnTo() == 0
 				|| a.getColumnTo() == state.getBoard().length - 1) {
 			if (state.getPawn(a.getRowTo(), a.getColumnTo()).equalsPawn("K")) {
 				state.setTurn(State.Turn.WHITEWIN);
-	//			this.loggGame.fine("Bianco vince con re in " + a.getTo());
+				// this.loggGame.fine("Bianco vince con re in " + a.getTo());
 			}
 		}
 		// TODO: implement the winning condition of the capture of the last
@@ -416,26 +420,30 @@ public class MyGameAshtonTablutRules implements MyRules {
 				if (state.getPawn(3, 4).equalsPawn("B") && state.getPawn(4, 3).equalsPawn("B")
 						&& state.getPawn(5, 4).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-		//			this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo(), a.getColumnTo() - 1));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo(), a.getColumnTo() - 1));
 				}
 			}
 			// re adiacente al trono
 			if (state.getBox(a.getRowTo(), a.getColumnTo() - 1).equals("e4")) {
 				if (state.getPawn(2, 4).equalsPawn("B") && state.getPawn(3, 3).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-		//			this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo(), a.getColumnTo() - 1));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo(), a.getColumnTo() - 1));
 				}
 			}
 			if (state.getBox(a.getRowTo(), a.getColumnTo() - 1).equals("f5")) {
 				if (state.getPawn(5, 5).equalsPawn("B") && state.getPawn(3, 5).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-		//			this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo(), a.getColumnTo() - 1));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo(), a.getColumnTo() - 1));
 				}
 			}
 			if (state.getBox(a.getRowTo(), a.getColumnTo() - 1).equals("e6")) {
 				if (state.getPawn(6, 4).equalsPawn("B") && state.getPawn(5, 3).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-		//			this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo(), a.getColumnTo() - 1));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo(), a.getColumnTo() - 1));
 				}
 			}
 			// sono fuori dalle zone del trono
@@ -446,7 +454,8 @@ public class MyGameAshtonTablutRules implements MyRules {
 				if (state.getPawn(a.getRowTo(), a.getColumnTo() - 2).equalsPawn("B")
 						|| this.citadels.contains(state.getBox(a.getRowTo(), a.getColumnTo() - 2))) {
 					state.setTurn(State.Turn.BLACKWIN);
-		//			this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo(), a.getColumnTo() - 1));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo(), a.getColumnTo() - 1));
 				}
 			}
 		}
@@ -462,26 +471,30 @@ public class MyGameAshtonTablutRules implements MyRules {
 				if (state.getPawn(3, 4).equalsPawn("B") && state.getPawn(4, 5).equalsPawn("B")
 						&& state.getPawn(5, 4).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-		//			this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo(), a.getColumnTo() + 1));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo(), a.getColumnTo() + 1));
 				}
 			}
 			// re adiacente al trono
 			if (state.getBox(a.getRowTo(), a.getColumnTo() + 1).equals("e4")) {
 				if (state.getPawn(2, 4).equalsPawn("B") && state.getPawn(3, 5).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-		//			this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo(), a.getColumnTo() + 1));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo(), a.getColumnTo() + 1));
 				}
 			}
 			if (state.getBox(a.getRowTo(), a.getColumnTo() + 1).equals("e6")) {
 				if (state.getPawn(5, 5).equalsPawn("B") && state.getPawn(6, 4).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-		//			this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo(), a.getColumnTo() + 1));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo(), a.getColumnTo() + 1));
 				}
 			}
 			if (state.getBox(a.getRowTo(), a.getColumnTo() + 1).equals("d5")) {
 				if (state.getPawn(3, 3).equalsPawn("B") && state.getPawn(5, 3).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-		//			this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo(), a.getColumnTo() + 1));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo(), a.getColumnTo() + 1));
 				}
 			}
 			// sono fuori dalle zone del trono
@@ -492,7 +505,8 @@ public class MyGameAshtonTablutRules implements MyRules {
 				if (state.getPawn(a.getRowTo(), a.getColumnTo() + 2).equalsPawn("B")
 						|| this.citadels.contains(state.getBox(a.getRowTo(), a.getColumnTo() + 2))) {
 					state.setTurn(State.Turn.BLACKWIN);
-			//		this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo(), a.getColumnTo() + 1));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo(), a.getColumnTo() + 1));
 				}
 			}
 		}
@@ -503,32 +517,36 @@ public class MyGameAshtonTablutRules implements MyRules {
 		// ho il re sotto
 		if (a.getRowTo() < state.getBoard().length - 2
 				&& state.getPawn(a.getRowTo() + 1, a.getColumnTo()).equalsPawn("K")) {
-		//	System.out.println("Ho il re sotto");
+			// System.out.println("Ho il re sotto");
 			// re sul trono
 			if (state.getBox(a.getRowTo() + 1, a.getColumnTo()).equals("e5")) {
 				if (state.getPawn(5, 4).equalsPawn("B") && state.getPawn(4, 5).equalsPawn("B")
 						&& state.getPawn(4, 3).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-			//		this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo() + 1, a.getColumnTo()));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo() + 1, a.getColumnTo()));
 				}
 			}
 			// re adiacente al trono
 			if (state.getBox(a.getRowTo() + 1, a.getColumnTo()).equals("e4")) {
 				if (state.getPawn(3, 3).equalsPawn("B") && state.getPawn(3, 5).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-			//		this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo() + 1, a.getColumnTo()));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo() + 1, a.getColumnTo()));
 				}
 			}
 			if (state.getBox(a.getRowTo() + 1, a.getColumnTo()).equals("d5")) {
 				if (state.getPawn(4, 2).equalsPawn("B") && state.getPawn(5, 3).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-			//		this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo() + 1, a.getColumnTo()));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo() + 1, a.getColumnTo()));
 				}
 			}
 			if (state.getBox(a.getRowTo() + 1, a.getColumnTo()).equals("f5")) {
 				if (state.getPawn(4, 6).equalsPawn("B") && state.getPawn(5, 5).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-		//			this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo() + 1, a.getColumnTo()));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo() + 1, a.getColumnTo()));
 				}
 			}
 			// sono fuori dalle zone del trono
@@ -539,7 +557,8 @@ public class MyGameAshtonTablutRules implements MyRules {
 				if (state.getPawn(a.getRowTo() + 2, a.getColumnTo()).equalsPawn("B")
 						|| this.citadels.contains(state.getBox(a.getRowTo() + 2, a.getColumnTo()))) {
 					state.setTurn(State.Turn.BLACKWIN);
-					// this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo() + 1, a.getColumnTo()));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo() + 1, a.getColumnTo()));
 				}
 			}
 		}
@@ -561,13 +580,15 @@ public class MyGameAshtonTablutRules implements MyRules {
 			if (state.getBox(a.getRowTo() - 1, a.getColumnTo()).equals("e6")) {
 				if (state.getPawn(5, 3).equalsPawn("B") && state.getPawn(5, 5).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-	//				this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo() - 1, a.getColumnTo()));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo() - 1, a.getColumnTo()));
 				}
 			}
 			if (state.getBox(a.getRowTo() - 1, a.getColumnTo()).equals("d5")) {
 				if (state.getPawn(4, 2).equalsPawn("B") && state.getPawn(3, 3).equalsPawn("B")) {
 					state.setTurn(State.Turn.BLACKWIN);
-	//				this.loggGame.fine("Nero vince con re catturato in: " + state.getBox(a.getRowTo() - 1, a.getColumnTo()));
+					// this.loggGame.fine("Nero vince con re catturato in: " +
+					// state.getBox(a.getRowTo() - 1, a.getColumnTo()));
 				}
 			}
 			if (state.getBox(a.getRowTo() - 1, a.getColumnTo()).equals("f5")) {
@@ -704,17 +725,13 @@ public class MyGameAshtonTablutRules implements MyRules {
 			state.setTurn(State.Turn.WHITE);
 		}
 
-		
-		
 		if (state.getTurn().equalsTurn("W")) {
 			state = this.checkCaptureBlack(state, a);
 		} else if (state.getTurn().equalsTurn("B")) {
 			state = this.checkCaptureWhite(state, a);
 
 		}
-		
-		
-		
+
 		return state;
 	}
 
