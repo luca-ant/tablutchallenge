@@ -9,16 +9,16 @@ import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 
 public class AdvancedHeuristic implements Heuristic {
 
-	private static double BLACK_WEIGHT_DIFF_PAWNS = 1.5;
-	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 2.5;
-	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2;
+	private static double BLACK_WEIGHT_DIFF_PAWNS = 2.5;
+	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 4;
+	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2.5;
 	private static double BLACK_WEIGHT_FREE_WAY_KING = 5;
 	private static double BLACK_WEIGHT_KING_OVERHANGED = 1.5;
 	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
-	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 1;
+	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 2;
 	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 2;
 	private static double BLACK_WEIGHT_BLACKBARRIER = 2.5;
-	private static double BLACK_WEIGHT_Q = 2;
+	private static double BLACK_WEIGHT_Q = 3;
 
 	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 7.0;
 	private static double WHITE_WEIGHT_COUNT_BLACK_PAWNS = 7.0;
@@ -202,9 +202,9 @@ public class AdvancedHeuristic implements Heuristic {
 
 		result += BLACK_WEIGHT_KING_OVERHANGED * ((double) this.kingOverhangedB);
 
-		result -= BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double) this.countW / 9);
+		result += BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double)(9- this.countW) / 9);
 
-		result -= BLACK_WEIGHT_FREE_WAY_KING * ((double) this.kingFreeWay / 4);
+		result -= BLACK_WEIGHT_FREE_WAY_KING * ((double) this.kingFreeWay);
 
 		result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double) this.blackPawnsOverhanged / this.countB);
 
@@ -245,8 +245,8 @@ public class AdvancedHeuristic implements Heuristic {
 		this.kingInQ4 = 0;
 
 		this.kingOverhangedW = 0;
-		this.kingOnFavourite=0;
-		this.guards=0;
+		this.kingOnFavourite = 0;
+		this.guards = 0;
 
 		this.quadrante1 = 0;
 		this.quadrante2 = 0;
