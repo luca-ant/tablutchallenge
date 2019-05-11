@@ -20,47 +20,20 @@ public class AdvancedHeuristic implements Heuristic {
 	private static double BLACK_WEIGHT_BLACKBARRIER = 2.5;
 	private static double BLACK_WEIGHT_Q = 2;
 
-	private static double WHITE_WEIGHT_DIFF_PAWNS = 5;
-	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 5;
-	private static double WHITE_WEIGHT_COUNT_BLACK_PAWNS = 3;
-	private static double WHITE_WEIGHT_WHITE_NEAR_KING = 1.5;
-	private static double WHITE_WEIGHT_FREE_WAY_KING = 10;
-	private static double WHITE_WEIGHT_KING_ON_THRONE = 0.5;
-	private static double WHITE_WEIGHT_KING_NEAR_THRONE = 0.3;
-	private static double WHITE_WEIGHT_KING_ON_STAR = 10;
-	private static double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 5;
-	private static double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 7;
-
-	// *** OK ***
-
-//	private static double BLACK_WEIGHT_DIFF_PAWNS = 5;
-//	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 3;
-//	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2;
-//	private static double BLACK_WEIGHT_BLACK_NEAR_KING = 3;
-//	private static double BLACK_WEIGHT_FREE_WAY_KING = 7;
-//	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
-//	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 1.5;
-//	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 2;
-//	private static double BLACK_WEIGHT_BLACKBARRIER = 2.3;
-//
-//	private static double WHITE_WEIGHT_DIFF_PAWNS = 3;
-//	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 4;
-//	private static double WHITE_WEIGHT_COUNT_BLACK_PAWNS = 3;
-//	private static double WHITE_WEIGHT_BLACK_NEAR_KING = 3;
-//	private static double WHITE_WEIGHT_WHITE_NEAR_KING = 1.5;
-//	private static double WHITE_WEIGHT_FREE_WAY_KING = 10;
-//	private static double WHITE_WEIGHT_KING_ON_THRONE = 2;
-//	private static double WHITE_WEIGHT_KING_NEAR_THRONE = 1.5;
-//	private static double WHITE_WEIGHT_KING_ON_STAR = 10;
-//	private static double WHITE_WEIGHT_KING_FROM_BORDER = 0;
-//	private static double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 2;
-//	private static double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 1.5;
-
-	// *** ***
+	private static double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 7.0;
+	private static double WHITE_WEIGHT_COUNT_BLACK_PAWNS = 7.0;
+	private static double WHITE_WEIGHT_SINGLE_FREE_WAY_KING = 5.0;
+	private static double WHITE_WEIGHT_MULTIPLE_FREE_WAY_KING = 10.0;
+	private static double WHITE_WEIGHT_KING_ON_STAR = 13.0;
+	private static double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 1.0;
+	private static double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 1.0;
+	private static double WHITE_WEIGHT_KING_OVERHANGED = 13.0;
+	private static double WHITE_WEIGHT_KING_FAVOURITE = 5.0;
+	private static double WHITE_WEIGHT_GUARDS = 2.5;
 
 	private int countB;
 	private int countW;
-	private int kingOverhanged;
+	private int kingOverhangedB;
 	private int whiteNearKing;
 	private int kingFreeWay;
 	private int kingOnThrone;
@@ -78,6 +51,15 @@ public class AdvancedHeuristic implements Heuristic {
 	private int kingInQ3;
 	private int kingInQ4;
 
+	private int kingOverhangedW;
+	private int kingOnFavourite;
+	private int guards;
+	private int quadrante1;
+	private int quadrante2;
+	private int quadrante3;
+	private int quadrante4;
+	private int quadranteF;
+
 	// Q1 Q2
 	// Q3 Q4
 
@@ -85,7 +67,10 @@ public class AdvancedHeuristic implements Heuristic {
 	private List<String> citadels;
 	private List<String> stars;
 	private List<String> blackBarrier;
+
+	private List<String> guardsPos;
 	private List<String> nearsThrone;
+
 	private String throne;
 
 	public AdvancedHeuristic() {
@@ -103,6 +88,7 @@ public class AdvancedHeuristic implements Heuristic {
 //		this.blackBarrier = Arrays.asList("b3", "b7", "c2", "c8", "g2", "g8", "h3", "h7");
 
 		this.blackBarrier = Arrays.asList("c4", "c6", "d3", "d7", "f3", "f7", "g4", "g6");
+		this.guardsPos = Arrays.asList("a1", "a9", "i1", "i9");
 
 	}
 
@@ -113,7 +99,7 @@ public class AdvancedHeuristic implements Heuristic {
 		System.out.println("countB - countW = " + diff);
 		System.out.println("countB = " + this.countB);
 		System.out.println("countW = " + this.countW);
-		System.out.println("kingOverhanged = " + this.kingOverhanged);
+		System.out.println("kingOverhangedB= " + this.kingOverhangedB);
 		System.out.println("whiteNearKing = " + this.whiteNearKing);
 		System.out.println("kingFreeWay = " + this.kingFreeWay);
 		System.out.println("kingOnThrone = " + this.kingOnThrone);
@@ -129,7 +115,8 @@ public class AdvancedHeuristic implements Heuristic {
 		System.out.println("kingInQ2 = " + this.kingInQ2);
 		System.out.println("kingInQ3 = " + this.kingInQ3);
 		System.out.println("kingInQ4 = " + this.kingInQ4);
-
+		System.out.println("kingOverhangedW = " + this.kingOverhangedW);
+		System.out.println("quadranteF = " + this.quadranteF);
 	}
 
 	@Override
@@ -155,41 +142,54 @@ public class AdvancedHeuristic implements Heuristic {
 		// double result = myRandom(-1, 1);
 		double result = 0;
 
-//		result -= WHITE_WEIGHT_DIFF_PAWNS * (((double)this.countW/16) - ((double)this.countB/9));
+//		// result -= env.getWeight("WHITE_WEIGHT_DIFF_PAWNS") * (this.countW -
+		// this.countB);
 
-		result -= WHITE_WEIGHT_COUNT_BLACK_PAWNS * ((double) this.countB / 16);
+		result += WHITE_WEIGHT_COUNT_BLACK_PAWNS * 16 / this.countB;
 
-		result -= WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double) this.whitePawnsOverhanged / this.countW);
+		result -= WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED * this.whitePawnsOverhanged;
 
-		// result -= WHITE_WEIGHT_BLACK_NEAR_KING * (this.kingOverhanged);
+		// result -= env.getWeight("WHITE_WEIGHT_BLACK_NEAR_KING") * this.blackNearKing;
 
-		result += WHITE_WEIGHT_COUNT_WHITE_PAWNS * ((double) this.countW / 9);
+		result += WHITE_WEIGHT_COUNT_WHITE_PAWNS * this.countW / 9;
 
-//		result += WHITE_WEIGHT_WHITE_NEAR_KING * this.whiteNearKing;
+		// result += env.getWeight("WHITE_WEIGHT_WHITE_NEAR_KING") * this.whiteNearKing;
 
-		result += WHITE_WEIGHT_FREE_WAY_KING * ((double) this.kingFreeWay / 4);
+		if (this.kingFreeWay == 1) {
+			result += WHITE_WEIGHT_SINGLE_FREE_WAY_KING * this.kingFreeWay;
+		} else {
+			if (this.kingFreeWay > 1) {
+				result += WHITE_WEIGHT_MULTIPLE_FREE_WAY_KING * (this.kingFreeWay / 2);
+			}
+		}
 
-		result += WHITE_WEIGHT_KING_ON_THRONE * this.kingOnThrone;
+		// result += env.getWeight("WHITE_WEIGHT_KING_ON_THRONE") * this.kingOnThrone;
 
-//		result += WHITE_WEIGHT_KING_NEAR_THRONE * this.kingNearThrone;
+		// result += env.getWeight("WHITE_WEIGHT_KING_NEAR_THRONE") *
+		// this.kingNearThrone;
 
-		result += WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double) this.blackPawnsOverhanged / this.countB);
+		result += WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED * this.blackPawnsOverhanged;
 
 		result += WHITE_WEIGHT_KING_ON_STAR * this.kingOnStar;
+
+		result -= WHITE_WEIGHT_KING_OVERHANGED * this.kingOverhangedW;
+
+		result += WHITE_WEIGHT_KING_FAVOURITE * this.kingOnFavourite;
+
+		result += WHITE_WEIGHT_GUARDS * this.guards;
 
 		return result;
 	}
 
 	public double heuristicBlack(State state) {
 
-		
-		if(state.getTurn().equalsTurn("BW")) {
+		if (state.getTurn().equalsTurn("BW")) {
 			return 100;
 		}
 		this.resetValues();
 		this.extractValues(state);
 
-	//	printValues();
+		// printValues();
 
 //		double result = myRandom(-1, 1);
 		double result = 0;
@@ -200,11 +200,11 @@ public class AdvancedHeuristic implements Heuristic {
 
 		result += BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double) this.whitePawnsOverhanged / this.countW);
 
-		result += BLACK_WEIGHT_KING_OVERHANGED * ((double) this.kingOverhanged);
+		result += BLACK_WEIGHT_KING_OVERHANGED * ((double) this.kingOverhangedB);
 
 		result -= BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double) this.countW / 9);
 
-		result -= BLACK_WEIGHT_FREE_WAY_KING * ((double) this.kingFreeWay / 4);
+		result -= BLACK_WEIGHT_FREE_WAY_KING * ((double) this.kingFreeWay);
 
 		result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double) this.blackPawnsOverhanged / this.countB);
 
@@ -226,7 +226,7 @@ public class AdvancedHeuristic implements Heuristic {
 	private void resetValues() {
 		this.countB = 0;
 		this.countW = 0;
-		this.kingOverhanged = 0;
+		this.kingOverhangedB = 0;
 		this.whiteNearKing = 0;
 		this.kingFreeWay = 0;
 		this.kingOnThrone = 0;
@@ -244,10 +244,105 @@ public class AdvancedHeuristic implements Heuristic {
 		this.kingInQ3 = 0;
 		this.kingInQ4 = 0;
 
+		this.kingOverhangedW = 0;
+		this.kingOnFavourite = 0;
+		this.guards = 0;
+
+		this.quadrante1 = 0;
+		this.quadrante2 = 0;
+		this.quadrante3 = 0;
+		this.quadrante4 = 0;
+		this.quadranteF = 0;
 	}
 
 	private void extractValues(State state) {
 
+		// valuto i quadranti
+		int minore = 50;
+		// QUADRANTE1
+		for (int i = 0; i <= 4; i++) {
+			for (int j = 0; j <= 4; j++) {
+				if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
+					quadrante1++;
+				}
+
+			}
+		}
+		if (state.getPawn(5, 0).equalsPawn(State.Pawn.BLACK.toString())) {
+			quadrante1++;
+		}
+		if (state.getPawn(0, 5).equalsPawn(State.Pawn.BLACK.toString())) {
+			quadrante1++;
+		}
+		if (quadrante1 < minore) {
+			minore = quadrante1;
+			quadranteF = 1;
+		}
+
+		// QUADRANTE2
+		for (int i = 0; i <= 4; i++) {
+			for (int j = 4; j <= state.getBoard().length - 1; j++) {
+				if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
+					quadrante2++;
+				}
+
+			}
+		}
+		if (state.getPawn(5, 8).equalsPawn(State.Pawn.BLACK.toString())) {
+			quadrante2++;
+		}
+		if (state.getPawn(0, 3).equalsPawn(State.Pawn.BLACK.toString())) {
+			quadrante2++;
+		}
+		if (quadrante2 < minore) {
+			minore = quadrante2;
+			quadranteF = 2;
+		}
+
+		// QUADRANTE3
+		for (int i = 4; i <= state.getBoard().length - 1; i++) {
+			for (int j = 0; j <= 4; j++) {
+				if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
+					quadrante3++;
+				}
+
+			}
+		}
+		if (state.getPawn(3, 0).equalsPawn(State.Pawn.BLACK.toString())) {
+			quadrante3++;
+		}
+		if (state.getPawn(8, 5).equalsPawn(State.Pawn.BLACK.toString())) {
+			quadrante3++;
+		}
+		if (quadrante3 < minore) {
+			minore = quadrante3;
+			quadranteF = 3;
+		}
+		if (quadrante1 == quadrante2 || quadrante1 == quadrante3 || quadrante1 == quadrante4 || quadrante2 == quadrante3
+				|| quadrante2 == quadrante4 || quadrante3 == quadrante4) {
+			quadranteF = 0;
+		}
+		// QUADRANTE4
+		for (int i = 4; i <= state.getBoard().length - 1; i++) {
+			for (int j = 4; j <= state.getBoard().length - 1; j++) {
+				if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
+					quadrante4++;
+				}
+
+			}
+		}
+		if (state.getPawn(5, 8).equalsPawn(State.Pawn.BLACK.toString())) {
+			quadrante4++;
+		}
+		if (state.getPawn(8, 5).equalsPawn(State.Pawn.BLACK.toString())) {
+			quadrante4++;
+		}
+		if (quadrante4 < minore) {
+			minore = quadrante4;
+			quadranteF = 4;
+		}
+
+		// ***** //
 		for (int i = 0; i < state.getBoard().length; i++) {
 			for (int j = 0; j < state.getBoard().length; j++) {
 				// conto le pedine bianche
@@ -391,27 +486,27 @@ public class AdvancedHeuristic implements Heuristic {
 					if (i > 0 && (state.getPawn(i - 1, j).equalsPawn(State.Pawn.BLACK.toString())
 							|| this.citadels.contains(state.getBox(i - 1, j))
 							|| state.getBox(i - 1, j).equals(this.throne))) {
-						this.kingOverhanged = 1;
+						this.kingOverhangedB = 1;
 					}
 
 					if (i < state.getBoard().length - 1
 							&& (state.getPawn(i + 1, j).equalsPawn(State.Pawn.BLACK.toString())
 									|| this.citadels.contains(state.getBox(i + 1, j))
 									|| state.getBox(i + 1, j).equals(this.throne))) {
-						this.kingOverhanged = 1;
+						this.kingOverhangedB = 1;
 					}
 
 					if (j > 0 && (state.getPawn(i, j - 1).equalsPawn(State.Pawn.BLACK.toString())
 							|| this.citadels.contains(state.getBox(i, j - 1))
 							|| state.getBox(i, j - 1).contentEquals(this.throne))) {
-						this.kingOverhanged = 1;
+						this.kingOverhangedB = 1;
 					}
 
 					if (j < state.getBoard().length - 1
 							&& (state.getPawn(i, j + 1).equalsPawn(State.Pawn.BLACK.toString())
 									|| this.citadels.contains(state.getBox(i, j + 1))
 									|| state.getBox(i, j + 1).contentEquals(this.throne))) {
-						this.kingOverhanged = 1;
+						this.kingOverhangedB = 1;
 					}
 
 					// controllo se il re è in Q1
@@ -550,6 +645,166 @@ public class AdvancedHeuristic implements Heuristic {
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())
 						&& this.stars.contains(state.getBox(i, j))) {
 					this.kingOnStar = 1;
+				}
+
+				// controllo se il re � minacciato
+				if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
+
+					// ho una nera sotto e controllo sopra-destra-sinistra
+					if (i + 1 < state.getBoard().length - 1
+							&& state.getPawn(i + 1, j).equalsPawn(State.Pawn.BLACK.toString())) {
+						boolean minacciato = false;
+						for (int itemp = i - 1; itemp >= 0 && !minacciato; itemp--) {
+							if (state.getPawn(itemp, j).equalsPawn(State.Pawn.BLACK.toString()))
+								minacciato = true;
+							if (state.getPawn(itemp, j).equalsPawn(State.Pawn.THRONE.toString())
+									|| citadels.contains(state.getBox(itemp, j)))
+								break;
+						}
+						for (int jtemp = j - 1; jtemp >= 0 && !minacciato; jtemp--) {
+							if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
+								minacciato = true;
+							if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.THRONE.toString())
+									|| citadels.contains(state.getBox(i - 1, jtemp)))
+								break;
+						}
+						for (int jtemp = j + 1; jtemp < state.getBoard().length - 1 && !minacciato; jtemp++) {
+							if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
+								minacciato = true;
+							if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.THRONE.toString())
+									|| citadels.contains(state.getBox(i - 1, jtemp)))
+								break;
+						}
+						if (minacciato) {
+							kingOverhangedW++;
+						}
+					}
+
+					// ho una nera sopra e controllo sotto-destra-sinistra
+					if (i - 1 >= 0 && state.getPawn(i - 1, j).equalsPawn(State.Pawn.BLACK.toString())) {
+						boolean minacciato = false;
+						for (int itemp = i + 1; itemp < state.getBoard().length - 1 && !minacciato; itemp++) {
+							if (state.getPawn(itemp, j).equalsPawn(State.Pawn.BLACK.toString()))
+								minacciato = true;
+							if (state.getPawn(itemp, j).equalsPawn(State.Pawn.THRONE.toString())
+									|| citadels.contains(state.getBox(itemp, j)))
+								break;
+						}
+						for (int jtemp = j - 1; jtemp >= 0 && !minacciato; jtemp--) {
+							if (state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
+								minacciato = true;
+							if (state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.THRONE.toString())
+									|| citadels.contains(state.getBox(i + 1, jtemp)))
+								break;
+						}
+						for (int jtemp = j + 1; jtemp < state.getBoard().length - 1 && !minacciato; jtemp++) {
+							if (state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
+								minacciato = true;
+							if (state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.THRONE.toString())
+									|| citadels.contains(state.getBox(i + 1, jtemp)))
+								break;
+						}
+						if (minacciato) {
+							kingOverhangedW++;
+						}
+					}
+
+					// ho una nera a destra e controllo a sinistra-sopra-sotto
+					if (j + 1 < state.getBoard().length - 1
+							&& state.getPawn(i, j + 1).equalsPawn(State.Pawn.BLACK.toString())) {
+						boolean minacciato = false;
+						for (int jtemp = j - 1; jtemp >= 0 && !minacciato; jtemp--) {
+							if (state.getPawn(i, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
+								minacciato = true;
+							if (state.getPawn(i, jtemp).equalsPawn(State.Pawn.THRONE.toString())
+									|| citadels.contains(state.getBox(i, jtemp)))
+								break;
+						}
+						for (int itemp = i - 1; itemp >= 0 && !minacciato; itemp--) {
+							if (state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.BLACK.toString()))
+								minacciato = true;
+							if (state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.THRONE.toString())
+									|| citadels.contains(state.getBox(itemp, j - 1)))
+								break;
+						}
+						for (int itemp = i + 1; itemp < state.getBoard().length - 1 && !minacciato; itemp++) {
+							if (state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.BLACK.toString()))
+								minacciato = true;
+							if (state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.THRONE.toString())
+									|| citadels.contains(state.getBox(itemp, j - 1)))
+								break;
+						}
+						if (minacciato) {
+							kingOverhangedW++;
+						}
+					}
+					// ho una nera a sinistra e controllo a destra-sopra-sotto
+					if (j - 1 >= 0 && state.getPawn(i, j - 1).equalsPawn(State.Pawn.BLACK.toString())) {
+						boolean minacciato = false;
+						for (int jtemp = j + 1; jtemp < state.getBoard().length - 1 && !minacciato; jtemp++) {
+							if (state.getPawn(i, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
+								minacciato = true;
+							if (state.getPawn(i, jtemp).equalsPawn(State.Pawn.THRONE.toString())
+									|| citadels.contains(state.getBox(i, jtemp)))
+								break;
+						}
+						for (int itemp = i - 1; itemp >= 0 && !minacciato; itemp--) {
+							if (state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.BLACK.toString()))
+								minacciato = true;
+							if (state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.THRONE.toString())
+									|| citadels.contains(state.getBox(itemp, j + 1)))
+								break;
+						}
+						for (int itemp = i + 1; itemp < state.getBoard().length - 1 && !minacciato; itemp++) {
+							if (state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.BLACK.toString()))
+								minacciato = true;
+							if (state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.THRONE.toString())
+									|| citadels.contains(state.getBox(itemp, j + 1)))
+								break;
+						}
+						if (minacciato) {
+							kingOverhangedW++;
+						}
+					}
+
+					// controllo se � nel quadrante favorito
+					if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
+						switch (quadranteF) {
+						case 1: {
+							if (i >= 0 && i <= 4 && j >= 0 && j <= 4) {
+								this.kingOnFavourite = 1;
+							}
+							break;
+						}
+						case 2: {
+							if (i >= 0 && i <= 4 && j >= 4 && j <= 8) {
+								this.kingOnFavourite = 1;
+							}
+							break;
+						}
+						case 3: {
+							if (i >= 4 && i <= 8 && j >= 0 && j <= 4) {
+								this.kingOnFavourite = 1;
+							}
+							break;
+						}
+						case 4: {
+							if (i >= 4 && i <= 8 && j >= 4 && j <= 8) {
+								this.kingOnFavourite = 1;
+							}
+							break;
+						}
+						default: {
+
+						}
+						}
+					}
+
+					if (state.getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString())
+							&& this.guardsPos.contains(state.getBox(i, j))) {
+						this.guards++;
+					}
+
 				}
 
 			}
