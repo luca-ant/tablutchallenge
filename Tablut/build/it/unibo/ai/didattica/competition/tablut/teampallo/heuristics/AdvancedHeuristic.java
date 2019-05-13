@@ -10,14 +10,14 @@ import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 public class AdvancedHeuristic implements Heuristic {
 
 	private static double BLACK_WEIGHT_DIFF_PAWNS = 0.5;
-	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 0.5;
+	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 1.5;
 	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 5.0;
 	private static double BLACK_WEIGHT_FREE_WAY_KING = 10.0;
 	private static double BLACK_WEIGHT_KING_OVERHANGED = 0.5;
 	private static double BLACK_WEIGHT_KING_ON_STAR = 10.0;
-	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 5.0;
+	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 3.0;
 	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 2;
-	private static double BLACK_WEIGHT_BLACKBARRIER = 10.0;
+	private static double BLACK_WEIGHT_BLACKBARRIER = 5.0;
 	private static double BLACK_WEIGHT_Q = 3.0;
 
 	/*
