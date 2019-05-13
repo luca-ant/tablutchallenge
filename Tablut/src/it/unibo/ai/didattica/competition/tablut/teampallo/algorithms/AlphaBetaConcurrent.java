@@ -91,8 +91,7 @@ public class AlphaBetaConcurrent implements IA {
 				if (i == NUM_THREAD - 1) {
 					to = this.rootChildren.size();
 				}
-				System.out.println("dim rootChildren = " + this.rootChildren.size() + " size = " + size + " Thread da "
-						+ from + " to " + to);
+	//			System.out.println("dim rootChildren = " + this.rootChildren.size() + " size = " + size + " Thread da "				+ from + " to " + to);
 
 				MinMaxConcurrent t = new MinMaxConcurrent(this.rootChildren.subList(from, to), d, this.endTime);
 				threads.add(t);

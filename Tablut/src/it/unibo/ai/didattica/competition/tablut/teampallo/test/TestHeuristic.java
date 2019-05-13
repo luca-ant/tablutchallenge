@@ -36,8 +36,8 @@ public class TestHeuristic {
 		board[6][4] = Pawn.WHITE;
 		board[8][2] = Pawn.WHITE;
 		board[4][3] = Pawn.WHITE;
-		board[4][5] = Pawn.WHITE;
-		board[4][6] = Pawn.WHITE;
+		board[4][5] = Pawn.BLACK;
+		board[4][6] = Pawn.EMPTY;
 
 		board[0][3] = Pawn.EMPTY;
 		board[0][4] = Pawn.BLACK;
@@ -45,9 +45,9 @@ public class TestHeuristic {
 		board[1][4] = Pawn.BLACK;
 		board[8][3] = Pawn.BLACK;
 		board[8][4] = Pawn.BLACK;
-		board[8][5] = Pawn.BLACK;
-		board[7][4] = Pawn.BLACK;
-		board[3][0] = Pawn.BLACK;
+		board[8][5] = Pawn.EMPTY;
+		board[7][4] = Pawn.EMPTY;
+		board[3][0] = Pawn.EMPTY;
 		board[4][0] = Pawn.BLACK;
 		board[5][0] = Pawn.BLACK;
 		board[4][1] = Pawn.BLACK;
@@ -57,7 +57,7 @@ public class TestHeuristic {
 		board[4][7] = Pawn.BLACK;
 
 		
-		board[0][3] = Pawn.BLACK;
+		board[5][5] = Pawn.WHITE;
 
 		
 		

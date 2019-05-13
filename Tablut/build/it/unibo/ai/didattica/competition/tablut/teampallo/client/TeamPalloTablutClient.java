@@ -98,7 +98,7 @@ public class TeamPalloTablutClient extends TablutClient {
 		System.out.println("Selected client: " + args[0]);
 		System.out.println("YOUR NAME: " + name);
 
-		int timeout = 30;
+		int timeout = 40;
 		int depth = 8;
 
 		GameManager.getInstance().setParameters(timeout, depth, role.toLowerCase());
