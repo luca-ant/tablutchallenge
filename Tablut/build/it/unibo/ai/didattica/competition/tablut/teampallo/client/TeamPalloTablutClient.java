@@ -88,7 +88,7 @@ public class TeamPalloTablutClient extends TablutClient {
 			System.out.println("You must specify which player you are (WHITE or BLACK)");
 			System.exit(-1);
 		} else {
-			System.out.println(args[0]);
+			//System.out.println(args[0]);
 			role = (args[0]);
 		}
 
@@ -112,13 +112,15 @@ public class TeamPalloTablutClient extends TablutClient {
 	}
 
 	private static void printName() {
-		System.out.println("████████╗███████╗ █████╗ ███╗   ███╗      ██████╗  █████╗ ██╗     ██╗      ██████╗");
-		System.out.println("╚══██╔══╝██╔════╝██╔══██╗████╗ ████║      ██╔══██╗██╔══██╗██║     ██║     ██╔═══██╗");
-		System.out.println("   ██║   █████╗  ███████║██╔████╔██║█████╗██████╔╝███████║██║     ██║     ██║   ██║");
-		System.out.println("   ██║   ██╔══╝  ██╔══██║██║╚██╔╝██║╚════╝██╔═══╝ ██╔══██║██║     ██║     ██║   ██║");
-		System.out.println("   ██║   ███████╗██║  ██║██║ ╚═╝ ██║      ██║     ██║  ██║███████╗███████╗╚██████╔╝");
-		System.out.println("   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝      ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝");
+		System.out.println();
+		System.out.println(" ████████╗███████╗ █████╗ ███╗   ███╗      ██████╗  █████╗ ██╗     ██╗      ██████╗");
+		System.out.println(" ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║      ██╔══██╗██╔══██╗██║     ██║     ██╔═══██╗");
+		System.out.println("    ██║   █████╗  ███████║██╔████╔██║█████╗██████╔╝███████║██║     ██║     ██║   ██║");
+		System.out.println("    ██║   ██╔══╝  ██╔══██║██║╚██╔╝██║╚════╝██╔═══╝ ██╔══██║██║     ██║     ██║   ██║");
+		System.out.println("    ██║   ███████╗██║  ██║██║ ╚═╝ ██║      ██║     ██║  ██║███████╗███████╗╚██████╔╝");
+		System.out.println("    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝      ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝");
 
+		System.out.println();
 	}
 
 	@Override
