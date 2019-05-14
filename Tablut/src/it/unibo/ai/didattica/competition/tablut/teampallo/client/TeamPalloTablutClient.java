@@ -80,31 +80,47 @@ public class TeamPalloTablutClient extends TablutClient {
 		int gametype = 4;
 		String role = "";
 		String name = "TEAMPALLO";
+		int timeout = 55;
+		int depth = 10;
+
 		// TODO: change the behavior?
 		if (args.length < 1) {
 			System.out.println("You must specify which player you are (WHITE or BLACK)");
 			System.exit(-1);
 		} else {
-			System.out.println(args[0]);
+			//System.out.println(args[0]);
 			role = (args[0]);
 		}
+
 		if (args.length == 2) {
-			System.out.println(args[1]);
-			gametype = Integer.parseInt(args[1]);
+			// System.out.println(args[1]);
+			timeout = Integer.parseInt(args[1]);
 		}
 		if (args.length == 3) {
-			name = args[2];
+			depth = Integer.parseInt(args[2]);
 		}
-		System.out.println("Selected client: " + args[0]);
-		System.out.println("YOUR NAME: " + name);
 
-		int timeout = 40;
-		int depth = 8;
+		printName();
+
+		// System.out.println("Selected client: " + args[0]);
+		// System.out.println("YOUR NAME: " + name);
 
 		GameManager.getInstance().setParameters(timeout, depth, role.toLowerCase());
 
 		TeamPalloTablutClient client = new TeamPalloTablutClient(role, name, gametype, timeout);
 		client.run();
+	}
+
+	private static void printName() {
+		System.out.println();
+		System.out.println(" ████████╗███████╗ █████╗ ███╗   ███╗      ██████╗  █████╗ ██╗     ██╗      ██████╗");
+		System.out.println(" ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║      ██╔══██╗██╔══██╗██║     ██║     ██╔═══██╗");
+		System.out.println("    ██║   █████╗  ███████║██╔████╔██║█████╗██████╔╝███████║██║     ██║     ██║   ██║");
+		System.out.println("    ██║   ██╔══╝  ██╔══██║██║╚██╔╝██║╚════╝██╔═══╝ ██╔══██║██║     ██║     ██║   ██║");
+		System.out.println("    ██║   ███████╗██║  ██║██║ ╚═╝ ██║      ██║     ██║  ██║███████╗███████╗╚██████╔╝");
+		System.out.println("    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝      ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝");
+
+		System.out.println();
 	}
 
 	@Override
@@ -157,7 +173,7 @@ public class TeamPalloTablutClient extends TablutClient {
 			} catch (InterruptedException e) {
 			}
 
-	//		GameManager.getInstance().addVisitedState(state);
+			// GameManager.getInstance().addVisitedState(state);
 
 			if (this.getPlayer().equals(Turn.WHITE)) {
 				// � il mio turno quando sono il bianco
