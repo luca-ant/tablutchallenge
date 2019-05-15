@@ -9,12 +9,12 @@ import it.unibo.ai.didattica.competition.tablut.domain.State;
 public class BlackHeuristic implements Heuristic {
 	private static double BLACK_WEIGHT_DIFF_PAWNS = 0.5;
 	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 4;
-	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2.5;
+	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 3;
 	private static double BLACK_WEIGHT_FREE_WAY_KING = 5;
 	private static double BLACK_WEIGHT_KING_OVERHANGED = 1.5;
 	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
 	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 2.5;
-	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 2;
+	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 3;
 	private static double BLACK_WEIGHT_BLACKBARRIER = 5;
 	private static double BLACK_WEIGHT_Q = 3;
 
@@ -69,12 +69,14 @@ public class BlackHeuristic implements Heuristic {
 
 	@Override
 	public double heuristic(State state) {
+		/*
 		if (state.getTurn().equalsTurn("BW")) {
 			return 100;
 		}
 		if (state.getTurn().equalsTurn("WW")) {
 			return -100;
 		}
+		*/
 		this.resetValues();
 		this.extractValues(state);
 
@@ -93,7 +95,7 @@ public class BlackHeuristic implements Heuristic {
 
 		result += BLACK_WEIGHT_KING_OVERHANGED * ((double) this.kingOverhangedB);
 
-		result += BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double) (9 - this.countW) / 9);
+		result -= BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double) (this.countW) / 9);
 
 		result -= BLACK_WEIGHT_FREE_WAY_KING * ((double) this.kingFreeWay);
 
