@@ -19,7 +19,6 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.teampallo.algorithms.Node;
-import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.BlackHeuristic2;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.WhiteHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;

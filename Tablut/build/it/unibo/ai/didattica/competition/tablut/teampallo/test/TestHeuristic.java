@@ -37,7 +37,7 @@ public class TestHeuristic {
 		board[5][4] = Pawn.WHITE;
 		board[6][4] = Pawn.WHITE;
 		board[8][2] = Pawn.WHITE;
-		board[4][3] = Pawn.WHITE;
+		board[4][3] = Pawn.EMPTY;
 		board[4][5] = Pawn.BLACK;
 		board[4][6] = Pawn.EMPTY;
 

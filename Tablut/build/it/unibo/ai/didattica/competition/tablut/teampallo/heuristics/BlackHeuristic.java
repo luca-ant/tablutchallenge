@@ -8,15 +8,15 @@ import it.unibo.ai.didattica.competition.tablut.domain.State;
 
 public class BlackHeuristic implements Heuristic {
 	private static double BLACK_WEIGHT_DIFF_PAWNS = 0.5;
-	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 4;
-	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 3;
+	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 5.0;
+	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 3.5;
 	private static double BLACK_WEIGHT_FREE_WAY_KING = 10.0;
-	private static double BLACK_WEIGHT_KING_OVERHANGED = 1.0;
+	private static double BLACK_WEIGHT_KING_OVERHANGED = 1.5;
 	private static double BLACK_WEIGHT_KING_ON_STAR = 10.0;
 	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 2.5;
-	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 3;
-	private static double BLACK_WEIGHT_BLACKBARRIER = 5;
-	private static double BLACK_WEIGHT_Q = 3;
+	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 3.0;
+	private static double BLACK_WEIGHT_BLACKBARRIER = 4.0;
+	private static double BLACK_WEIGHT_Q = 5.0;
 
 	private int countB;
 	private int countW;
@@ -69,47 +69,49 @@ public class BlackHeuristic implements Heuristic {
 
 	@Override
 	public double heuristic(State state) {
-		
+
 		if (state.getTurn().equalsTurn("BW")) {
-			return 100;
+			return 1000;
 		}
 		if (state.getTurn().equalsTurn("WW")) {
-			return -100;
+			return -1000;
 		}
-		
+
 		this.resetValues();
 		this.extractValues(state);
 
-		 printValues();
+		// printValues();
 
 //		double result = myRandom(-1, 1);
 		double result = 0;
 
 //		result += BLACK_WEIGHT_DIFF_PAWNS * (((double) this.countB / 16) - ((double) this.countW / 9));
 
-		result += BLACK_WEIGHT_COUNT_BLACK_PAWNS * ((double) this.countB / 16);
+		result -= BLACK_WEIGHT_COUNT_BLACK_PAWNS * (16 - this.countB);
 
-	//	result += BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double) this.whitePawnsOverhanged / this.countW);
+		result += BLACK_WEIGHT_COUNT_WHITE_PAWNS * (9 - this.countW);
 
-	//	result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double) this.blackPawnsOverhanged / this.countB);
+		// result += BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double)
+		// this.whitePawnsOverhanged / this.countW);
 
-		result += BLACK_WEIGHT_KING_OVERHANGED * ((double) this.kingOverhangedB);
+		// result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double)
+		// this.blackPawnsOverhanged / this.countB);
 
-		result -= BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double) (this.countW) / 9);
+		result += BLACK_WEIGHT_KING_OVERHANGED * (this.kingOverhangedB);
 
-		result -= BLACK_WEIGHT_FREE_WAY_KING * ((double) this.kingFreeWay);
+		result -= BLACK_WEIGHT_FREE_WAY_KING * (this.kingFreeWay);
 
 		result -= BLACK_WEIGHT_KING_ON_STAR * this.kingOnStar;
 
-		result += BLACK_WEIGHT_BLACKBARRIER * ((double) this.blackBarrierPawns / 8);
+		result += BLACK_WEIGHT_BLACKBARRIER * (this.blackBarrierPawns);
 
-		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ1 / this.countB) * this.kingInQ1;
+		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ1) * this.kingInQ1;
 
-		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ2 / this.countB) * this.kingInQ2;
+		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ2) * this.kingInQ2;
 
-		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ3 / this.countB) * this.kingInQ3;
+		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ3) * this.kingInQ3;
 
-		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ4 / this.countB) * this.kingInQ4;
+		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ4) * this.kingInQ4;
 
 		return result;
 	}
@@ -448,27 +450,39 @@ public class BlackHeuristic implements Heuristic {
 
 					// ho una nera sotto, sopra libero e controllo sopra-sinistra-destra
 					if (i + 1 < state.getBoard().length - 1
-							&& state.getPawn(i + 1, j).equalsPawn(State.Pawn.BLACK.toString()) && i>0 && state.getPawn(i-1, j).equalsPawn(State.Pawn.EMPTY.toString())) {
+							&& state.getPawn(i + 1, j).equalsPawn(State.Pawn.BLACK.toString()) && i > 0
+							&& state.getPawn(i - 1, j).equalsPawn(State.Pawn.EMPTY.toString())) {
 						boolean minacciato = false;
 						for (int itemp = i - 1; itemp >= 0 && !minacciato; itemp--) {
 							if (state.getPawn(itemp, j).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
 							if (state.getPawn(itemp, j).equalsPawn(State.Pawn.THRONE.toString())
-									|| citadels.contains(state.getBox(itemp, j)) || state.getPawn(itemp, j).equalsPawn(State.Pawn.WHITE.toString()))
+									|| citadels.contains(state.getBox(itemp, j))
+									|| state.getPawn(itemp, j).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
+						if (minacciato) {
+							this.kingOverhangedB++;
+						}
+						minacciato = false;
 						for (int jtemp = j - 1; jtemp >= 0 && !minacciato; jtemp--) {
 							if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
 							if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.THRONE.toString())
-									|| citadels.contains(state.getBox(i - 1, jtemp))|| state.getPawn(i-1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
+									|| citadels.contains(state.getBox(i - 1, jtemp))
+									|| state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
-						for (int jtemp = j + 1; jtemp < state.getBoard().length - 1 && !minacciato; jtemp++) {
+						if (minacciato) {
+							this.kingOverhangedB++;
+						}
+						minacciato = false;
+						for (int jtemp = j + 1; jtemp < state.getBoard().length && !minacciato; jtemp++) {
 							if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
 							if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.THRONE.toString())
-									|| citadels.contains(state.getBox(i - 1, jtemp))|| state.getPawn(i-1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
+									|| citadels.contains(state.getBox(i - 1, jtemp))
+									|| state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
 						if (minacciato) {
@@ -477,27 +491,40 @@ public class BlackHeuristic implements Heuristic {
 					}
 
 					// ho una nera sopra, libero sotto e controllo sotto-destra-sinistra
-					if (i - 1 >= 0 && state.getPawn(i - 1, j).equalsPawn(State.Pawn.BLACK.toString())&& i<state.getBoard().length -1 && state.getPawn(i+1, j).equalsPawn(State.Pawn.EMPTY.toString())) {
+					if (i - 1 >= 0 && state.getPawn(i - 1, j).equalsPawn(State.Pawn.BLACK.toString())
+							&& i < state.getBoard().length - 1
+							&& state.getPawn(i + 1, j).equalsPawn(State.Pawn.EMPTY.toString())) {
 						boolean minacciato = false;
-						for (int itemp = i + 1; itemp < state.getBoard().length - 1 && !minacciato; itemp++) {
+						for (int itemp = i + 1; itemp < state.getBoard().length && !minacciato; itemp++) {
 							if (state.getPawn(itemp, j).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
 							if (state.getPawn(itemp, j).equalsPawn(State.Pawn.THRONE.toString())
-									|| citadels.contains(state.getBox(itemp, j))|| state.getPawn(itemp, j).equalsPawn(State.Pawn.WHITE.toString()))
+									|| citadels.contains(state.getBox(itemp, j))
+									|| state.getPawn(itemp, j).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
+						if (minacciato) {
+							this.kingOverhangedB++;
+						}
+						minacciato = false;
 						for (int jtemp = j - 1; jtemp >= 0 && !minacciato; jtemp--) {
 							if (state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
 							if (state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.THRONE.toString())
-									|| citadels.contains(state.getBox(i + 1, jtemp))|| state.getPawn(i+1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
+									|| citadels.contains(state.getBox(i + 1, jtemp))
+									|| state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
-						for (int jtemp = j + 1; jtemp < state.getBoard().length - 1 && !minacciato; jtemp++) {
+						if (minacciato) {
+							this.kingOverhangedB++;
+						}
+						minacciato = false;
+						for (int jtemp = j + 1; jtemp < state.getBoard().length && !minacciato; jtemp++) {
 							if (state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
 							if (state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.THRONE.toString())
-									|| citadels.contains(state.getBox(i + 1, jtemp))|| state.getPawn(i+1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
+									|| citadels.contains(state.getBox(i + 1, jtemp))
+									|| state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
 						if (minacciato) {
@@ -507,27 +534,39 @@ public class BlackHeuristic implements Heuristic {
 
 					// ho una nera a destra, libero a sinistra e controllo a sinistra-sotto-sopra
 					if (j + 1 < state.getBoard().length - 1
-							&& state.getPawn(i, j + 1).equalsPawn(State.Pawn.BLACK.toString())&& j>0 && state.getPawn(i, j-1).equalsPawn(State.Pawn.EMPTY.toString())) {
+							&& state.getPawn(i, j + 1).equalsPawn(State.Pawn.BLACK.toString()) && j > 0
+							&& state.getPawn(i, j - 1).equalsPawn(State.Pawn.EMPTY.toString())) {
 						boolean minacciato = false;
 						for (int jtemp = j - 1; jtemp >= 0 && !minacciato; jtemp--) {
 							if (state.getPawn(i, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
 							if (state.getPawn(i, jtemp).equalsPawn(State.Pawn.THRONE.toString())
-									|| citadels.contains(state.getBox(i, jtemp))|| state.getPawn(i, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
+									|| citadels.contains(state.getBox(i, jtemp))
+									|| state.getPawn(i, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
+						if (minacciato) {
+							this.kingOverhangedB++;
+						}
+						minacciato = false;
 						for (int itemp = i - 1; itemp >= 0 && !minacciato; itemp--) {
 							if (state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
 							if (state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.THRONE.toString())
-									|| citadels.contains(state.getBox(itemp, j - 1))|| state.getPawn(itemp, j-1).equalsPawn(State.Pawn.WHITE.toString()))
+									|| citadels.contains(state.getBox(itemp, j - 1))
+									|| state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
-						for (int itemp = i + 1; itemp < state.getBoard().length - 1 && !minacciato; itemp++) {
+						if (minacciato) {
+							this.kingOverhangedB++;
+						}
+						minacciato = false;
+						for (int itemp = i + 1; itemp < state.getBoard().length && !minacciato; itemp++) {
 							if (state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
 							if (state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.THRONE.toString())
-									|| citadels.contains(state.getBox(itemp, j - 1))|| state.getPawn(itemp, j-1).equalsPawn(State.Pawn.WHITE.toString()))
+									|| citadels.contains(state.getBox(itemp, j - 1))
+									|| state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
 						if (minacciato) {
@@ -535,27 +574,40 @@ public class BlackHeuristic implements Heuristic {
 						}
 					}
 					// ho una nera a sinistra, libero a destra e controllo a destra-sopra-sotto
-					if (j - 1 >= 0 && state.getPawn(i, j - 1).equalsPawn(State.Pawn.BLACK.toString())&& j<state.getBoard().length-1 && state.getPawn(i, j+1).equalsPawn(State.Pawn.EMPTY.toString())) {
+					if (j - 1 >= 0 && state.getPawn(i, j - 1).equalsPawn(State.Pawn.BLACK.toString())
+							&& j < state.getBoard().length - 1
+							&& state.getPawn(i, j + 1).equalsPawn(State.Pawn.EMPTY.toString())) {
 						boolean minacciato = false;
-						for (int jtemp = j + 1; jtemp < state.getBoard().length - 1 && !minacciato; jtemp++) {
+						for (int jtemp = j + 1; jtemp < state.getBoard().length && !minacciato; jtemp++) {
 							if (state.getPawn(i, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
 							if (state.getPawn(i, jtemp).equalsPawn(State.Pawn.THRONE.toString())
-									|| citadels.contains(state.getBox(i, jtemp))|| state.getPawn(i, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
+									|| citadels.contains(state.getBox(i, jtemp))
+									|| state.getPawn(i, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
+						if (minacciato) {
+							this.kingOverhangedB++;
+						}
+						minacciato = false;
 						for (int itemp = i - 1; itemp >= 0 && !minacciato; itemp--) {
 							if (state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
 							if (state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.THRONE.toString())
-									|| citadels.contains(state.getBox(itemp, j + 1))|| state.getPawn(itemp, j+1).equalsPawn(State.Pawn.WHITE.toString()))
+									|| citadels.contains(state.getBox(itemp, j + 1))
+									|| state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
-						for (int itemp = i + 1; itemp < state.getBoard().length - 1 && !minacciato; itemp++) {
+						if (minacciato) {
+							this.kingOverhangedB++;
+						}
+						minacciato = false;
+						for (int itemp = i + 1; itemp < state.getBoard().length && !minacciato; itemp++) {
 							if (state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
 							if (state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.THRONE.toString())
-									|| citadels.contains(state.getBox(itemp, j + 1))|| state.getPawn(itemp, j+1).equalsPawn(State.Pawn.WHITE.toString()))
+									|| citadels.contains(state.getBox(itemp, j + 1))
+									|| state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
 						if (minacciato) {
