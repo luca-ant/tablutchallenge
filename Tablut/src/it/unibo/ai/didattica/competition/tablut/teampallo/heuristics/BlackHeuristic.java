@@ -7,7 +7,7 @@ import java.util.Random;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 
 public class BlackHeuristic implements Heuristic {
-	private static double BLACK_WEIGHT_DIFF_PAWNS = 0.5;
+	
 	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 5.0;
 	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 3.5;
 	private static double BLACK_WEIGHT_FREE_WAY_KING = 10.0;
@@ -82,20 +82,13 @@ public class BlackHeuristic implements Heuristic {
 
 		// printValues();
 
-//		double result = myRandom(-1, 1);
 		double result = 0;
 
-//		result += BLACK_WEIGHT_DIFF_PAWNS * (((double) this.countB / 16) - ((double) this.countW / 9));
+//		result -= BLACK_WEIGHT_COUNT_BLACK_PAWNS * (16 - this.countB);
+		result -= BLACK_WEIGHT_COUNT_BLACK_PAWNS * ((double) (16 - this.countB) / 16);
 
-		result -= BLACK_WEIGHT_COUNT_BLACK_PAWNS * (16 - this.countB);
-
-		result += BLACK_WEIGHT_COUNT_WHITE_PAWNS * (9 - this.countW);
-
-		// result += BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double)
-		// this.whitePawnsOverhanged / this.countW);
-
-		// result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double)
-		// this.blackPawnsOverhanged / this.countB);
+//		result += BLACK_WEIGHT_COUNT_WHITE_PAWNS * (9 - this.countW);
+		result += BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double) 9 - this.countW / 9);
 
 		result += BLACK_WEIGHT_KING_OVERHANGED * (this.kingOverhangedB);
 
@@ -103,15 +96,18 @@ public class BlackHeuristic implements Heuristic {
 
 		result -= BLACK_WEIGHT_KING_ON_STAR * this.kingOnStar;
 
-		result += BLACK_WEIGHT_BLACKBARRIER * (this.blackBarrierPawns);
+//		result += BLACK_WEIGHT_BLACKBARRIER * (this.blackBarrierPawns);	
+		result += BLACK_WEIGHT_BLACKBARRIER * ((double) this.blackBarrierPawns / 8);
 
-		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ1) * this.kingInQ1;
+//		result += BLACK_WEIGHT_Q * (this.blackPawnsQ1) * this.kingInQ1;
+//		result += BLACK_WEIGHT_Q * (this.blackPawnsQ2) * this.kingInQ2;
+//		result += BLACK_WEIGHT_Q * (this.blackPawnsQ3) * this.kingInQ3;
+//		result += BLACK_WEIGHT_Q * (this.blackPawnsQ4) * this.kingInQ4;
 
-		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ2) * this.kingInQ2;
-
-		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ3) * this.kingInQ3;
-
-		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ4) * this.kingInQ4;
+		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ1 / this.countB) * this.kingInQ1;
+		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ2 / this.countB) * this.kingInQ2;
+		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ3 / this.countB) * this.kingInQ3;
+		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ4 / this.countB) * this.kingInQ4;
 
 		return result;
 	}
