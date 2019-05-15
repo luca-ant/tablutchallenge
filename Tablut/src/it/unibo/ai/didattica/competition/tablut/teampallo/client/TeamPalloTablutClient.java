@@ -111,7 +111,7 @@ public class TeamPalloTablutClient extends TablutClient {
 		client.run();
 	}
 
-	private static void printName() {
+	private synchronized static void printName() {
 		System.out.println();
 		System.out.println(" ████████╗███████╗ █████╗ ███╗   ███╗      ██████╗  █████╗ ██╗     ██╗      ██████╗");
 		System.out.println(" ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║      ██╔══██╗██╔══██╗██║     ██║     ██╔═══██╗");

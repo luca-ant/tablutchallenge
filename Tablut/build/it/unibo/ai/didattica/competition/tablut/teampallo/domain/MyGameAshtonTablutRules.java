@@ -2,6 +2,8 @@ package it.unibo.ai.didattica.competition.tablut.teampallo.domain;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
@@ -16,6 +18,11 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
+import it.unibo.ai.didattica.competition.tablut.teampallo.algorithms.Node;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.BlackHeuristic2;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.WhiteHeuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 
 public class MyGameAshtonTablutRules implements MyRules {
 
@@ -1057,6 +1064,8 @@ public class MyGameAshtonTablutRules implements MyRules {
 //		return state;
 //	}
 
+	
+	/*
 	public List<Action> getNextMovesFromState(State state) {
 
 		List<Action> possibleMoves = new ArrayList<Action>();
@@ -1189,6 +1198,159 @@ public class MyGameAshtonTablutRules implements MyRules {
 
 			}
 		}
+		return possibleMoves;
+	}
+*/
+	public List<Action> getNextMovesFromState(State state) {
+		Heuristic heuristic = null;
+		if (GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
+			heuristic = new BlackHeuristic2();
+		} else if (GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
+			heuristic = new WhiteHeuristic();
+		}
+
+		List<Node> nextNodes = new ArrayList<Node>();
+		List<Action> possibleMoves = new ArrayList<Action>();
+
+		if (state.getTurn().equalsTurn(State.Turn.WHITE.toString())) {
+			List<int[]> pawns = new ArrayList<int[]>();
+
+			int[] buf;
+			for (int i = 0; i < state.getBoard().length; i++) {
+				for (int j = 0; j < state.getBoard().length; j++) {
+					if (state.getPawn(i, j).equalsPawn(State.Pawn.WHITE.toString())
+							|| state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
+						buf = new int[2];
+						buf[0] = i;
+						buf[1] = j;
+						pawns.add(buf);
+
+					}
+				}
+			}
+
+			String from = "";
+			String to = "";
+			int[] p;
+
+			for (int i = 0; i < pawns.size(); i++) {
+				p = pawns.get(i);
+
+				for (int j = 0; j < state.getBoard().length; j++) {
+
+					int[] orr = new int[2];
+					int[] ver = new int[2];
+
+					orr[0] = p[0];
+					orr[1] = j;
+
+					ver[0] = j;
+					ver[1] = p[1];
+
+					from = state.getBox(p[0], p[1]);
+
+					to = state.getBox(orr[0], orr[1]);
+					try {
+						Action a = new Action(from, to, state.getTurn());
+						this.checkMove(state, a);
+						State nextState = GameManager.getInstance().getRules().movePawn(state.clone(), a);
+						nextNodes.add(new Node(nextState, heuristic.heuristic(nextState), a));
+
+					} catch (Exception e1) {
+
+					}
+
+					from = state.getBox(p[0], p[1]);
+
+					to = state.getBox(ver[0], ver[1]);
+					try {
+						Action a = new Action(from, to, state.getTurn());
+						this.checkMove(state, a);
+
+						State nextState = GameManager.getInstance().getRules().movePawn(state.clone(), a);
+						nextNodes.add(new Node(nextState, heuristic.heuristic(nextState), a));
+
+					} catch (Exception e1) {
+
+					}
+
+				}
+
+			}
+
+		} else if (state.getTurn().equalsTurn(State.Turn.BLACK.toString())) {
+
+			List<int[]> pawns = new ArrayList<int[]>();
+
+			int[] buf;
+			for (int i = 0; i < state.getBoard().length; i++) {
+				for (int j = 0; j < state.getBoard().length; j++) {
+					if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
+						buf = new int[2];
+						buf[0] = i;
+						buf[1] = j;
+						pawns.add(buf);
+
+					}
+				}
+			}
+
+			String from = "";
+			String to = "";
+			int[] p;
+
+			for (int i = 0; i < pawns.size(); i++) {
+				p = pawns.get(i);
+
+				for (int j = 0; j < state.getBoard().length; j++) {
+
+					int[] orr = new int[2];
+					int[] ver = new int[2];
+
+					orr[0] = p[0];
+					orr[1] = j;
+
+					ver[0] = j;
+					ver[1] = p[1];
+
+					from = state.getBox(p[0], p[1]);
+
+					to = state.getBox(orr[0], orr[1]);
+					try {
+						Action a = new Action(from, to, state.getTurn());
+						this.checkMove(state, a);
+
+						State nextState = GameManager.getInstance().getRules().movePawn(state.clone(), a);
+						nextNodes.add(new Node(nextState, heuristic.heuristic(nextState), a));
+					} catch (Exception e1) {
+
+					}
+
+					from = state.getBox(p[0], p[1]);
+
+					to = state.getBox(ver[0], ver[1]);
+					try {
+						Action a = new Action(from, to, state.getTurn());
+						this.checkMove(state, a);
+
+						State nextState = GameManager.getInstance().getRules().movePawn(state.clone(), a);
+						nextNodes.add(new Node(nextState, heuristic.heuristic(nextState), a));
+
+					} catch (Exception e1) {
+
+					}
+
+				}
+
+			}
+		}
+
+		Collections.sort(nextNodes, (a, b) -> a.getValue() > b.getValue() ? -1 : a.getValue() == b.getValue() ? 0 : 1);
+
+		for (int i = 0; i < nextNodes.size(); ++i) {
+			possibleMoves.add(nextNodes.get(i).getMove());
+		}
+
 		return possibleMoves;
 	}
 

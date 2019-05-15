@@ -17,8 +17,10 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.AdvancedHeuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.BlackHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.WhiteHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
 
@@ -32,8 +34,12 @@ public class MinMaxConcurrent extends Thread {
 	public MinMaxConcurrent(List<Node> nodes, int d, long endTime) {
 
 		this.nodes = nodes;
-		//	this.heuristic = new MyHeuristic();
-		this.heuristic = new AdvancedHeuristic();
+		
+		if (GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
+			this.heuristic = new BlackHeuristic();
+		} else if (GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
+			this.heuristic = new WhiteHeuristic();
+		}
 		this.endTime = endTime;
 		this.depthToReach = d;
 	}

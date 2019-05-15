@@ -6,17 +6,28 @@ import java.util.Random;
 
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 
-public class BlackHeuristic implements Heuristic {
-	private static double BLACK_WEIGHT_DIFF_PAWNS = 0.5;
-	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 4;
-	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2.5;
-	private static double BLACK_WEIGHT_FREE_WAY_KING = 5;
-	private static double BLACK_WEIGHT_KING_OVERHANGED = 1.5;
-	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
-	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 2.5;
-	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 2;
-	private static double BLACK_WEIGHT_BLACKBARRIER = 5;
-	private static double BLACK_WEIGHT_Q = 3;
+public class BlackHeuristic2 implements Heuristic {
+//	private static double BLACK_WEIGHT_DIFF_PAWNS = 0.5;
+//	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 4;
+//	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2.5;
+//	private static double BLACK_WEIGHT_FREE_WAY_KING = 5;
+//	private static double BLACK_WEIGHT_KING_OVERHANGED = 1.5;
+//	private static double BLACK_WEIGHT_KING_ON_STAR = 10;
+//	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 2.5;
+//	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 2;
+//	private static double BLACK_WEIGHT_BLACKBARRIER = 5;
+//	private static double BLACK_WEIGHT_Q = 3;
+
+	private final static double BLACK_WEIGHT_DIFF_PAWNS = 7;
+	private final static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 3;
+	private final static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 2.5;
+	private final static double BLACK_WEIGHT_FREE_WAY_KING = 10;
+	private final static double BLACK_WEIGHT_KING_OVERHANGED = 1.5;
+	private final static double BLACK_WEIGHT_KING_ON_STAR = 10;
+	private final static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 3;
+	private final static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 4;
+	private final static double BLACK_WEIGHT_BLACKBARRIER = 5;
+	private final static double BLACK_WEIGHT_Q = 7;
 
 	private int countB;
 	private int countW;
@@ -48,7 +59,7 @@ public class BlackHeuristic implements Heuristic {
 	private List<String> nearsThrone;
 	private String throne;
 
-	public BlackHeuristic() {
+	public BlackHeuristic2() {
 
 		this.r = new Random(System.currentTimeMillis());
 
@@ -70,10 +81,10 @@ public class BlackHeuristic implements Heuristic {
 	@Override
 	public double heuristic(State state) {
 		if (state.getTurn().equalsTurn("BW")) {
-			return 100;
+			return 1000;
 		}
 		if (state.getTurn().equalsTurn("WW")) {
-			return -100;
+			return -1000;
 		}
 		this.resetValues();
 		this.extractValues(state);
@@ -85,29 +96,29 @@ public class BlackHeuristic implements Heuristic {
 
 //		result += BLACK_WEIGHT_DIFF_PAWNS * (((double) this.countB / 16) - ((double) this.countW / 9));
 
-		result += BLACK_WEIGHT_COUNT_BLACK_PAWNS * ((double) this.countB / 16);
+		result -= BLACK_WEIGHT_COUNT_BLACK_PAWNS * ((double) (16 - this.countB));
 
-		result += BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double) this.whitePawnsOverhanged / this.countW);
+		result += BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED * ((double) this.whitePawnsOverhanged);
 
-		result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double) this.blackPawnsOverhanged / this.countB);
+		result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double) this.blackPawnsOverhanged);
 
 		result += BLACK_WEIGHT_KING_OVERHANGED * ((double) this.kingOverhangedB);
 
-		result += BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double) (9 - this.countW) / 9);
+		result += BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double) (9 - this.countW));
 
 		result -= BLACK_WEIGHT_FREE_WAY_KING * ((double) this.kingFreeWay);
 
 		result -= BLACK_WEIGHT_KING_ON_STAR * this.kingOnStar;
 
-		result += BLACK_WEIGHT_BLACKBARRIER * ((double) this.blackBarrierPawns / 8);
+		result += BLACK_WEIGHT_BLACKBARRIER * ((double) this.blackBarrierPawns);
 
-		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ1 / this.countB) * this.kingInQ1;
+		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ1) * this.kingInQ1;
 
-		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ2 / this.countB) * this.kingInQ2;
+		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ2) * this.kingInQ2;
 
-		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ3 / this.countB) * this.kingInQ3;
+		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ3) * this.kingInQ3;
 
-		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ4 / this.countB) * this.kingInQ4;
+		result += BLACK_WEIGHT_Q * ((double) this.blackPawnsQ4) * this.kingInQ4;
 
 		return result;
 	}
@@ -166,7 +177,7 @@ public class BlackHeuristic implements Heuristic {
 						this.blackPawnsQ2++;
 					}
 					// conto le pedine nere in Q3
-					if ((i > state.getBoard().length / 2 && i < state.getBoard().length)
+					if ((i >= state.getBoard().length / 2 && i < state.getBoard().length)
 							&& (j >= 0 && j < state.getBoard().length / 2)) {
 						this.blackPawnsQ3++;
 					}
