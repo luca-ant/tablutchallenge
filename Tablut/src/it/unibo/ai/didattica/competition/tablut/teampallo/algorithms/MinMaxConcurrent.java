@@ -20,7 +20,6 @@ import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.AdvancedHeu
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.BlackHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.DoubleBlackHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
-import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.WhiteHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
@@ -90,11 +89,11 @@ public class MinMaxConcurrent extends Thread {
 			it.unibo.ai.didattica.competition.tablut.domain.State nextState = GameManager.getInstance().getRules()
 					.movePawn(node.getState().clone(), a);
 
-			if (GameManager.getInstance().contains(nextState)) {
-				System.out.println("Salto lo stato");
-
-				continue;
-			}
+//			if (GameManager.getInstance().contains(nextState)) {
+//				System.out.println("Salto lo stato");
+//
+//				continue;
+//			}
 
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
@@ -140,12 +139,12 @@ public class MinMaxConcurrent extends Thread {
 			it.unibo.ai.didattica.competition.tablut.domain.State nextState = GameManager.getInstance().getRules()
 					.movePawn(node.getState().clone(), a);
 
-			if (GameManager.getInstance().contains(nextState)) {
-			
-
-				System.out.println("Salto lo stato");
-				continue;
-			}
+//			if (GameManager.getInstance().contains(nextState)) {
+//			
+//
+//				System.out.println("Salto lo stato");
+//				continue;
+//			}
 
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 

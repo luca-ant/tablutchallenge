@@ -24,9 +24,8 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyRules;
-import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.AdvancedHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
-import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.RandomHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
 
@@ -43,7 +42,7 @@ public class AlphaBetaIterativeWithMemory implements IA {
 	public AlphaBetaIterativeWithMemory() {
 
 		this.rootChildren = new ArrayList<>();
-		this.heuristic = new MyHeuristic();
+		this.heuristic = new AdvancedHeuristic();
 		this.transpositionTable = new Hashtable<Integer, Node>();
 		this.bestMove = null;
 		this.ww = false;

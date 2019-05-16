@@ -58,8 +58,7 @@ public class WhiteHeuristic implements Heuristic {
 	private String player;
 	private List<String> blackBarrier;
 
-	public WhiteHeuristic(String player) {
-		this.player = player;
+	public WhiteHeuristic() {
 		this.pawnsB = 16;
 		this.pawnsW = 9;
 		this.r = new Random(System.currentTimeMillis());
@@ -88,7 +87,7 @@ public class WhiteHeuristic implements Heuristic {
 		this.extractValues(state);
 		// this.calculatePhasis();
 
-		printValues();
+	//	printValues();
 
 		// double result = myRandom(-1, 1);
 		double result = 0;

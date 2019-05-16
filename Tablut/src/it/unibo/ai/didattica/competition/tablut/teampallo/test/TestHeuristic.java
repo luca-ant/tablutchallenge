@@ -6,7 +6,6 @@ import it.unibo.ai.didattica.competition.tablut.teampallo.gui.GuiCli;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.AdvancedHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.BlackHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
-import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.WhiteHeuristic;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Pawn;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;

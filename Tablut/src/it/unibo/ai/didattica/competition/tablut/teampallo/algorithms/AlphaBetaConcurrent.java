@@ -19,7 +19,6 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyRules;
-import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
@@ -53,6 +52,12 @@ public class AlphaBetaConcurrent implements IA {
 
 			State nextState = GameManager.getInstance().getRules().movePawn(state.clone(), a);
 
+			if (GameManager.getInstance().contains(nextState)) {
+				System.out.println("Salto lo stato");
+
+				continue;
+			}
+
 			Node n = new Node(nextState, 0, a);
 
 			if (n.getState().getTurn().equalsTurn(State.Turn.WHITEWIN.toString())
@@ -70,6 +75,10 @@ public class AlphaBetaConcurrent implements IA {
 
 		}
 
+		if (rootChildren.isEmpty()) {
+			return actionFromRoot.get(0);
+		}
+		
 		this.bestMove = null;
 
 		List<MinMaxConcurrent> threads = new ArrayList<MinMaxConcurrent>();
@@ -91,7 +100,8 @@ public class AlphaBetaConcurrent implements IA {
 				if (i == NUM_THREAD - 1) {
 					to = this.rootChildren.size();
 				}
-	//			System.out.println("dim rootChildren = " + this.rootChildren.size() + " size = " + size + " Thread da "				+ from + " to " + to);
+				// System.out.println("dim rootChildren = " + this.rootChildren.size() + " size
+				// = " + size + " Thread da " + from + " to " + to);
 
 				MinMaxConcurrent t = new MinMaxConcurrent(this.rootChildren.subList(from, to), d, this.endTime);
 				threads.add(t);
@@ -133,7 +143,7 @@ public class AlphaBetaConcurrent implements IA {
 
 			Node bestNextNode = rootChildren.stream().max(Comparator.comparing(n -> n.getValue())).get();
 
-			System.out.println("Temp move found: " + bestNextNode.getMove() + " H: "+ bestNextNode.getValue() );
+			System.out.println("Temp move found: " + bestNextNode.getMove() + " H: " + bestNextNode.getValue());
 
 			this.bestMove = bestNextNode.getMove();
 

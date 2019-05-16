@@ -20,9 +20,8 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyGameAshtonTablutRules;
 import it.unibo.ai.didattica.competition.tablut.teampallo.domain.MyRules;
-import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.AdvancedHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
-import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.RandomHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.GameManager;
 import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
 
@@ -37,7 +36,7 @@ public class MinMaxAlphaBeta implements IA {
 	public MinMaxAlphaBeta() {
 
 		this.rootChildren = new ArrayList<>();
-		this.heuristic = new RandomHeuristic();
+		this.heuristic = new AdvancedHeuristic();
 
 	}
 
