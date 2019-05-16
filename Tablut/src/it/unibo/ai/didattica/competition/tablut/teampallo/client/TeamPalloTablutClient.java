@@ -80,7 +80,7 @@ public class TeamPalloTablutClient extends TablutClient {
 		int gametype = 4;
 		String role = "";
 		String name = "TEAMPALLO";
-		int timeout = 55;
+		int timeout = 30;
 		int depth = 10;
 
 		// TODO: change the behavior?

@@ -7,15 +7,15 @@ import java.util.Random;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 
 public class BlackHeuristic implements Heuristic {
-	
-	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 5.0;
-	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 3.5;
+
+	private static double BLACK_WEIGHT_COUNT_WHITE_PAWNS = 3.0;
+	private static double BLACK_WEIGHT_COUNT_BLACK_PAWNS = 5.0;
 	private static double BLACK_WEIGHT_FREE_WAY_KING = 10.0;
 	private static double BLACK_WEIGHT_KING_OVERHANGED = 1.5;
 	private static double BLACK_WEIGHT_KING_ON_STAR = 10.0;
-	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 2.5;
+	private static double BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED = 5;
 	private static double BLACK_WEIGHT_WHITE_PAWNS_OVERHANGED = 3.0;
-	private static double BLACK_WEIGHT_BLACKBARRIER = 4.0;
+	private static double BLACK_WEIGHT_BLACKBARRIER = 18;
 	private static double BLACK_WEIGHT_Q = 5.0;
 
 	private int countB;
@@ -90,6 +90,9 @@ public class BlackHeuristic implements Heuristic {
 //		result += BLACK_WEIGHT_COUNT_WHITE_PAWNS * (9 - this.countW);
 		result += BLACK_WEIGHT_COUNT_WHITE_PAWNS * ((double) 9 - this.countW / 9);
 
+		result -= BLACK_WEIGHT_BLACK_PAWNS_OVERHANGED * ((double) this.blackPawnsOverhanged/ this.countB);
+		
+		
 		result += BLACK_WEIGHT_KING_OVERHANGED * (this.kingOverhangedB);
 
 		result -= BLACK_WEIGHT_FREE_WAY_KING * (this.kingFreeWay);
@@ -457,9 +460,7 @@ public class BlackHeuristic implements Heuristic {
 									|| state.getPawn(itemp, j).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
-						if (minacciato) {
-							this.kingOverhangedB++;
-						}
+
 						minacciato = false;
 						for (int jtemp = j - 1; jtemp >= 0 && !minacciato; jtemp--) {
 							if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
@@ -469,9 +470,7 @@ public class BlackHeuristic implements Heuristic {
 									|| state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
-						if (minacciato) {
-							this.kingOverhangedB++;
-						}
+
 						minacciato = false;
 						for (int jtemp = j + 1; jtemp < state.getBoard().length && !minacciato; jtemp++) {
 							if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
@@ -499,10 +498,7 @@ public class BlackHeuristic implements Heuristic {
 									|| state.getPawn(itemp, j).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
-						if (minacciato) {
-							this.kingOverhangedB++;
-						}
-						minacciato = false;
+
 						for (int jtemp = j - 1; jtemp >= 0 && !minacciato; jtemp--) {
 							if (state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
@@ -511,10 +507,7 @@ public class BlackHeuristic implements Heuristic {
 									|| state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
-						if (minacciato) {
-							this.kingOverhangedB++;
-						}
-						minacciato = false;
+
 						for (int jtemp = j + 1; jtemp < state.getBoard().length && !minacciato; jtemp++) {
 							if (state.getPawn(i + 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
@@ -541,10 +534,7 @@ public class BlackHeuristic implements Heuristic {
 									|| state.getPawn(i, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
-						if (minacciato) {
-							this.kingOverhangedB++;
-						}
-						minacciato = false;
+
 						for (int itemp = i - 1; itemp >= 0 && !minacciato; itemp--) {
 							if (state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
@@ -553,10 +543,7 @@ public class BlackHeuristic implements Heuristic {
 									|| state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
-						if (minacciato) {
-							this.kingOverhangedB++;
-						}
-						minacciato = false;
+
 						for (int itemp = i + 1; itemp < state.getBoard().length && !minacciato; itemp++) {
 							if (state.getPawn(itemp, j - 1).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
@@ -582,10 +569,7 @@ public class BlackHeuristic implements Heuristic {
 									|| state.getPawn(i, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
-						if (minacciato) {
-							this.kingOverhangedB++;
-						}
-						minacciato = false;
+
 						for (int itemp = i - 1; itemp >= 0 && !minacciato; itemp--) {
 							if (state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;
@@ -594,10 +578,7 @@ public class BlackHeuristic implements Heuristic {
 									|| state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.WHITE.toString()))
 								break;
 						}
-						if (minacciato) {
-							this.kingOverhangedB++;
-						}
-						minacciato = false;
+
 						for (int itemp = i + 1; itemp < state.getBoard().length && !minacciato; itemp++) {
 							if (state.getPawn(itemp, j + 1).equalsPawn(State.Pawn.BLACK.toString()))
 								minacciato = true;

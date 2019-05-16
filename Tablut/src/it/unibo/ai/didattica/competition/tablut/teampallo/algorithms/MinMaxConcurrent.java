@@ -18,6 +18,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.AdvancedHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.BlackHeuristic;
+import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.DoubleBlackHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.Heuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.MyHeuristic;
 import it.unibo.ai.didattica.competition.tablut.teampallo.heuristics.WhiteHeuristic;
@@ -34,9 +35,10 @@ public class MinMaxConcurrent extends Thread {
 	public MinMaxConcurrent(List<Node> nodes, int d, long endTime) {
 
 		this.nodes = nodes;
-		
+
 		if (GameManager.getInstance().getPlayer().equalsIgnoreCase("black")) {
-			this.heuristic = new BlackHeuristic();
+			// this.heuristic = new BlackHeuristic();
+			this.heuristic = new DoubleBlackHeuristic();
 		} else if (GameManager.getInstance().getPlayer().equalsIgnoreCase("white")) {
 			this.heuristic = new WhiteHeuristic();
 		}
@@ -87,13 +89,12 @@ public class MinMaxConcurrent extends Thread {
 
 			it.unibo.ai.didattica.competition.tablut.domain.State nextState = GameManager.getInstance().getRules()
 					.movePawn(node.getState().clone(), a);
-/*
-			if (GameManager.getInstance().contains(nextState.hashCode())) {
-				System.out.println("Salto lo stato");
-
-				continue;
-			}
-*/
+			/*
+			 * if (GameManager.getInstance().contains(nextState.hashCode())) {
+			 * System.out.println("Salto lo stato");
+			 * 
+			 * continue; }
+			 */
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();
@@ -137,12 +138,10 @@ public class MinMaxConcurrent extends Thread {
 		for (Action a : possibleMoves) {
 			it.unibo.ai.didattica.competition.tablut.domain.State nextState = GameManager.getInstance().getRules()
 					.movePawn(node.getState().clone(), a);
-/*
-			if (GameManager.getInstance().contains(nextState.hashCode())) {
-				System.out.println("Salto lo stato");
-				continue;
-			}
-*/
+			/*
+			 * if (GameManager.getInstance().contains(nextState.hashCode())) {
+			 * System.out.println("Salto lo stato"); continue; }
+			 */
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();
