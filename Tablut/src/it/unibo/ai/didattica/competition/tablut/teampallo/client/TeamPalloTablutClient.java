@@ -173,7 +173,7 @@ public class TeamPalloTablutClient extends TablutClient {
 			} catch (InterruptedException e) {
 			}
 
-			// GameManager.getInstance().addVisitedState(state);
+			GameManager.getInstance().addVisitedState(state);
 
 			if (this.getPlayer().equals(Turn.WHITE)) {
 				// � il mio turno quando sono il bianco

@@ -72,16 +72,16 @@ public class DoubleBlackHeuristic implements Heuristic {
 
 		this.resetValues();
 		this.extractValues(state);
-	/*
+
 		if (this.blackBarrierPawns <= 8) {
 			BLACK_WEIGHT_BLACKBARRIER = 18.0;
-			BLACK_WEIGHT_COUNT_WHITE_PAWNS = 1.0;
+			// BLACK_WEIGHT_COUNT_WHITE_PAWNS = 1.0;
 
 		} else {
-			BLACK_WEIGHT_BLACKBARRIER = 8.0;
-			BLACK_WEIGHT_COUNT_WHITE_PAWNS = 5.0;
+			BLACK_WEIGHT_BLACKBARRIER = 6.0;
+//			BLACK_WEIGHT_COUNT_WHITE_PAWNS = 5.0;
 		}
-*/
+
 		if (state.getTurn().equalsTurn("BW")) {
 			return 1000;
 		}
