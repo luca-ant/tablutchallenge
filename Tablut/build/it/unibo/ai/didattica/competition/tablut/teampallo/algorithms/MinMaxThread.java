@@ -145,7 +145,7 @@ public class MinMaxThread extends Thread {
 
 			it.unibo.ai.didattica.competition.tablut.domain.State nextState = GameManager.getInstance().getRules().movePawn(node.getState().clone(), a);
 
-			if (GameManager.getInstance().contains(nextState.hashCode())) {
+			if (GameManager.getInstance().contains(nextState)) {
 				System.out.println("Salto lo stato");
 
 				continue;
@@ -200,7 +200,7 @@ public class MinMaxThread extends Thread {
 		for (Action a : possibleMoves) {
 			it.unibo.ai.didattica.competition.tablut.domain.State nextState = GameManager.getInstance().getRules().movePawn(node.getState().clone(), a);
 
-			if (GameManager.getInstance().contains(nextState.hashCode())) {
+			if (GameManager.getInstance().contains(nextState)) {
 				System.out.println("Salto lo stato");
 				continue;
 			}

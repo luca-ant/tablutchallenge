@@ -23,7 +23,7 @@ public class GameManager {
 	private int timeout;
 	private int memoryLimit;
 	private int maxDepth;
-	private List<Integer> statiVisitati;
+	private List<State> statiVisitati;
 
 	private GameManager() {
 		this.statiVisitati = new ArrayList<>();
@@ -96,7 +96,7 @@ public class GameManager {
 	}
 
 	public void addVisitedState(State state) {
-		this.statiVisitati.add(state.hashCode());
+		this.statiVisitati.add(state.clone());
 
 		int num = 0;
 		for (int i = 0; i < 9; i++) {
@@ -113,8 +113,8 @@ public class GameManager {
 		}
 	}
 
-	public boolean contains(int hash) {
-		return this.statiVisitati.contains(hash);
+	public boolean contains(State s) {
+		return this.statiVisitati.contains(s);
 	}
 
 }

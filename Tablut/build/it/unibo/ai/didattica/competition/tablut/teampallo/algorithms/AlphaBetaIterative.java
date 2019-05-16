@@ -166,12 +166,13 @@ public class AlphaBetaIterative implements IA {
 		for (Action a : possibleMoves) {
 
 			State nextState = GameManager.getInstance().getRules().movePawn(node.getState().clone(), a);
-			/*
-			 * if (GameManager.getInstance().contains(nextState.hashCode())) {
-			 * System.out.println("Salto lo stato");
-			 * 
-			 * continue; }
-			 */
+
+			if (GameManager.getInstance().contains(nextState)) {
+				System.out.println("Salto lo stato");
+
+				continue;
+			}
+
 			Node n = new Node(nextState, Double.POSITIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();
@@ -220,10 +221,12 @@ public class AlphaBetaIterative implements IA {
 		Double v = Double.POSITIVE_INFINITY;
 		for (Action a : possibleMoves) {
 			State nextState = GameManager.getInstance().getRules().movePawn(node.getState().clone(), a);
-			/*
-			 * if (GameManager.getInstance().contains(nextState.hashCode())) {
-			 * System.out.println("Salto lo stato"); continue; }
-			 */
+
+			if (GameManager.getInstance().contains(nextState)) {
+				System.out.println("Salto lo stato");
+				continue;
+			}
+
 			Node n = new Node(nextState, Double.NEGATIVE_INFINITY, a);
 
 			StatsManager.getInstance().incrementExpandedNodes();
