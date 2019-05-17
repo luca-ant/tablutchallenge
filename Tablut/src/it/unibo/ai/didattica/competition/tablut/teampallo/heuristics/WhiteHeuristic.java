@@ -9,7 +9,7 @@ import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 public class WhiteHeuristic implements Heuristic {
 
-	private double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 6.0;
+	private double WHITE_WEIGHT_COUNT_WHITE_PAWNS = 4.0;
 	private double WHITE_WEIGHT_COUNT_BLACK_PAWNS = 3.0;
 	private double WHITE_WEIGHT_SINGLE_FREE_WAY_KING = 5.65; // 5
 	private double WHITE_WEIGHT_MULTIPLE_FREE_WAY_KING = 10.0;
@@ -19,6 +19,8 @@ public class WhiteHeuristic implements Heuristic {
 	private double WHITE_WEIGHT_KING_OVERHANGED = 18.0;
 	private double WHITE_WEIGHT_KING_FAVOURITE = 5.0; // 9
 	private double WHITE_WEIGHT_GUARDS = 14.0;
+	private double WHITE_WEIGHT_STRATEGY = 7.0;
+	private double WHITE_WEIGHT_KING_ON_THRONE = 2.5;
 
 	private int countB;
 	private int countW;
@@ -43,6 +45,12 @@ public class WhiteHeuristic implements Heuristic {
 	private int quadrante3;
 	private int quadrante4;
 	private int quadranteF;
+
+	private int quadrante1Blocked;
+	private int quadrante2Blocked;
+	private int quadrante3Blocked;
+	private int quadrante4Blocked;
+	private int quadranteFBlocked;
 
 	private int pawnsB;
 	private int pawnsW;
@@ -77,7 +85,6 @@ public class WhiteHeuristic implements Heuristic {
 		this.guardsPos = Arrays.asList("a1", "a2", "b1", "h1", "i1", "i2", "i8", "i9", "h9", "b9", "a9", "a8");
 
 		this.disPosL = Arrays.asList("2-0", "0-2", "0-6", "2-8", "6-8", "8-6", "8-2", "6-0");
-
 	}
 
 	@Override
@@ -85,9 +92,9 @@ public class WhiteHeuristic implements Heuristic {
 
 		this.resetValues();
 		this.extractValues(state);
-		// this.calculatePhasis();
+		this.calculatePhasis();
 
-	//	printValues();
+		// printValues();
 
 		// double result = myRandom(-1, 1);
 		double result = 0;
@@ -107,16 +114,16 @@ public class WhiteHeuristic implements Heuristic {
 		}
 
 		/*
-		 * result += WHITE_WEIGHT_COUNT_BLACK_PAWNS * 16/this.countB;
+		 * result += env.getWeight("WHITE_WEIGHT_COUNT_BLACK_PAWNS") * 16/this.countB;
 		 * 
-		 * result += WHITE_WEIGHT_COUNT_WHITE_PAWNS * this.countW / 9;
+		 * result += env.getWeight("WHITE_WEIGHT_COUNT_WHITE_PAWNS") * this.countW / 9;
 		 */
 
 		result -= WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED * this.whitePawnsOverhanged;
 
-		// result -= WHITE_WEIGHT_BLACK_NEAR_KING * this.blackNearKing;
+		// result -= env.getWeight("WHITE_WEIGHT_BLACK_NEAR_KING") * this.blackNearKing;
 
-		// result += WHITE_WEIGHT_WHITE_NEAR_KING * this.whiteNearKing;
+		// result += env.getWeight("WHITE_WEIGHT_WHITE_NEAR_KING") * this.whiteNearKing;
 
 		if (this.kingOverhanged > 0) {
 			result -= WHITE_WEIGHT_KING_OVERHANGED * this.kingOverhanged;
@@ -125,12 +132,12 @@ public class WhiteHeuristic implements Heuristic {
 				result += WHITE_WEIGHT_SINGLE_FREE_WAY_KING * this.kingFreeWay;
 			} else {
 				if (this.kingFreeWay > 1) {
-					result += WHITE_WEIGHT_MULTIPLE_FREE_WAY_KING * (this.kingFreeWay / 2);
+					result += WHITE_WEIGHT_MULTIPLE_FREE_WAY_KING * (this.kingFreeWay / 2.0);
 				}
 			}
 		}
 
-		// result -= WHITE_WEIGHT_KING_ON_THRONE * this.kingOnThrone;
+		result -= WHITE_WEIGHT_KING_ON_THRONE * this.kingOnThrone;
 
 		// result += env.getWeight("WHITE_WEIGHT_KING_NEAR_THRONE") *
 		// this.kingNearThrone;
@@ -146,10 +153,7 @@ public class WhiteHeuristic implements Heuristic {
 		// result -= env.getWeight("WHITE_WEIGHT_DIS_POS") * this.disPos * ( 1 +
 		// ((initial)?1:0)*3);
 
-		/*
-		 * if(this.strategy>0) result += env.getWeight("WHITE_WEIGHT_STRATEGY") * (1 +
-		 * (this.strategy-1)/8);
-		 */
+		result += WHITE_WEIGHT_STRATEGY * this.quadranteFBlocked / 4.0;
 
 		return result;
 	}
@@ -171,13 +175,18 @@ public class WhiteHeuristic implements Heuristic {
 		this.kingOnFavourite = 0;
 		this.guards = 0;
 		this.disPos = 0;
-		this.strategy = 0;
 
 		this.quadrante1 = 0;
 		this.quadrante2 = 0;
 		this.quadrante3 = 0;
 		this.quadrante4 = 0;
 		this.quadranteF = 0;
+
+		this.quadrante1Blocked = 0;
+		this.quadrante2Blocked = 0;
+		this.quadrante3Blocked = 0;
+		this.quadrante4Blocked = 0;
+		this.quadranteFBlocked = 0;
 
 	}
 
@@ -261,10 +270,65 @@ public class WhiteHeuristic implements Heuristic {
 			quadranteF = 4;
 		}
 
-		if (quadrante1 == quadrante2 || quadrante1 == quadrante3 || quadrante1 == quadrante4 || quadrante2 == quadrante3
-				|| quadrante2 == quadrante4 || quadrante3 == quadrante4) {
+		// RIVEDERE
+		if (quadrante1 == quadrante2 && quadrante1 == quadrante3 && quadrante1 == quadrante4) {
 			quadranteF = 0;
 		}
+
+		// calcolo strategia
+		int maggiore = -100;
+		List<String> temp = Arrays.asList("2-0", "3-1", "0-2", "1-3");
+		for (String s : temp) {
+			int row = Integer.parseInt(s.split("-")[0]);
+			int col = Integer.parseInt(s.split("-")[1]);
+
+			if (state.getPawn(row, col).equalsPawn(State.Pawn.WHITE.toString())) {
+				this.quadrante1Blocked++;
+			}
+		}
+		if (this.quadrante1Blocked > maggiore) {
+			maggiore = this.quadrante1Blocked;
+		}
+
+		temp = Arrays.asList("0-6", "1-5", "2-8", "3-7");
+		for (String s : temp) {
+			int row = Integer.parseInt(s.split("-")[0]);
+			int col = Integer.parseInt(s.split("-")[1]);
+
+			if (state.getPawn(row, col).equalsPawn(State.Pawn.WHITE.toString())) {
+				this.quadrante2Blocked++;
+			}
+		}
+		if (this.quadrante2Blocked > maggiore) {
+			maggiore = this.quadrante2Blocked;
+		}
+
+		temp = Arrays.asList("6-8", "5-7", "8-6", "7-5");
+		for (String s : temp) {
+			int row = Integer.parseInt(s.split("-")[0]);
+			int col = Integer.parseInt(s.split("-")[1]);
+
+			if (state.getPawn(row, col).equalsPawn(State.Pawn.WHITE.toString())) {
+				this.quadrante3Blocked++;
+			}
+		}
+		if (this.quadrante3Blocked > maggiore) {
+			maggiore = this.quadrante3Blocked;
+		}
+
+		temp = Arrays.asList("7-3", "8-2", "6-0", "5-1");
+		for (String s : temp) {
+			int row = Integer.parseInt(s.split("-")[0]);
+			int col = Integer.parseInt(s.split("-")[1]);
+
+			if (state.getPawn(row, col).equalsPawn(State.Pawn.WHITE.toString())) {
+				this.quadrante4Blocked++;
+			}
+		}
+		if (this.quadrante4Blocked > maggiore) {
+			maggiore = this.quadrante4Blocked;
+		}
+		this.quadranteFBlocked = maggiore;
 
 		for (int i = 0; i < state.getBoard().length; i++) {
 			for (int j = 0; j < state.getBoard().length; j++) {
@@ -715,41 +779,11 @@ public class WhiteHeuristic implements Heuristic {
 		}
 
 		// calcolo strategy
-//		for(String s : this.disPosL) {
-//			double value=0;
-//			int row=Integer.parseInt(s.split("-")[0]);
-//			int column=Integer.parseInt(s.split("-")[1]);
-//			
-//			if(state.getPawn(row, column).equalsPawn(State.Pawn.WHITE.toString())) {
-//				value+=1.0;
-//				
-//				//controllo la nera nell'accampamento sopra
-//				for(int i=row-4;i<9;i++) {
-//					if(state.getPawn(i, column-1).equalsPawn(State.Pawn.BLACK.toString())) {
-//						value-=1.25;
-//						break;
-//					}
-//				}
-//				
-//				//controllo se serve anche la bianca sopra o meno
-//				if(state.getPawn(row-1, column+2).equalsPawn(State.Pawn.BLACK.toString())
-//						&& state.getPawn(row-1, column).equalsPawn(State.Pawn.WHITE.toString())){
-//					value+=1.3;
-//				}
-//				
-//				for(int i=row-3;i<9;i++) {
-//					if(state.getPawn(i, column-1).equalsPawn(State.Pawn.KING.toString())) {
-//						value+=8.0;
-//						break;
-//					}
-//				}
-//				
-//				if(value>8) {
-//					this.strategy++;
-//				}
-//			}
-//		}
 
+	}
+
+	private void calculatePhasis() {
+		// this.initial=(this.guards>2)?true:false;
 	}
 
 	private void printValues() {
