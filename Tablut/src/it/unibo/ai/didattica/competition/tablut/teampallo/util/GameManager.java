@@ -23,6 +23,9 @@ public class GameManager {
 	private int timeout;
 	private int memoryLimit;
 	private int maxDepth;
+
+
+	private int numThread;
 	private List<State> statiVisitati;
 
 	private GameManager() {
@@ -43,6 +46,14 @@ public class GameManager {
 		return instance;
 	}
 
+	public int getNumThread() {
+		return numThread;
+	}
+
+	public void setNumThread(int numThread) {
+		this.numThread = numThread;
+	}
+	
 	public void setParameters(int timeout, int maxDepth, String player) {
 		this.timeout = timeout;
 		this.maxDepth = maxDepth;

@@ -25,13 +25,13 @@ import it.unibo.ai.didattica.competition.tablut.teampallo.util.StatsManager;
 
 public class AlphaBetaConcurrent implements IA {
 
-	private static final int NUM_THREAD = 8;
+	private  int NUM_THREAD = 8;
 	private List<Node> rootChildren;
 	private long endTime;
 	private Action bestMove;
 
 	public AlphaBetaConcurrent() {
-
+		NUM_THREAD = GameManager.getInstance().getNumThread();
 		this.rootChildren = new ArrayList<>();
 		this.bestMove = null;
 

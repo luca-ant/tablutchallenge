@@ -61,10 +61,10 @@ public class DoubleBlackHeuristic implements Heuristic {
 		this.nearsThrone = Arrays.asList("e4", "e6", "d5", "f5");
 		this.throne = "e5";
 		// external barrier
-//		this.blackBarrier = Arrays.asList("b3", "b7", "c2", "c8", "g2", "g8", "h3", "h7");
+	this.blackBarrier = Arrays.asList("b3", "b7", "c2", "c8", "g2", "g8", "h3", "h7");
 
 		// internal barrier
-		this.blackBarrier = Arrays.asList("c4", "c6", "d3", "d7", "f3", "f7", "g4", "g6");
+//		this.blackBarrier = Arrays.asList("c4", "c6", "d3", "d7", "f3", "f7", "g4", "g6");
 	}
 
 	@Override
