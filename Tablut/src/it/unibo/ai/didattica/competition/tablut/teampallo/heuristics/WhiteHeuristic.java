@@ -33,11 +33,9 @@ public class WhiteHeuristic implements Heuristic {
 	private int kingFromBorder;
 	private int blackPawnsOverhanged;
 	private int whitePawnsOverhanged;
-	private int blackBarrierPawns;
 	private int kingOverhanged;
 	private int kingOnFavourite;
 	private int guards;
-	private int disPos;
 	private int strategy;
 
 	private int quadrante1;
@@ -60,10 +58,8 @@ public class WhiteHeuristic implements Heuristic {
 	private List<String> stars;
 	private List<String> nearsThrone;
 	private List<String> guardsPos;
-	private List<String> disPosL;
 	private String throne;
 
-	private String player;
 	private List<String> blackBarrier;
 
 	public WhiteHeuristic() {
@@ -84,7 +80,6 @@ public class WhiteHeuristic implements Heuristic {
 
 		this.guardsPos = Arrays.asList("a1", "a2", "b1", "h1", "i1", "i2", "i8", "i9", "h9", "b9", "a9", "a8");
 
-		this.disPosL = Arrays.asList("2-0", "0-2", "0-6", "2-8", "6-8", "8-6", "8-2", "6-0");
 	}
 
 	@Override
@@ -170,11 +165,9 @@ public class WhiteHeuristic implements Heuristic {
 		this.kingFromBorder = 0;
 		this.blackPawnsOverhanged = 0;
 		this.whitePawnsOverhanged = 0;
-		this.blackBarrierPawns = 0;
 		this.kingOverhanged = 0;
 		this.kingOnFavourite = 0;
 		this.guards = 0;
-		this.disPos = 0;
 
 		this.quadrante1 = 0;
 		this.quadrante2 = 0;
@@ -343,10 +336,6 @@ public class WhiteHeuristic implements Heuristic {
 				if (state.getPawn(i, j).equalsPawn(State.Pawn.BLACK.toString())) {
 					this.countB++;
 
-					// conto le nere che formano la barriera
-					if (this.blackBarrier.contains(state.getBox(i, j))) {
-						this.blackBarrierPawns++;
-					}
 				}
 
 				// conto le pedine nere con una bianca o un accampamento o il trono vicino
