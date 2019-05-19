@@ -1,4 +1,4 @@
-# IA client tablut game
+# AI client tablut game
 
 ## How to start player
 Clone the repository
