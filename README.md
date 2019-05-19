@@ -20,7 +20,9 @@ java -jar teampallo.jar WHITE
 Optionally you can add some arguments to change the execution
 
 **-t [timeout]** -> to change timeout for each move (*default 55 sec*)
+
 **-p [core]** -> to set threading option (*default 8*)
+
 **-d [max_depth]** -> to change max depth which min-max alghoritm try to reach (*default 8*)
 
 *Example of used option parameters*
