@@ -1,0 +1,51 @@
+PARAMETRI BIANCO
+
+1) KING_OVERHANGED: Indica se il re è in una situazione in cui verrà mangiato
+2) SINGLE_FREEWAY: Indica se il re è in una posizione in cui ha una singola strada per vincere
+3) MULTIPLE_FREEWAY: Indica se il re è in una posizione in cui ha più di una strada per vincere
+4) PROTECTION: Indica se ci si trova in una situazione in cui due pedine bianche proteggono il re
+				in riga e in colonna(?)
+5) WHITE_OVERHANGED: Indica quante pedine bianche sono potenzialmente vulnerabili
+5) WHITE_OVERHANGED: Indica quante pedine nere sono potenzialmente vulnerabili
+6) KING_ON_STAR: Indica se il re ha raggiunto il punto di fuga
+7) WHITE_COUNT: Indica quante pedine bianche ci sono in proporzione col totale
+8) BLACK_COUNT: Indica quante pedine nere ci sono in proporzione col totale
+9) KING_FSECTOR: Indica se il re è nel quadrante più "vuoto"
+10)GUARDS: Indica quante angoli della scacchiera sono coperti da bianchi
+
+
+PESISTICA
+
+/*************************************************************/
+KING_OVERHANGED				13
+/*************************************************************/
+/*************************************************************/
+SINGLE_FREEWAY				5
+/*************************************************************/
+/*************************************************************/
+MULTIPLE_FREEWAY			10
+/*************************************************************/
+/*************************************************************/
+PROTECTION
+/*************************************************************/
+/*************************************************************/
+WHITE_OVERHANGED			1
+/*************************************************************/
+/*************************************************************/
+BLACK_OVERHANGED			1
+/*************************************************************/
+/*************************************************************/
+KING_ON_STAR				13
+/*************************************************************/
+/*************************************************************/
+WHITE_COUNT					7
+/*************************************************************/
+/*************************************************************/
+BLACK_COUNT					1
+/*************************************************************/
+/*************************************************************/
+KING_FSECTOR				5
+/*************************************************************/
+/*************************************************************/
+GUARDS						5
+/*************************************************************/
