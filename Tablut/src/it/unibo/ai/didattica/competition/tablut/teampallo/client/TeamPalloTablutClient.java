@@ -77,8 +77,8 @@ public class TeamPalloTablutClient extends TablutClient {
 		int numThread = 8;
 
 		String usage = "Usage: java teampallo COLOR [-t <timeout>] [-p <core>] [-d <max_depth>]\n"
-				+ "\ttimeout must be an integer (default 60)\n" + "\tcore must be an integer (default 8\n"
-				+ "\tmax_depth must be an integer (default 8)\n";
+				+ "\t<timeout> must be an integer (default 60)\n" + "\t<core> must be an integer (default 8\n"
+				+ "\t<max_depth> must be an integer (default 8)\n";
 
 		// TODO: change the behavior?
 		if (args.length < 1) {
