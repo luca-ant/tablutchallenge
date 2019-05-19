@@ -12,6 +12,7 @@ Run JAR file. The first argument must be your color (BLACK or WHITE)
 java -jar teampallo.jar BLACK
 `
 or
+
 `
 java -jar teampallo.jar WHITE
 `
