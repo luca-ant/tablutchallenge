@@ -82,6 +82,7 @@ public class TeamPalloTablutClient extends TablutClient {
 		String name = "TEAMPALLO";
 		int timeout = 30;
 		int depth = 10;
+		int numThread = 1;
 
 		// TODO: change the behavior?
 		if (args.length < 1) {
@@ -97,6 +98,9 @@ public class TeamPalloTablutClient extends TablutClient {
 			timeout = Integer.parseInt(args[1]);
 		}
 		if (args.length == 3) {
+			numThread = Integer.parseInt(args[2]);
+		}
+		if (args.length == 4) {
 			depth = Integer.parseInt(args[2]);
 		}
 
@@ -106,7 +110,7 @@ public class TeamPalloTablutClient extends TablutClient {
 		// System.out.println("YOUR NAME: " + name);
 
 		GameManager.getInstance().setParameters(timeout, depth, role.toLowerCase());
-
+GameManager.getInstance().setNumThread(numThread);
 		TeamPalloTablutClient client = new TeamPalloTablutClient(role, name, gametype, timeout);
 		client.run();
 	}
