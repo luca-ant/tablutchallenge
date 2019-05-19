@@ -28,7 +28,7 @@ Optionally you can add some arguments to change the execution
 
 **-d [max_depth]** -> to change max depth which min-max alghoritm try to reach (*default 8*)
 
-*Example of used option parameters*
+**Example of used option parameters:**
 
 `
 java -jar teampallo.jar BLACK -t 30
