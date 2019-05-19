@@ -15,47 +15,7 @@
 		</copy>
 	</target>
 
-	<target name="server">
-		<java classname="it.unibo.ai.didattica.competition.tablut.server.Server" fork="true">
-			<classpath>
-				<pathelement location="lib/gson-2.2.2.jar" />
-				<pathelement location="build" />
-			</classpath>
-		</java>
-	</target>
-	<target name="randomwhite">
-		<java classname="it.unibo.ai.didattica.competition.tablut.client.TablutRandomWhiteClient" fork="true">
-			<classpath>
-				<pathelement location="lib/gson-2.2.2.jar" />
-				<pathelement location="build" />
-			</classpath>
-		</java>
-	</target>
-	<target name="randomblack">
-		<java classname="it.unibo.ai.didattica.competition.tablut.client.TablutRandomBlackClient" fork="true">
-			<classpath>
-				<pathelement location="lib/gson-2.2.2.jar" />
-				<pathelement location="build" />
-			</classpath>
-		</java>
-	</target>
-
-	<target name="humanwhite">
-		<java classname="it.unibo.ai.didattica.competition.tablut.client.TablutHumanWhiteClient" fork="true">
-			<classpath>
-				<pathelement location="lib/gson-2.2.2.jar" />
-				<pathelement location="build" />
-			</classpath>
-		</java>
-	</target>
-	<target name="humanblack">
-		<java classname="it.unibo.ai.didattica.competition.tablut.client.TablutHumanBlackClient" fork="true">
-			<classpath>
-				<pathelement location="lib/gson-2.2.2.jar" />
-				<pathelement location="build" />
-			</classpath>
-		</java>
-	</target>
+	
 	<target name="teampalloblack">
 		<java classname="it.unibo.ai.didattica.competition.tablut.teampallo.client.TeamPalloBlackTablutClient" fork="true">
 			<classpath>
