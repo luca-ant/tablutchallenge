@@ -73,11 +73,11 @@ public class TeamPalloTablutClient extends TablutClient {
 		String role = "";
 		String name = "TEAMPALLO";
 		int timeout = 55;
-		int depth = 10;
+		int depth = 8;
 		int numThread = 8;
 
 		String usage = "Usage: java teampallo COLOR [-t <timeout>] [-p <core>] [-d <max_depth>]\n"
-				+ "\t<timeout> must be an integer (default 60)\n" + "\t<core> must be an integer (default 8\n"
+				+ "\t<timeout> must be an integer (default 55)\n" + "\t<core> must be an integer (default 8\n"
 				+ "\t<max_depth> must be an integer (default 8)\n";
 
 		// TODO: change the behavior?
