@@ -18,6 +18,18 @@ or
 java -jar teampallo.jar WHITE
 `
 
+### FOR UNIBO CHALLENGE
+Run JAR file with **-p 2** option
+
+`
+java -jar teampallo.jar BLACK -p 2
+`
+
+or
+
+`
+java -jar teampallo.jar WHITE -p 2
+`
 
 
 Optionally you can add some arguments to change the execution
